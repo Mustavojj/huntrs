@@ -1173,7 +1173,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                     referred_by_verified: false,
                     wallet: null,
                     task_count: 0,
-                    special_tasks_count: 0,
                     promo_codes_created: 0
                 };
 
