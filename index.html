@@ -14,7 +14,7 @@
 <body>
 
 <div id="app-loader" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#0a0a0f;gap:16px;">
-    <img src="https://i.ibb.co/d4dS8mjC/file-00000000ee208210bd185ae86647133a.png" style="width:80px;height:80px;border-radius:50%;border:2px solid #4A90D9;object-fit:cover;">
+    <img src="https://slho.shop/i/8067" style="width:80px;height:80px;border-radius:50%;border:2px solid #4A90D9;object-fit:cover;">
     <div style="color:#4A90D9;font-weight:700;font-size:1.1rem;letter-spacing:2px;">GRAM HUNTERS</div>
 </div>
 
@@ -22,10 +22,7 @@
     <div class="modal-content blue-modal" style="max-width:320px;width:90%;margin:0 auto;position:relative;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(74,144,217,0.2);box-shadow:0 8px 40px rgba(0,0,0,0.8);text-align:center;padding:30px 24px;">
         <div style="font-size:60px;margin-bottom:16px;">🚫</div>
         <h3 style="color:#FF4444;font-size:1.3rem;font-weight:700;margin-bottom:8px;">Account Banned</h3>
-        <p style="color:#888;font-size:0.95rem;margin-bottom:20px;line-height:1.5;">
-            Your account has been banned.<br>
-            Please contact support for more information.
-        </p>
+        <p style="color:#888;font-size:0.95rem;margin-bottom:20px;line-height:1.5;">Your account has been banned.<br>Please contact support for more information.</p>
         <button id="close-app-btn" class="blue-btn" style="padding:12px 40px;background:linear-gradient(135deg,#4A90D9,#2563EB);border:none;border-radius:60px;color:#fff;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 20px rgba(74,144,217,0.3);">
             <i class="fas fa-times"></i> Close App
         </button>
@@ -37,12 +34,12 @@
         <div class="header-top">
             <div class="user-info">
                 <div class="avatar-wrapper">
-                    <img id="user-photo" class="user-avatar" src="https://i.ibb.co/W4FRWY3z/c53854a65b5a.jpg">
+                    <img id="user-photo" class="user-avatar" src="https://slho.shop/i/8067">
                     <div class="avatar-badge miner-badge" id="user-miner-badge">🥉</div>
                 </div>
                 <div class="user-details">
                     <span id="user-name" class="user-name">User</span>
-                    <div class="user-miner blue-text"><span id="user-miner-name">Bronze Miner</span></div>
+                    <div class="user-miner blue-text"><span id="user-miner-name">No Miner</span></div>
                 </div>
             </div>
             <div class="header-actions">
@@ -113,7 +110,6 @@
                     <button class="reward-option" data-value="10">10</button>
                     <button class="reward-option" data-value="25">25</button>
                     <button class="reward-option" data-value="50">50</button>
-                    <button class="reward-option" data-value="100">100</button>
                 </div>
             </div>
             <div class="form-group" id="community-verification-group" style="display:none;">
@@ -131,47 +127,6 @@
                 </div>
             </div>
             <button id="pay-add-community-task-btn" class="blue-btn" style="width:100%;padding:14px;border:none;border-radius:60px;font-weight:700;font-size:0.95rem;cursor:pointer;background:linear-gradient(135deg,#4A90D9,#2563EB);color:#fff;">PAY & ADD TASK</button>
-        </div>
-    </div>
-</div>
-
-<div id="add-special-task-modal" class="modal" style="display:none;">
-    <div class="modal-content blue-modal" style="max-width:400px;width:92%;max-height:90vh;overflow-y:auto;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(74,144,217,0.15);padding:0;">
-        <div class="modal-header blue-header" style="padding:16px 20px;border-bottom:1px solid rgba(74,144,217,0.1);">
-            <h3 style="color:#60A5FA;font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-star" style="color:#4A90D9;"></i> Add Special Task</h3>
-            <button class="modal-close" onclick="document.getElementById('add-special-task-modal').style.display='none'">&times;</button>
-        </div>
-        <div class="modal-body" style="padding:20px;">
-            <div class="form-group">
-                <label class="form-label">Name (5-20 chars)</label>
-                <input type="text" id="special-task-name" class="form-input blue-input" placeholder="Task name" maxlength="20">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Link</label>
-                <input type="text" id="special-task-link" class="form-input blue-input" placeholder="https://t.me/...">
-            </div>
-            <div class="form-group" id="special-verification-group" style="display:none;">
-                <label class="form-label">Verification</label>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-                    <button class="special-verif-option" data-value="yes">YES</button>
-                    <button class="special-verif-option" data-value="no">NO</button>
-                    <span id="special-verification-note" style="font-size:0.6rem;color:#4A90D9;display:none;margin-left:4px;"><i class="fas fa-info-circle"></i> You must add the bot as admin to verify membership</span>
-                </div>
-            </div>
-            <div style="background:rgba(74,144,217,0.08);border-radius:12px;padding:12px;margin:12px 0;border:1px solid rgba(74,144,217,0.1);">
-                <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:8px;">
-                    <span style="color:#888;">Price:</span>
-                    <span id="special-task-price-display" style="color:#60A5FA;font-weight:700;">10 GRAM</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
-                    <span style="color:#888;">Reward:</span>
-                    <span style="color:#60A5FA;font-weight:700;">50 Power + 5 COIN</span>
-                </div>
-            </div>
-            <div style="font-size:0.65rem;color:#888;text-align:center;margin-bottom:12px;padding:8px;background:rgba(74,144,217,0.05);border-radius:8px;">
-                <i class="fas fa-info-circle"></i> This is an unlimited task.
-            </div>
-            <button id="pay-add-special-task-btn" class="blue-btn" style="width:100%;padding:14px;border:none;border-radius:60px;font-weight:700;font-size:0.95rem;cursor:pointer;background:linear-gradient(135deg,#4A90D9,#2563EB);color:#fff;">PAY & ADD TASK</button>
         </div>
     </div>
 </div>
@@ -286,20 +241,6 @@
         </div>
         <div class="modal-body" style="padding:20px;">
             <div id="my-tasks-container">
-                <div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>Loading...</p></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="my-special-tasks-modal" class="modal" style="display:none;">
-    <div class="modal-content blue-modal" style="max-width:400px;width:92%;max-height:90vh;overflow-y:auto;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(74,144,217,0.15);padding:0;">
-        <div class="modal-header blue-header" style="padding:16px 20px;border-bottom:1px solid rgba(74,144,217,0.1);">
-            <h3 style="color:#60A5FA;font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-star" style="color:#4A90D9;"></i> My Special Tasks</h3>
-            <button class="modal-close" onclick="document.getElementById('my-special-tasks-modal').style.display='none'">&times;</button>
-        </div>
-        <div class="modal-body" style="padding:20px;">
-            <div id="my-special-tasks-container">
                 <div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>Loading...</p></div>
             </div>
         </div>
