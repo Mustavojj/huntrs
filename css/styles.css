@@ -1678,3 +1678,47 @@ body {
     right: -50px;
     pointer-events: none;
 } 
+
+
+    /* الطبقة 1: ظل داكن خلف زر CLAIM */
+.daily-bonus-card::before {
+    content: '';
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 40%, transparent 75%);
+    top: 50%;
+    right: -30px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* الطبقة 2: نمط احتفالي متكرر (هدايا، بالونات، نجوم) */
+.daily-bonus-card::after {
+    content: '🎁 🎈 ⭐ 🪙 ✨ 🎉 🎊 ⭐ 🎁 🎈';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 22px;
+    line-height: 60px;
+    letter-spacing: 28px;
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+    word-break: break-all;
+    text-shadow: 0 0 4px rgba(0,0,0,0.3);
+    transform: rotate(-8deg);
+}
+
+/* المحتوى فوق الخلفية */
+.daily-bonus-card .daily-bonus-icon,
+.daily-bonus-card .daily-bonus-info,
+.daily-bonus-card .daily-bonus-btn {
+    position: relative;
+    z-index: 2;
+                                                    }
