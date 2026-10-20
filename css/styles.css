@@ -1682,3 +1682,319 @@ body {
     background-repeat: repeat;
     transform: rotate(-8deg);
 } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ============================================
+   LOADER
+   ============================================ */
+.loader-logo-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.loader-beast-bg {
+    position: absolute;
+    font-size: 140px;
+    opacity: 0.08;
+    animation: rotateGlow 4s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotateGlow {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+.loader-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #4A90D9;
+    box-shadow: 0 0 30px rgba(74, 144, 217, 0.6), inset 0 0 20px rgba(74, 144, 217, 0.3);
+    animation: pulseLoader 2s ease-in-out infinite;
+    z-index: 2;
+}
+
+.loader-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@keyframes pulseLoader {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(74, 144, 217, 0.6); }
+    50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(74, 144, 217, 0.9); }
+}
+
+.loader-title {
+    color: transparent;
+    background: linear-gradient(135deg, #4A90D9, #60A5FA);
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+}
+
+.loader-bar {
+    width: 200px;
+    height: 4px;
+    background: rgba(74, 144, 217, 0.15);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.loader-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #4A90D9, #60A5FA);
+    border-radius: 10px;
+    animation: loadProgress 2s ease-in-out infinite;
+    box-shadow: 0 0 12px rgba(74, 144, 217, 0.6);
+}
+
+@keyframes loadProgress {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+.loader-text {
+    color: #666;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* ============================================
+   BACKGROUND DECORATIONS FOR ALL CARDS
+   ============================================ */
+
+/* Mining card - pickaxe pattern */
+.mining-card::before {
+    content: '⛏️';
+    position: absolute;
+    font-size: 160px;
+    opacity: 0.04;
+    right: -30px;
+    bottom: -30px;
+    pointer-events: none;
+    transform: rotate(-15deg);
+}
+
+/* Promo card - ticket pattern */
+.promo-card::before {
+    content: '🎟️';
+    position: absolute;
+    font-size: 120px;
+    opacity: 0.05;
+    right: -20px;
+    top: -20px;
+    pointer-events: none;
+    transform: rotate(15deg);
+}
+
+/* Ad cards - play button pattern */
+.ad-card::before {
+    content: '▶️';
+    position: absolute;
+    font-size: 100px;
+    opacity: 0.04;
+    right: 10px;
+    bottom: -20px;
+    pointer-events: none;
+}
+
+/* Team card - users pattern */
+.team-card::before {
+    content: '👥';
+    position: absolute;
+    font-size: 140px;
+    opacity: 0.05;
+    right: -30px;
+    top: -20px;
+    pointer-events: none;
+}
+
+/* Withdraw card - money pattern */
+.withdraw-card::before {
+    content: '💸';
+    position: absolute;
+    font-size: 140px;
+    opacity: 0.05;
+    right: -20px;
+    bottom: -20px;
+    pointer-events: none;
+}
+
+/* Wallet card - safe pattern */
+.wallet-card::before {
+    content: '🔐';
+    position: absolute;
+    font-size: 120px;
+    opacity: 0.04;
+    right: -20px;
+    top: -20px;
+    pointer-events: none;
+}
+
+/* Quest cards - trophy */
+.quest-card::before {
+    content: '🏆';
+    position: absolute;
+    font-size: 80px;
+    opacity: 0.06;
+    right: -10px;
+    bottom: -15px;
+    pointer-events: none;
+}
+
+/* Ensure all cards are relative */
+.mining-card, .promo-card, .ad-card, .team-card, .withdraw-card, .wallet-card, .quest-card {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ensure content is above decorations */
+.mining-card > *, .promo-card > *, .ad-card > *, .team-card > *, .withdraw-card > *, .wallet-card > *, .quest-card > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Language menu overlay */
+.lang-menu {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.75) !important;
+    backdrop-filter: blur(8px) !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+}
+
+.lang-menu-content {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    background: var(--bg-elevated) !important;
+    padding: 20px !important;
+    border-radius: var(--border-radius) !important;
+    border: 1px solid rgba(74, 144, 217, 0.2) !important;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8) !important;
+    min-width: 200px !important;
+}
+
+.lang-option {
+    padding: 12px 18px !important;
+    background: rgba(74, 144, 217, 0.08) !important;
+    border: 1px solid rgba(74, 144, 217, 0.15) !important;
+    border-radius: 12px !important;
+    color: white !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    transition: all 0.2s !important;
+}
+
+.lang-option img {
+    width: 24px !important;
+    height: 16px !important;
+    border-radius: 4px !important;
+    object-fit: cover !important;
+}
+
+.lang-option:active {
+    transform: scale(0.96) !important;
+    background: var(--blue-gradient) !important;
+}
+
+/* Withdraw note */
+.withdraw-note {
+    font-size: 0.7rem;
+    color: #FFD700;
+    text-align: center;
+    margin-top: 12px;
+    padding: 10px;
+    background: rgba(255, 215, 0, 0.08);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    font-weight: 600;
+}
+
+/* Team referral rows */
+.referral-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.referral-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(74, 144, 217, 0.08);
+    border-radius: 12px;
+    border-left: 3px solid var(--primary);
+}
+
+.referral-row-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(74, 144, 217, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.referral-row-info {
+    flex: 1;
+    margin-left: 12px;
+}
+
+.referral-row-label {
+    font-size: 0.65rem;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+.referral-row-value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary-light);
+    }
