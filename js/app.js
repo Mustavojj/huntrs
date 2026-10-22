@@ -6,44 +6,39 @@ const translations = {
         no_ads: "No Ads", no_ads_available: "No ads available",
         no_tasks: "No tasks", no_tasks_available: "No tasks available",
         all_tasks_completed: "All tasks completed!", no_withdrawals: "No withdrawals",
-        no_my_tasks: "No tasks created yet.", no_my_promo_codes: "No promo codes yet.",
+        no_my_tasks: "No tasks yet.", no_my_promo_codes: "No codes yet.",
         confirm_delete: "Are you sure?", deleted: "Deleted",
         busy: "Busy", complete_current_task: "Complete current task first",
         join_required: "Join Required", join_channel_first: "Please join channel first",
         miners: "Miners", earn: "Earn", home: "Home", team: "Team", wallet_page: "Withdraw",
-        miners_title: "Mining Rigs", miners_subtitle: "Choose your rig and start earning",
         speed: "Speed", duration: "Duration", price: "Price", per_hour: "/H", days: "D",
         unlimited_duration: "∞", free: "FREE", activate: "ACTIVATE", active: "Active",
         need_power: "NEED {amount} POWER", buy_for_power: "BUY - {amount} POWER",
         miner_activated: "Miner Activated!", miner_purchased: "Miner Purchased!",
         no_miner: "No Miner", coin_mined: "COIN MINED", ready_to_claim: "READY TO CLAIM",
         not_active: "Not Active", session: "Session", start_mining: "START MINING",
-        claim_reward: "CLAIM {amount} COIN", mining_active: "MINING ACTIVE",
+        claim_reward: "CLAIM {amount} COIN", mining_active: "MINING ACTIVE", time_left: "TIME LEFT:",
         claim_quest: "Claim", watch_ad_1: "Watch AD #1", watch_ad_2: "Watch AD #2",
         watch_earn: "WATCH & EARN", main_tasks: "Main Tasks", community_tasks: "Community Tasks",
         promo_code: "Promo Code", enter_code: "Enter code",
         daily_bonus: "Daily Bonus", daily_bonus_reward: "100 COIN", daily_bonus_claimed: "Claimed",
         daily_bonus_ready: "CLAIM", daily_bonus_success: "Bonus claimed! +100 COIN",
-        invite_earn: "Invite & Earn", step1: "Copy Link", step2: "Invite Hunters", step3: "Earn Rewards!",
+        invite_earn: "Build Your Team", invite_earn_sub: "Invite and earn generous rewards",
+        referral_link_title: "Referral Link:", share_earn_desc: "Share and earn free GRAM",
         copy_link: "Copy Link", referral_earnings: "Referral Rewards",
         power_earnings: "Power Earnings", coin_earnings: "COIN Earnings",
         total_referrals: "Total Referrals",
-        earn_referral_each: "Earn 100 Power each referral",
-        earn_referral_mining: "Earn 10% from mining earnings",
-        earn_referral_tasks: "Earn 20% from tasks & ads earnings",
-        convert_withdraw: "Convert & Withdraw", enter_amount: "Enter Withdrawal Amount",
-        wallet_address: "Wallet Address", enter_wallet_address: "Enter wallet address",
+        earn_referral_each_label: "Unlimited Power", earn_referral_each: "Earn 100 power per referral",
+        earn_referral_tasks_label: "Tasks & Ads commission", earn_referral_tasks: "Earn 20% from referrals earnings",
+        earn_referral_mining_label: "Mining Commission", earn_referral_mining: "Earn 10% from mining earnings",
+        withdraw_gram: "Withdraw GRAM", withdrawal_amount: "Withdrawal Amount", gram_wallet: "GRAM Wallet",
         confirm_withdrawal: "Confirm Withdrawal", withdrawal_history: "Withdrawal History",
-        pending: "PENDING", completed: "PAID",
+        my_payments: "My Payments", live_payments: "Live Payments",
+        pending: "PENDING", completed: "PAID", processing: "PROCESSING",
         min_withdraw_note: "Minimum Withdrawal: {amount} COIN",
         invalid_amount: "Invalid amount", wallet_invalid: "Invalid wallet. Must start with UQ and be 20+ chars.",
         insufficient_balance: "Insufficient balance",
-        withdrawal_details: "Withdrawal Details", wallet_label: "Wallet", amount_label: "Amount",
-        fees_label: "Fees", received_amount: "Received",
-        confirm: "YES, CONFIRM", are_you_sure: "Are you sure?",
-        contact_support: "No, contact support",
-        not_registered_title: "Not Registered",
-        not_registered_message: "Start the bot first to register.",
+        not_registered_title: "Not Registered", not_registered_message: "Start the bot first to register.",
         register_now: "Register Now",
         task_added: "Task Added!", task_added_success: "Community task added.",
         name_required: "Name 5-20 chars", link_required: "Valid https:// link required",
@@ -57,9 +52,17 @@ const translations = {
         task_cooldown: "Wait {s}s", promo_code_cooldown: "Wait {s}s",
         daily_bonus_already: "Already claimed today",
         quests_title: "Quests",
-        you_have_received: "You received {reward} {type}",
         reward_claimed: "Reward Claimed",
-        cancel: "Cancel"
+        daily_limit_reached: "Daily limit reached",
+        ads_today: "Today: {count}/{max}",
+        view_on_explorer: "View on Explorer",
+        just_now: "Just now",
+        time_ago: "{time} ago",
+        buy_miner: "BUY MINER",
+        quest_buy_miner: "BUY MINER",
+        quest_complete_tasks: "COMPLETE TASKS",
+        quest_invite: "INVITE HUNTERS",
+        view_explorer: "View"
     },
     ar: {
         power: "قوة", coin: "عملة", gram: "جرام", claim: "استلام", watch: "مشاهدة",
@@ -73,39 +76,34 @@ const translations = {
         busy: "مشغول", complete_current_task: "أكمل المهمة الحالية",
         join_required: "الانضمام مطلوب", join_channel_first: "انضم للقناة أولاً",
         miners: "المناجم", earn: "ربح", home: "الرئيسية", team: "الفريق", wallet_page: "السحب",
-        miners_title: "أجهزة التعدين", miners_subtitle: "اختر جهازك وابدأ",
         speed: "السرعة", duration: "المدة", price: "السعر", per_hour: "/س", days: "ي",
         unlimited_duration: "∞", free: "مجاني", activate: "تفعيل", active: "نشط",
         need_power: "تحتاج {amount} قوة", buy_for_power: "شراء - {amount} قوة",
         miner_activated: "تم التفعيل!", miner_purchased: "تم الشراء!",
         no_miner: "لا منجم", coin_mined: "عملة معدنة", ready_to_claim: "جاهز",
         not_active: "غير نشط", session: "الجلسة", start_mining: "بدء التعدين",
-        claim_reward: "استلام {amount} عملة", mining_active: "التعدين نشط",
+        claim_reward: "استلام {amount} عملة", mining_active: "التعدين نشط", time_left: "الوقت المتبقي:",
         claim_quest: "استلام", watch_ad_1: "إعلان #1", watch_ad_2: "إعلان #2",
         watch_earn: "شاهد واربح", main_tasks: "المهام الرئيسية", community_tasks: "المهام المجتمعية",
         promo_code: "رمز ترويجي", enter_code: "أدخل الرمز",
         daily_bonus: "المكافأة اليومية", daily_bonus_reward: "100 عملة", daily_bonus_claimed: "مستلمة",
         daily_bonus_ready: "استلام", daily_bonus_success: "تم الاستلام! +100 عملة",
-        invite_earn: "ادعُ واربح", step1: "انسخ الرابط", step2: "ادعُ الصيادين", step3: "اربح!",
+        invite_earn: "ابني فريقك", invite_earn_sub: "ادعُ واربح مكافآت سخية",
+        referral_link_title: "رابط الإحالة:", share_earn_desc: "شارك واربح جرام مجاناً",
         copy_link: "نسخ الرابط", referral_earnings: "مكافآت الإحالة",
         power_earnings: "أرباح القوة", coin_earnings: "أرباح العملات",
         total_referrals: "إجمالي الإحالات",
-        earn_referral_each: "اربح 100 قوة لكل إحالة",
-        earn_referral_mining: "اربح 10% من أرباح التعدين",
-        earn_referral_tasks: "اربح 20% من أرباح المهام والإعلانات",
-        convert_withdraw: "تحويل وسحب", enter_amount: "أدخل مبلغ السحب",
-        wallet_address: "عنوان المحفظة", enter_wallet_address: "أدخل العنوان",
+        earn_referral_each_label: "قوة غير محدودة", earn_referral_each: "اربح 100 قوة لكل إحالة",
+        earn_referral_tasks_label: "عمولة المهام والإعلانات", earn_referral_tasks: "اربح 20% من أرباح الإحالات",
+        earn_referral_mining_label: "عمولة التعدين", earn_referral_mining: "اربح 10% من أرباح التعدين",
+        withdraw_gram: "سحب جرام", withdrawal_amount: "مبلغ السحب", gram_wallet: "محفظة جرام",
         confirm_withdrawal: "تأكيد السحب", withdrawal_history: "سجل السحوبات",
-        pending: "قيد الانتظار", completed: "مدفوع",
+        my_payments: "مدفوعاتي", live_payments: "المدفوعات الحية",
+        pending: "قيد الانتظار", completed: "مدفوع", processing: "قيد المعالجة",
         min_withdraw_note: "الحد الأدنى للسحب: {amount} عملة",
         invalid_amount: "مبلغ غير صالح", wallet_invalid: "محفظة غير صالحة. يجب أن تبدأ بـ UQ و20+ حرف.",
         insufficient_balance: "رصيد غير كافٍ",
-        withdrawal_details: "تفاصيل السحب", wallet_label: "المحفظة", amount_label: "المبلغ",
-        fees_label: "الرسوم", received_amount: "المستلم",
-        confirm: "نعم، تأكيد", are_you_sure: "متأكد؟",
-        contact_support: "لا، دعم",
-        not_registered_title: "غير مسجل",
-        not_registered_message: "ابدأ البوت أولاً.",
+        not_registered_title: "غير مسجل", not_registered_message: "ابدأ البوت أولاً.",
         register_now: "سجل الآن",
         task_added: "تمت الإضافة!", task_added_success: "تمت إضافة المهمة.",
         name_required: "الاسم 5-20 حرف", link_required: "رابط https:// صحيح",
@@ -119,9 +117,17 @@ const translations = {
         task_cooldown: "انتظر {s}ث", promo_code_cooldown: "انتظر {s}ث",
         daily_bonus_already: "تم الاستلام اليوم",
         quests_title: "المهام",
-        you_have_received: "تلقيت {reward} {type}",
         reward_claimed: "تم الاستلام",
-        cancel: "إلغاء"
+        daily_limit_reached: "تم بلوغ الحد اليومي",
+        ads_today: "اليوم: {count}/{max}",
+        view_on_explorer: "عرض على المستكشف",
+        just_now: "الآن",
+        time_ago: "منذ {time}",
+        buy_miner: "شراء منجم",
+        quest_buy_miner: "شراء منجم",
+        quest_complete_tasks: "أكمل المهام",
+        quest_invite: "ادعُ الصيادين",
+        view_explorer: "عرض"
     },
     ru: {
         power: "Мощность", coin: "МОНЕТА", gram: "GRAM", claim: "Забрать", watch: "Смотреть",
@@ -135,39 +141,34 @@ const translations = {
         busy: "Занято", complete_current_task: "Завершите задание",
         join_required: "Нужна подписка", join_channel_first: "Подпишитесь на канал",
         miners: "Майнеры", earn: "Заработать", home: "Главная", team: "Команда", wallet_page: "Вывод",
-        miners_title: "Майнинг-риги", miners_subtitle: "Выберите риг",
         speed: "Скорость", duration: "Длительность", price: "Цена", per_hour: "/Ч", days: "Д",
         unlimited_duration: "∞", free: "БЕСПЛАТНО", activate: "АКТИВИРОВАТЬ", active: "Активен",
         need_power: "НУЖНО {amount}", buy_for_power: "КУПИТЬ - {amount}",
         miner_activated: "Активирован!", miner_purchased: "Куплен!",
         no_miner: "Нет майнера", coin_mined: "МОНЕТ", ready_to_claim: "ГОТОВО",
         not_active: "Не активно", session: "Сессия", start_mining: "НАЧАТЬ",
-        claim_reward: "ЗАБРАТЬ {amount}", mining_active: "АКТИВЕН",
+        claim_reward: "ЗАБРАТЬ {amount}", mining_active: "АКТИВЕН", time_left: "ОСТАЛОСЬ:",
         claim_quest: "Забрать", watch_ad_1: "Реклама #1", watch_ad_2: "Реклама #2",
         watch_earn: "СМОТРИ", main_tasks: "Основные", community_tasks: "Сообщества",
         promo_code: "Промокод", enter_code: "Введите код",
         daily_bonus: "Бонус", daily_bonus_reward: "100 МОНЕТ", daily_bonus_claimed: "Получено",
         daily_bonus_ready: "ЗАБРАТЬ", daily_bonus_success: "+100 МОНЕТ",
-        invite_earn: "Приглашай", step1: "Копируй", step2: "Приглашай", step3: "Зарабатывай",
+        invite_earn: "Построй команду", invite_earn_sub: "Приглашай и зарабатывай",
+        referral_link_title: "Реф. ссылка:", share_earn_desc: "Поделись и заработай GRAM",
         copy_link: "Копировать", referral_earnings: "Реферальные награды",
         power_earnings: "Мощность", coin_earnings: "Монеты",
         total_referrals: "Всего рефералов",
-        earn_referral_each: "100 мощности за реферала",
-        earn_referral_mining: "10% от майнинга",
-        earn_referral_tasks: "20% от заданий и рекламы",
-        convert_withdraw: "Вывод", enter_amount: "Введите сумму",
-        wallet_address: "Адрес кошелька", enter_wallet_address: "Введите адрес",
+        earn_referral_each_label: "Неограниченная мощь", earn_referral_each: "100 мощности за реферала",
+        earn_referral_tasks_label: "Комиссия с задач", earn_referral_tasks: "20% от рефералов",
+        earn_referral_mining_label: "Комиссия с майнинга", earn_referral_mining: "10% от майнинга",
+        withdraw_gram: "Вывод GRAM", withdrawal_amount: "Сумма вывода", gram_wallet: "GRAM Кошелёк",
         confirm_withdrawal: "Подтвердить", withdrawal_history: "История",
-        pending: "ОЖИДАНИЕ", completed: "ОПЛАЧЕНО",
+        my_payments: "Мои платежи", live_payments: "Живые платежи",
+        pending: "ОЖИДАНИЕ", completed: "ОПЛАЧЕНО", processing: "ОБРАБОТКА",
         min_withdraw_note: "Минимум: {amount} МОНЕТ",
         invalid_amount: "Неверная сумма", wallet_invalid: "Неверный кошелёк. UQ + 20+ символов.",
         insufficient_balance: "Недостаточно",
-        withdrawal_details: "Детали", wallet_label: "Кошелёк", amount_label: "Сумма",
-        fees_label: "Комиссия", received_amount: "Получено",
-        confirm: "ДА", are_you_sure: "Уверены?",
-        contact_support: "Нет, поддержка",
-        not_registered_title: "Не зарегистрирован",
-        not_registered_message: "Запустите бота.",
+        not_registered_title: "Не зарегистрирован", not_registered_message: "Запустите бота.",
         register_now: "Регистрация",
         task_added: "Добавлено!", task_added_success: "Задание добавлено.",
         name_required: "Имя 5-20 символов", link_required: "Ссылка https://",
@@ -181,13 +182,21 @@ const translations = {
         task_cooldown: "Ждите {s}с", promo_code_cooldown: "Ждите {s}с",
         daily_bonus_already: "Уже получено",
         quests_title: "Задания",
-        you_have_received: "Вы получили {reward} {type}",
         reward_claimed: "Награда получена",
-        cancel: "Отмена"
+        daily_limit_reached: "Дневной лимит",
+        ads_today: "Сегодня: {count}/{max}",
+        view_on_explorer: "Открыть",
+        just_now: "Только что",
+        time_ago: "{time} назад",
+        buy_miner: "КУПИТЬ",
+        quest_buy_miner: "КУПИТЬ МАЙНЕР",
+        quest_complete_tasks: "ВЫПОЛНИТЬ",
+        quest_invite: "ПРИГЛАСИТЬ",
+        view_explorer: "Открыть"
     },
     fa: {
         power: "قدرت", coin: "سکه", gram: "گرم", claim: "دریافت", watch: "تماشا",
-        loading: "بارگذاری", start: "شروع", done: "انجام شد", delete: "حذف",
+        loading: "بارگذاری", start: "شروع", done: "انجام", delete: "حذف",
         copy: "کپی", copy_success: "کپی شد!", link_copied: "لینک کپی شد",
         no_ads: "تبلیغ نیست", no_ads_available: "تبلیغی موجود نیست",
         no_tasks: "وظیفه‌ای نیست", no_tasks_available: "وظیفه‌ای نیست",
@@ -197,39 +206,34 @@ const translations = {
         busy: "مشغول", complete_current_task: "ابتدا وظیفه فعلی",
         join_required: "نیاز به عضویت", join_channel_first: "ابتدا عضو شوید",
         miners: "ماینرها", earn: "درآمد", home: "خانه", team: "تیم", wallet_page: "برداشت",
-        miners_title: "ماینرها", miners_subtitle: "انتخاب کنید",
         speed: "سرعت", duration: "مدت", price: "قیمت", per_hour: "/س", days: "ر",
         unlimited_duration: "∞", free: "رایگان", activate: "فعال‌سازی", active: "فعال",
         need_power: "نیاز {amount}", buy_for_power: "خرید - {amount}",
         miner_activated: "فعال شد!", miner_purchased: "خریداری شد!",
         no_miner: "بدون ماینر", coin_mined: "سکه معدنی", ready_to_claim: "آماده",
         not_active: "غیرفعال", session: "جلسه", start_mining: "شروع استخراج",
-        claim_reward: "دریافت {amount}", mining_active: "فعال",
+        claim_reward: "دریافت {amount}", mining_active: "فعال", time_left: "زمان باقی‌مانده:",
         claim_quest: "دریافت", watch_ad_1: "تبلیغ #۱", watch_ad_2: "تبلیغ #۲",
         watch_earn: "تماشا", main_tasks: "اصلی", community_tasks: "اجتماعی",
         promo_code: "کد", enter_code: "کد را وارد کنید",
         daily_bonus: "پاداش روزانه", daily_bonus_reward: "۱۰۰ سکه", daily_bonus_claimed: "دریافت شد",
         daily_bonus_ready: "دریافت", daily_bonus_success: "+۱۰۰ سکه",
-        invite_earn: "دعوت", step1: "کپی", step2: "دعوت", step3: "درآمد",
+        invite_earn: "تیم خود را بسازید", invite_earn_sub: "دعوت کنید و پاداش بگیرید",
+        referral_link_title: "لینک معرفی:", share_earn_desc: "به اشتراک بگذارید و GRAM رایگان بگیرید",
         copy_link: "کپی لینک", referral_earnings: "پاداش‌ها",
         power_earnings: "قدرت", coin_earnings: "سکه",
         total_referrals: "کل معرفی‌ها",
-        earn_referral_each: "۱۰۰ قدرت هر معرفی",
-        earn_referral_mining: "۱۰٪ از استخراج",
-        earn_referral_tasks: "۲۰٪ از وظایف و تبلیغات",
-        convert_withdraw: "برداشت", enter_amount: "مبلغ برداشت",
-        wallet_address: "کیف پول", enter_wallet_address: "آدرس را وارد کنید",
+        earn_referral_each_label: "قدرت نامحدود", earn_referral_each: "۱۰۰ قدرت هر معرفی",
+        earn_referral_tasks_label: "کمیسیون وظایف", earn_referral_tasks: "۲۰٪ از معرفی‌ها",
+        earn_referral_mining_label: "کمیسیون استخراج", earn_referral_mining: "۱۰٪ از استخراج",
+        withdraw_gram: "برداشت GRAM", withdrawal_amount: "مبلغ برداشت", gram_wallet: "کیف GRAM",
         confirm_withdrawal: "تأیید", withdrawal_history: "تاریخچه",
-        pending: "در انتظار", completed: "پرداخت شده",
+        my_payments: "پرداخت‌های من", live_payments: "پرداخت‌های زنده",
+        pending: "در انتظار", completed: "پرداخت شده", processing: "در حال پردازش",
         min_withdraw_note: "حداقل برداشت: {amount} سکه",
         invalid_amount: "مبلغ نامعتبر", wallet_invalid: "کیف پول نامعتبر. UQ + ۲۰+ کاراکتر.",
         insufficient_balance: "موجودی ناکافی",
-        withdrawal_details: "جزئیات", wallet_label: "کیف پول", amount_label: "مبلغ",
-        fees_label: "کارمزد", received_amount: "دریافت شده",
-        confirm: "بله", are_you_sure: "مطمئنید؟",
-        contact_support: "نه، پشتیبانی",
-        not_registered_title: "ثبت نشده",
-        not_registered_message: "ربات را استارت کنید.",
+        not_registered_title: "ثبت نشده", not_registered_message: "ربات را استارت کنید.",
         register_now: "ثبت نام",
         task_added: "اضافه شد!", task_added_success: "وظیفه اضافه شد.",
         name_required: "نام ۵-۲۰ کاراکتر", link_required: "لینک https://",
@@ -238,14 +242,22 @@ const translations = {
         my_tasks: "وظایف من", claim_promo_code: "دریافت",
         promo_requirements: "الزامات", join_channel: "پیوستن",
         watch_ad_requirement: "تماشای تبلیغ", promo_reward_preview: "دریافت می‌کنید",
-        promo_claim_final: "دریافت پاداش", join_first: "ابتدا عضو شوید",
+        promo_claim_final: "دریافت", join_first: "ابتدا عضو شوید",
         language_changed: "زبان تغییر کرد!",
         task_cooldown: "{s}ثانیه صبر", promo_code_cooldown: "{s}ثانیه صبر",
         daily_bonus_already: "امروز دریافت شد",
         quests_title: "وظایف",
-        you_have_received: "{reward} {type} دریافت کردید",
         reward_claimed: "پاداش دریافت شد",
-        cancel: "لغو"
+        daily_limit_reached: "حد روزانه",
+        ads_today: "امروز: {count}/{max}",
+        view_on_explorer: "مشاهده",
+        just_now: "همین حالا",
+        time_ago: "{time} پیش",
+        buy_miner: "خرید ماینر",
+        quest_buy_miner: "خرید ماینر",
+        quest_complete_tasks: "تکمیل وظایف",
+        quest_invite: "دعوت شکارچیان",
+        view_explorer: "مشاهده"
     }
 };
 
@@ -253,7 +265,6 @@ class App {
     constructor() {
         this.tg = null;
         this.tgUser = null;
-        this.isInitialized = false;
         this.serverUrl = '';
         this.jwtToken = null;
         this.isAuthenticated = false;
@@ -275,15 +286,20 @@ class App {
         this.pendingCoinReward = 0;
         this.miningSessionHours = 12;
         this.withdrawals = [];
+        this.liveWithdrawals = [];
         this.totalReferrals = 0;
         this.isTaskRunning = false;
         this.userState = null;
         this.adWatchCount = 0;
+        this.ad1DailyCount = 0;
+        this.ad2DailyCount = 0;
+        this.adDailyDate = '';
         this.adLastWatch = 0;
         this.adexiumAdLastWatch = 0;
-        this.communityCoinReward = 1;
+        this.communityCoinReward = 50;
         this.adRewardPower = 50;
         this.adRewardCoin = 20;
+        this.adDailyLimit = 5;
         this.dailyBonusClaimed = false;
 
         this.lang = 'en';
@@ -297,10 +313,10 @@ class App {
         this._walletLoaded = false;
         this._minersLoaded = false;
         this._withdrawLock = false;
+        this._historyTab = 'my';
 
         this.membershipCache = new Map();
         this._lastFetchTime = new Map();
-        this._taskCompletionCooldown = 0;
         this._promoCooldown = 0;
 
         this.quests = { currentMinerQuestIndex: 0, currentTaskQuestIndex: 0, currentReferralQuestIndex: 0 };
@@ -347,9 +363,7 @@ class App {
 
     t(key, params = {}) {
         let text = translations[this.lang]?.[key] || translations.en[key] || key;
-        for (const [k, v] of Object.entries(params)) {
-            text = text.replace(`{${k}}`, v);
-        }
+        for (const [k, v] of Object.entries(params)) text = text.replace(`{${k}}`, v);
         return text;
     }
 
@@ -365,31 +379,12 @@ class App {
         return num.toFixed(2);
     }
 
-    getActiveMiner() {
-        if (!this.activeMiner) return null;
-        return this.activeMiner;
-    }
+    getActiveMiner() { return this.activeMiner; }
+    getSpeedPerHour() { return this.getActiveMiner()?.speed_per_hour || 0; }
 
-    getSpeedPerHour() {
-        const miner = this.getActiveMiner();
-        return miner?.speed_per_hour || 0;
-    }
-
-    updateLevelFromPower() {
-        const power = this.powerBalance;
-        let newLevel = 1;
-        if (power >= 1000000) newLevel = 10;
-        else if (power >= 500000) newLevel = 9;
-        else if (power >= 250000) newLevel = 8;
-        else if (power >= 100000) newLevel = 7;
-        else if (power >= 50000) newLevel = 6;
-        else if (power >= 20000) newLevel = 5;
-        else if (power >= 10000) newLevel = 4;
-        else if (power >= 5000) newLevel = 3;
-        else if (power >= 1000) newLevel = 2;
-        this.userLevel = newLevel;
-        this.updateHeaderBalances();
-        this.updateHeaderMiner();
+    applyThemeForMiner(miner) {
+        document.body.classList.remove('theme-bronze', 'theme-silver', 'theme-gold', 'theme-diamond', 'theme-master', 'theme-hunters');
+        if (miner && miner.id) document.body.classList.add(`theme-${miner.id}`);
     }
 
     updateHeaderBalances() {
@@ -406,7 +401,10 @@ class App {
         if (minerName) minerName.innerText = activeMiner ? activeMiner.name : this.t('no_miner');
         if (minerBadge && activeMiner) {
             minerBadge.innerHTML = `<img src="${activeMiner.logo}" style="width:100%;height:100%;object-fit:contain;border-radius:50%;">`;
+        } else if (minerBadge) {
+            minerBadge.innerHTML = '⛏️';
         }
+        this.applyThemeForMiner(activeMiner);
     }
 
     checkCooldown(endpoint) {
@@ -422,8 +420,7 @@ class App {
         const now = Date.now();
         const cooldownMs = 5000;
         if (this._promoCooldown && (now - this._promoCooldown) < cooldownMs) {
-            const remaining = Math.ceil((cooldownMs - (now - this._promoCooldown)) / 1000);
-            return { allowed: false, remaining };
+            return { allowed: false, remaining: Math.ceil((cooldownMs - (now - this._promoCooldown)) / 1000) };
         }
         return { allowed: true, remaining: 0 };
     }
@@ -435,16 +432,8 @@ class App {
         try {
             const headers = { 'Content-Type': 'application/json' };
             if (this.jwtToken) headers['Authorization'] = `Bearer ${this.jwtToken}`;
-            const payload = {
-                ...data,
-                userId: this.tgUser?.id,
-                username: this.tgUser?.username || '',
-                firstName: this.tgUser?.first_name || 'User',
-                photoUrl: this.tgUser?.photo_url || this.config.DEFAULT_USER_AVATAR
-            };
-            const response = await fetch(`${this.serverUrl}${endpoint}`, {
-                method: 'POST', headers: headers, body: JSON.stringify(payload)
-            });
+            const payload = { ...data, userId: this.tgUser?.id, username: this.tgUser?.username || '', firstName: this.tgUser?.first_name || 'User', photoUrl: this.tgUser?.photo_url || this.config.DEFAULT_USER_AVATAR };
+            const response = await fetch(`${this.serverUrl}${endpoint}`, { method: 'POST', headers, body: JSON.stringify(payload) });
             const result = await response.json();
             if (result.error === 'Invalid token' || result.error === 'Token expired' || result.error === 'No token provided') {
                 const refreshed = await this.refreshToken();
@@ -471,9 +460,10 @@ class App {
             const config = await this.getFromServer('/api/config');
             this.config = config;
             this.miningSessionHours = config.MINING_SESSION_HOURS || 12;
-            this.communityCoinReward = config.COMMUNITY_COIN_REWARD || 1;
+            this.communityCoinReward = config.COMMUNITY_COIN_REWARD || 50;
             this.adRewardPower = config.AD_REWARD_POWER || 50;
             this.adRewardCoin = config.AD_REWARD_COIN || 20;
+            this.adDailyLimit = config.AD_DAILY_LIMIT || 5;
             this.miners = config.MINERS || [];
             return config;
         } catch (error) { return this.config; }
@@ -518,12 +508,7 @@ class App {
                     return true;
                 }
             }
-            const result = await this.fetchFromServer('/api/auth', {
-                initData, userId: this.tgUser?.id,
-                username: this.tgUser?.username || '',
-                firstName: this.tgUser?.first_name || 'User',
-                photoUrl: this.tgUser?.photo_url || this.config.DEFAULT_USER_AVATAR
-            });
+            const result = await this.fetchFromServer('/api/auth', { initData, userId: this.tgUser?.id, username: this.tgUser?.username || '', firstName: this.tgUser?.first_name || 'User', photoUrl: this.tgUser?.photo_url || this.config.DEFAULT_USER_AVATAR });
             if (result.token) {
                 this.jwtToken = result.token;
                 localStorage.setItem('hunter_jwt', result.token);
@@ -562,7 +547,6 @@ class App {
                 if (result.error === 'Account banned') { this.showBanModal(); return; }
                 return;
             }
-
             const user = result.user;
             this.powerBalance = user.power_balance || 0;
             this.coinBalance = user.coin_balance || 0;
@@ -581,6 +565,9 @@ class App {
             this.adWatchCount = user.ad_watch_count || 0;
             this.adLastWatch = user.ad_last_watch || 0;
             this.adexiumAdLastWatch = user.adexium_ad_last_watch || 0;
+            this.ad1DailyCount = user.ad1_daily_count || 0;
+            this.ad2DailyCount = user.ad2_daily_count || 0;
+            this.adDailyDate = user.ad_daily_date || '';
             this.isAuthenticated = true;
             this.ownedMiners = user.owned_miners || [];
 
@@ -614,7 +601,6 @@ class App {
 
             this.updateHeaderBalances();
             this.updateHeaderMiner();
-            this.updateLevelFromPower();
 
             document.getElementById('app-loader').style.display = 'none';
             document.getElementById('app').style.display = 'block';
@@ -638,11 +624,7 @@ class App {
     async startMining() {
         const serverTime = await this.getServerTime();
         const result = await this.fetchFromServer('/api/start-mining', { serverTime });
-        if (result.error) {
-            this.showNotification('Error', result.error, 'error');
-            this.vibrate('error');
-            return;
-        }
+        if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return; }
         if (result.user) {
             this.miningActive = result.user.mining_active || false;
             this.miningStartTime = result.user.mining_start_time || null;
@@ -672,24 +654,19 @@ class App {
     }
 
     async claimMiningRewards() {
-        if (this.pendingCoinReward <= 0) {
-            this.showNotification('Error', 'No rewards', 'error');
-            this.vibrate('error');
-            return;
-        }
+        if (this.pendingCoinReward <= 0) { this.showNotification('Error', 'No rewards', 'error'); this.vibrate('error'); return; }
+        try {
+            const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
+            if (AdController) await AdController.show();
+        } catch (e) { this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning'); this.vibrate('warning'); return; }
         const result = await this.fetchFromServer('/api/claim-mining', {});
-        if (result.error) {
-            this.showNotification('Error', result.error, 'error');
-            this.vibrate('error');
-            return;
-        }
+        if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return; }
         if (result.user) {
             this.coinBalance = result.user.coin_balance || 0;
             this.pendingCoinReward = result.user.pending_coin_reward || 0;
             this.miningActive = result.user.mining_active || false;
             this.miningStartTime = result.user.mining_start_time || null;
             this.miningEndTime = result.user.mining_end_time || null;
-            this.updateLevelFromPower();
             this.updateHeaderBalances();
             this.renderMining();
             this.showNotification('Reward Claimed', `+${this.formatCoin(result.claimed)} COIN`, 'success');
@@ -706,10 +683,7 @@ class App {
             if (this.miningEndTime && currentTime >= this.miningEndTime) await this.stopMining();
         }, 60000);
         this.uiUpdateInterval = setInterval(() => {
-            if (this.miningActive) {
-                this.updateMiningTimerDisplay();
-                this.updateMiningProgressDisplay();
-            }
+            if (this.miningActive) { this.updateMiningTimerDisplay(); this.updateMiningProgressDisplay(); }
         }, 1000);
     }
 
@@ -722,7 +696,7 @@ class App {
         const minutes = Math.floor((remaining % 3600) / 60);
         const seconds = Math.floor(remaining % 60);
         const timerEl = document.querySelector('.mining-timer');
-        if (timerEl) timerEl.innerHTML = `<i class="fas fa-hourglass-half"></i> ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        if (timerEl) timerEl.innerHTML = `${this.t('time_left')} ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
 
     updateMiningProgressDisplay() {
@@ -740,11 +714,7 @@ class App {
     async buyMiner(minerId) {
         try {
             const result = await this.fetchFromServer('/api/buy-miner', { minerId });
-            if (result.error) {
-                this.showNotification('Error', result.error, 'error');
-                this.vibrate('error');
-                return false;
-            }
+            if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return false; }
             if (result.user) {
                 this.powerBalance = result.user.power_balance || 0;
                 this.coinBalance = result.user.coin_balance || 0;
@@ -764,10 +734,7 @@ class App {
     async activateMiner(minerId) {
         try {
             const result = await this.fetchFromServer('/api/activate-miner', { minerId });
-            if (result.error) {
-                this.showNotification('Error', result.error, 'error');
-                return false;
-            }
+            if (result.error) { this.showNotification('Error', result.error, 'error'); return false; }
             if (result.user) {
                 this.activeMiner = result.miner;
                 this.updateHeaderMiner();
@@ -782,22 +749,13 @@ class App {
     async applyPromoCode(code) {
         if (!this.tgUser) return false;
         const promoCheck = this.canUsePromo();
-        if (!promoCheck.allowed) {
-            this.showNotification('Cooldown', this.t('promo_code_cooldown', { s: promoCheck.remaining }), 'warning');
-            this.vibrate('warning');
-            return false;
-        }
+        if (!promoCheck.allowed) { this.showNotification('Cooldown', this.t('promo_code_cooldown', { s: promoCheck.remaining }), 'warning'); this.vibrate('warning'); return false; }
         try {
             const result = await this.fetchFromServer('/api/claim-promo-code', { code });
-            if (result.error) {
-                this.showNotification('Error', result.error, 'error');
-                this.vibrate('error');
-                return false;
-            }
+            if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return false; }
             if (result.user) {
                 this.powerBalance = result.user.power_balance || 0;
                 this.coinBalance = result.user.coin_balance || 0;
-                this.updateLevelFromPower();
                 this.updateHeaderBalances();
                 this.setPromoCooldown();
             }
@@ -810,11 +768,7 @@ class App {
     async claimDailyBonus() {
         try {
             const result = await this.fetchFromServer('/api/claim-daily-bonus', {});
-            if (result.error) {
-                this.showNotification('Error', result.error, 'error');
-                this.vibrate('error');
-                return false;
-            }
+            if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return false; }
             if (result.user) {
                 this.coinBalance = result.user.coin_balance || 0;
                 this.dailyBonusClaimed = true;
@@ -829,12 +783,12 @@ class App {
 
     async claimReferralEarnings(type) {
         try {
+            const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
+            if (AdController) await AdController.show();
+        } catch (e) { this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning'); this.vibrate('warning'); return false; }
+        try {
             const result = await this.fetchFromServer('/api/claim-referral-earnings', { type });
-            if (result.error) {
-                this.showNotification('Error', result.error, 'error');
-                this.vibrate('error');
-                return false;
-            }
+            if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return false; }
             if (result.user) {
                 if (type === 'power') {
                     this.powerBalance = result.user.power_balance || 0;
@@ -843,7 +797,6 @@ class App {
                     this.coinBalance = result.user.coin_balance || 0;
                     this.referralCoinEarnings = result.user.referral_coin_earnings || 0;
                 }
-                this.updateLevelFromPower();
                 this.updateHeaderBalances();
                 this.showNotification('Reward Claimed', `+${this.formatCoin(result.claimed)} ${type === 'power' ? 'Power' : 'COIN'}`, 'success');
                 this.vibrate('success');
@@ -929,7 +882,6 @@ class App {
                 this.powerBalance = result.user.power_balance || 0;
                 this.coinBalance = result.user.coin_balance || 0;
                 this.totalTasksCompleted = result.user.total_tasks_completed || 0;
-                this.updateLevelFromPower();
                 this.updateHeaderBalances();
             }
             return true;
@@ -949,6 +901,11 @@ class App {
             const v = c === 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
+    }
+
+    generateMemo(prefix, userId) {
+        const random10 = Math.random().toString(36).substring(2, 12).padEnd(10, '0').toUpperCase();
+        return `${prefix}_${userId}_${random10}`;
     }
 
     showNotification(title, message, type) {
@@ -985,7 +942,18 @@ class App {
             if (window.Telegram?.WebApp) window.Telegram.WebApp.close();
             else window.close();
         });
-            }
+    }
+
+    formatTimeAgo(timestamp) {
+        const diff = Date.now() - timestamp;
+        const mins = Math.floor(diff / 60000);
+        if (mins < 1) return this.t('just_now');
+        if (mins < 60) return this.t('time_ago', { time: `${mins}m` });
+        const hours = Math.floor(mins / 60);
+        if (hours < 24) return this.t('time_ago', { time: `${hours}h` });
+        const days = Math.floor(hours / 24);
+        return this.t('time_ago', { time: `${days}d` });
+        }
         renderMiners() {
         const el = document.getElementById('miners-page');
         if (!el) return;
@@ -995,10 +963,6 @@ class App {
         const activeMinerId = this.activeMiner?.id || null;
 
         el.innerHTML = `
-            <div class="section-header blue-header">
-                <h3><i class="fas fa-hard-hat"></i> ${this.t('miners_title')}</h3>
-            </div>
-            <p style="text-align:center;color:#888;font-size:0.75rem;margin-bottom:16px;">${this.t('miners_subtitle')}</p>
             <div class="miners-list">
                 ${miners.map(miner => {
                     const isOwned = ownedMiners.includes(miner.id);
@@ -1014,6 +978,11 @@ class App {
 
                     return `
                         <div class="miner-card miner-${miner.id}">
+                            <div class="miner-bg-icons">
+                                <span>${miner.bg_icon}</span>
+                                <span>${miner.bg_icon}</span>
+                                <span>${miner.bg_icon}</span>
+                            </div>
                             <div class="miner-card-header">
                                 <div class="miner-icon"><img src="${miner.logo}" alt="${miner.name}"></div>
                                 <div class="miner-card-title">${miner.name}</div>
@@ -1077,7 +1046,7 @@ class App {
                     <div class="mining-progress-bar"><div class="mining-progress-fill" style="width: ${progressPercent}%"></div></div>
                     <div class="mining-progress-text"><span>${this.t('mining_active')}</span><span class="percent">${Math.floor(progressPercent)}%</span></div>
                 </div>
-                <div class="mining-timer"><i class="fas fa-hourglass-half"></i> 00:00:00</div>
+                <div class="mining-timer">${this.t('time_left')} 00:00:00</div>
             `;
         } else if (this.pendingCoinReward > 0) {
             statusHtml = `<div class="mining-status active"><span class="amount">${this.formatCoin(this.pendingCoinReward)}</span><span class="label">${this.t('ready_to_claim')}</span></div>`;
@@ -1088,11 +1057,11 @@ class App {
         }
 
         const minerClass = activeMiner ? `miner-${activeMiner.id}` : 'miner-bronze';
-        const minerColor = activeMiner?.color || '#4A90D9';
+        const bgIcon = activeMiner?.bg_icon || '⛏️';
 
         el.innerHTML = `
-            <div class="mining-card ${minerClass}">
-                <div class="miner-name-display" style="color: ${minerColor}">${activeMiner ? activeMiner.name : this.t('no_miner')}</div>
+            <div class="mining-card ${minerClass}" data-bg-icon="${bgIcon}">
+                <div class="miner-name-display">${activeMiner ? activeMiner.name : this.t('no_miner')}</div>
                 ${statusHtml}
                 <div class="speed-card">
                     <div class="speed-item"><div class="speed-label">${this.t('speed')}</div><div class="speed-value">${speedPerHour} ${this.t('coin')}${this.t('per_hour')}</div></div>
@@ -1132,20 +1101,30 @@ class App {
             const hasMiner = ownedMiners.includes(currentMinerQuest.miner_id);
             const minerName = currentMinerQuest.miner_id.charAt(0).toUpperCase() + currentMinerQuest.miner_id.slice(1);
             minerQuestsContainer.innerHTML = `
-                <div class="quest-card blue-quest">
+                <div class="quest-card blue-quest" data-icon="⛏️">
                     <div class="quest-header">
-                        <div class="quest-icon blue-icon"><i class="fas fa-hard-hat"></i></div>
+                        <div class="quest-icon blue-icon"><i class="fas fa-hammer"></i></div>
                         <div class="quest-info">
-                            <h4>BUY ${minerName.toUpperCase()} MINER</h4>
-                            <div class="quest-reward"><i class="fas fa-bolt"></i> ${this.formatNumber(currentMinerQuest.reward)} ${this.t('power')}</div>
+                            <h4>${this.t('quest_buy_miner')} - ${minerName.toUpperCase()}</h4>
+                            <div class="quest-rewards-row">
+                                <span class="quest-reward-badge"><i class="fas fa-bolt"></i> ${this.formatNumber(currentMinerQuest.reward)}</span>
+                            </div>
                         </div>
-                        ${hasMiner ? `<button id="claim-miner-quest" class="quest-claim-btn blue-btn">${this.t('claim_quest')}</button>` : `<button class="quest-claim-btn locked" disabled><i class="fas fa-lock"></i></button>`}
+                        ${hasMiner ? `<button id="claim-miner-quest" class="quest-claim-btn">${this.t('claim_quest')}</button>` : `<button class="quest-claim-btn locked" disabled><i class="fas fa-lock"></i></button>`}
                     </div>
                 </div>
             `;
             document.getElementById('claim-miner-quest')?.addEventListener('click', async () => {
+                const btn = document.getElementById('claim-miner-quest');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+                try {
+                    const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
+                    if (AdController) await AdController.show();
+                } catch (e) {}
                 const success = await this.claimQuest('miner');
                 if (success) this.renderMining();
+                else { btn.disabled = false; btn.innerHTML = this.t('claim_quest'); }
             });
         } else if (minerQuestsContainer) minerQuestsContainer.innerHTML = '';
 
@@ -1157,22 +1136,32 @@ class App {
             const taskQuestComplete = this.totalTasksCompleted >= currentTaskQuest.target_tasks;
             const taskProgress = Math.min(100, (this.totalTasksCompleted / currentTaskQuest.target_tasks) * 100);
             taskQuestsContainer.innerHTML = `
-                <div class="quest-card blue-quest">
+                <div class="quest-card blue-quest" data-icon="📋">
                     <div class="quest-header">
                         <div class="quest-icon blue-icon"><i class="fas fa-clipboard-list"></i></div>
                         <div class="quest-info">
-                            <h4>COMPLETE ${currentTaskQuest.target_tasks} TASKS</h4>
-                            <div class="quest-reward"><i class="fas fa-bolt"></i> ${this.formatNumber(currentTaskQuest.reward)} ${this.t('power')}</div>
+                            <h4>${this.t('quest_complete_tasks')} - ${currentTaskQuest.target_tasks}</h4>
+                            <div class="quest-rewards-row">
+                                <span class="quest-reward-badge"><i class="fas fa-bolt"></i> ${this.formatNumber(currentTaskQuest.reward)}</span>
+                            </div>
                             <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: ${taskProgress}%"></div></div>
                             <div style="font-size:0.55rem;color:#888;margin-top:2px;">${Math.floor(taskProgress)}%</div>
                         </div>
-                        ${taskQuestComplete ? `<button id="claim-task-quest" class="quest-claim-btn blue-btn">${this.t('claim_quest')}</button>` : `<button class="quest-claim-btn locked" disabled><i class="fas fa-lock"></i></button>`}
+                        ${taskQuestComplete ? `<button id="claim-task-quest" class="quest-claim-btn">${this.t('claim_quest')}</button>` : `<button class="quest-claim-btn locked" disabled><i class="fas fa-lock"></i></button>`}
                     </div>
                 </div>
             `;
             document.getElementById('claim-task-quest')?.addEventListener('click', async () => {
+                const btn = document.getElementById('claim-task-quest');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+                try {
+                    const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
+                    if (AdController) await AdController.show();
+                } catch (e) {}
                 const success = await this.claimQuest('task');
                 if (success) this.renderMining();
+                else { btn.disabled = false; btn.innerHTML = this.t('claim_quest'); }
             });
         } else if (taskQuestsContainer) taskQuestsContainer.innerHTML = '';
 
@@ -1184,22 +1173,32 @@ class App {
             const referralQuestComplete = this.totalReferrals >= currentReferralQuest.target_referrals;
             const referralProgress = Math.min(100, (this.totalReferrals / currentReferralQuest.target_referrals) * 100);
             referralQuestsContainer.innerHTML = `
-                <div class="quest-card blue-quest">
+                <div class="quest-card blue-quest" data-icon="👫">
                     <div class="quest-header">
                         <div class="quest-icon blue-icon"><i class="fas fa-users"></i></div>
                         <div class="quest-info">
-                            <h4>INVITE ${currentReferralQuest.target_referrals} HUNTERS</h4>
-                            <div class="quest-reward"><i class="fas fa-bolt"></i> ${this.formatNumber(currentReferralQuest.reward)} ${this.t('power')}</div>
+                            <h4>${this.t('quest_invite')} - ${currentReferralQuest.target_referrals}</h4>
+                            <div class="quest-rewards-row">
+                                <span class="quest-reward-badge"><i class="fas fa-bolt"></i> ${this.formatNumber(currentReferralQuest.reward)}</span>
+                            </div>
                             <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: ${referralProgress}%"></div></div>
                             <div style="font-size:0.55rem;color:#888;margin-top:2px;">${Math.floor(referralProgress)}%</div>
                         </div>
-                        ${referralQuestComplete ? `<button id="claim-referral-quest" class="quest-claim-btn blue-btn">${this.t('claim_quest')}</button>` : `<button class="quest-claim-btn locked" disabled><i class="fas fa-lock"></i></button>`}
+                        ${referralQuestComplete ? `<button id="claim-referral-quest" class="quest-claim-btn">${this.t('claim_quest')}</button>` : `<button class="quest-claim-btn locked" disabled><i class="fas fa-lock"></i></button>`}
                     </div>
                 </div>
             `;
             document.getElementById('claim-referral-quest')?.addEventListener('click', async () => {
+                const btn = document.getElementById('claim-referral-quest');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+                try {
+                    const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
+                    if (AdController) await AdController.show();
+                } catch (e) {}
                 const success = await this.claimQuest('referral');
                 if (success) this.renderMining();
+                else { btn.disabled = false; btn.innerHTML = this.t('claim_quest'); }
             });
         } else if (referralQuestsContainer) referralQuestsContainer.innerHTML = '';
     }
@@ -1207,14 +1206,13 @@ class App {
     async claimQuest(questType) {
         try {
             const result = await this.fetchFromServer('/api/claim-quest', { questType });
-            if (result.error) { this.showNotification('Error', result.error, 'error'); return false; }
+            if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return false; }
             if (result.user) {
                 this.powerBalance = result.user.power_balance || 0;
                 this.quests = result.user.quests || this.quests;
                 if (questType === 'miner') this.quests.currentMinerQuestIndex = result.questIndex || 0;
                 else if (questType === 'task') this.quests.currentTaskQuestIndex = result.questIndex || 0;
                 else if (questType === 'referral') this.quests.currentReferralQuestIndex = result.questIndex || 0;
-                this.updateLevelFromPower();
                 this.updateHeaderBalances();
                 this.showNotification('Reward Claimed', `+${result.reward} Power`, 'success');
                 this.vibrate('success');
@@ -1228,9 +1226,11 @@ class App {
         const el = document.getElementById('earn-page');
         if (!el) return;
 
-        const now = Date.now();
-        const ad1Cooldown = this.adLastWatch ? Math.max(0, (5 * 60 * 1000) - (now - this.adLastWatch)) : 0;
-        const ad2Cooldown = this.adexiumAdLastWatch ? Math.max(0, (5 * 60 * 1000) - (now - this.adexiumAdLastWatch)) : 0;
+        const today = new Date().toISOString().split('T')[0];
+        const ad1Count = this.adDailyDate === today ? this.ad1DailyCount : 0;
+        const ad2Count = this.adDailyDate === today ? this.ad2DailyCount : 0;
+        const ad1ReachedLimit = ad1Count >= this.adDailyLimit;
+        const ad2ReachedLimit = ad2Count >= this.adDailyLimit;
 
         el.innerHTML = `
             <div class="daily-bonus-card">
@@ -1256,7 +1256,7 @@ class App {
             </div>
 
             <div class="promo-card blue-card">
-                <div class="promo-title"><i class="fas fa-gift"></i> ${this.t('promo_code')}</div>
+                <div class="promo-title"><i class="fas fa-ticket-alt"></i> ${this.t('promo_code')}</div>
                 <div class="promo-input-group">
                     <input type="text" id="promo-input" class="form-input blue-input" placeholder="${this.t('enter_code')}" autocomplete="off">
                     <button id="promo-submit" class="promo-submit-btn" disabled>${this.t('claim')}</button>
@@ -1268,34 +1268,36 @@ class App {
                 <h3><i class="fas fa-play-circle"></i> ${this.t('watch_earn')}</h3>
             </div>
 
-            <div class="ad-card blue-card">
+            <div class="ad-card blue-card" data-icon="📺">
                 <div class="ad-header">
-                    <div class="ad-icon"><i class="fas fa-ad"></i></div>
+                    <div class="ad-icon"><i class="fas fa-tv"></i></div>
                     <div class="ad-info">
                         <h4>${this.t('watch_ad_1')}</h4>
                         <div class="ad-rewards">
                             <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower} ${this.t('power')}</span>
                             <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${this.adRewardCoin} ${this.t('coin')}</span>
+                            <span class="ad-counter-badge">${ad1Count}/${this.adDailyLimit}</span>
                         </div>
                     </div>
-                    <button id="watch-ad-1-btn" class="ad-btn" ${ad1Cooldown > 0 ? 'disabled' : ''}>
-                        ${ad1Cooldown > 0 ? Math.ceil(ad1Cooldown / 1000) + 's' : this.t('watch')}
+                    <button id="watch-ad-1-btn" class="ad-btn" ${ad1ReachedLimit ? 'disabled' : ''}>
+                        ${ad1ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}
                     </button>
                 </div>
             </div>
 
-            <div class="ad-card blue-card">
+            <div class="ad-card blue-card" data-icon="📺">
                 <div class="ad-header">
-                    <div class="ad-icon"><i class="fas fa-video"></i></div>
+                    <div class="ad-icon"><i class="fas fa-tv"></i></div>
                     <div class="ad-info">
                         <h4>${this.t('watch_ad_2')}</h4>
                         <div class="ad-rewards">
                             <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower} ${this.t('power')}</span>
                             <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${this.adRewardCoin} ${this.t('coin')}</span>
+                            <span class="ad-counter-badge">${ad2Count}/${this.adDailyLimit}</span>
                         </div>
                     </div>
-                    <button id="watch-ad-2-btn" class="ad-btn" ${ad2Cooldown > 0 ? 'disabled' : ''}>
-                        ${ad2Cooldown > 0 ? Math.ceil(ad2Cooldown / 1000) + 's' : this.t('watch')}
+                    <button id="watch-ad-2-btn" class="ad-btn" ${ad2ReachedLimit ? 'disabled' : ''}>
+                        ${ad2ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}
                     </button>
                 </div>
             </div>
@@ -1365,8 +1367,8 @@ class App {
                 if (!result.error && result.user) {
                     this.powerBalance = result.user.power_balance || 0;
                     this.coinBalance = result.user.coin_balance || 0;
-                    this.adLastWatch = result.user.ad_last_watch || 0;
-                    this.updateLevelFromPower();
+                    this.ad1DailyCount = result.user.ad1_daily_count || 0;
+                    this.adDailyDate = result.user.ad_daily_date || '';
                     this.updateHeaderBalances();
                     this.showNotification('Reward', `+${result.powerReward} Power +${result.coinReward} COIN`, 'success');
                     this.vibrate('success');
@@ -1378,8 +1380,6 @@ class App {
                 this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
                 this.vibrate('warning');
             }
-            btn.disabled = false;
-            btn.innerHTML = this.t('watch');
             this.renderEarn();
         });
 
@@ -1389,20 +1389,22 @@ class App {
             btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
             const requestTime = Date.now();
             try {
-                if (typeof AdexiumWidget !== 'undefined') {
-                    const adexiumWidget = new AdexiumWidget({
-                        wid: this.config.ADEXIUM_WIDGET_ID || '008babf2-7e7e-4ad2-a7ca-3079cfb774ca',
-                        adFormat: 'interstitial'
-                    });
-                    await adexiumWidget.show();
+                if (window.adexiumWidget) {
+                    await window.adexiumWidget.show();
+                } else if (typeof AdexiumWidget !== 'undefined') {
+                    const widget = new AdexiumWidget({ wid: this.config.ADEXIUM_WIDGET_ID || '5e0639e1-2a8b-49a1-bee9-41c9dda9b6ea', adFormat: 'interstitial' });
+                    widget.autoMode();
+                    await widget.show();
+                } else {
+                    throw new Error('AdexiumWidget not loaded');
                 }
                 await new Promise(r => setTimeout(r, 15000));
                 const result = await this.fetchFromServer('/api/watch-ad-2', { requestTime });
                 if (!result.error && result.user) {
                     this.powerBalance = result.user.power_balance || 0;
                     this.coinBalance = result.user.coin_balance || 0;
-                    this.adexiumAdLastWatch = result.user.adexium_ad_last_watch || 0;
-                    this.updateLevelFromPower();
+                    this.ad2DailyCount = result.user.ad2_daily_count || 0;
+                    this.adDailyDate = result.user.ad_daily_date || '';
                     this.updateHeaderBalances();
                     this.showNotification('Reward', `+${result.powerReward} Power +${result.coinReward} COIN`, 'success');
                     this.vibrate('success');
@@ -1411,11 +1413,10 @@ class App {
                     this.vibrate('error');
                 }
             } catch (e) {
+                console.error('Adexium error:', e);
                 this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
                 this.vibrate('warning');
             }
-            btn.disabled = false;
-            btn.innerHTML = this.t('watch');
             this.renderEarn();
         });
 
@@ -1499,7 +1500,7 @@ class App {
                 return;
             }
             container.innerHTML = availableTasks.map(task => {
-                const coinReward = this.communityCoinReward || 1;
+                const coinReward = this.communityCoinReward || 50;
                 return `
                     <div class="task-card blue-card">
                         <div class="task-header">
@@ -1507,7 +1508,7 @@ class App {
                             <div class="task-info">
                                 <h4>${task.name}</h4>
                                 <div class="task-reward">
-                                    <span class="reward-badge"><i class="fas fa-bolt"></i> ${task.reward}</span>
+                                    <span class="reward-badge"><i class="fas fa-bolt"></i> ${task.reward || 50}</span>
                                     <span class="reward-badge"><img src="${this.config.COIN_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${coinReward}</span>
                                 </div>
                                 <div style="font-size:0.55rem;color:#888;margin-top:2px;">${task.total_completed || 0}/${task.total}</div>
@@ -1566,12 +1567,11 @@ class App {
                                     newBtn.classList.add('done');
                                     newBtn.classList.remove('claim-btn');
                                     this.userCompletedTasks.add(taskId);
-                                    const reward = isCommunity ? `+${task.reward} Power +${this.communityCoinReward} COIN` : `+${task.reward} Power`;
+                                    const reward = isCommunity ? `+${task.reward || 50} Power +${this.communityCoinReward} COIN` : `+${task.reward} Power`;
                                     this.showNotification('Reward Claimed', reward, 'success');
                                     this.vibrate('success');
                                     this.isTaskRunning = false;
                                     this.disableAllTaskButtons(false);
-                                    this.renderMining();
                                     setTimeout(() => isCommunity ? this.loadCommunityTasks() : this.loadMainTasks(), 1000);
                                     return;
                                 }
@@ -1605,13 +1605,12 @@ class App {
         const totalCostDisplay = document.getElementById('community-total-cost-display');
 
         let selectedTotal = 100;
-        let selectedReward = 10;
         let selectedVerification = 'no';
 
         const updateTotalCost = () => {
-            const pricePer100 = this.config.PRICE_PER_100 || 0.001;
-            const cost = (selectedTotal * selectedReward / 1000) * pricePer100;
-            if (totalCostDisplay) totalCostDisplay.textContent = cost.toFixed(4) + ' GRAM';
+            const pricePer100 = this.config.PRICE_PER_100 || 0.10;
+            const cost = (selectedTotal * 50 / 1000) * pricePer100;
+            if (totalCostDisplay) totalCostDisplay.textContent = cost.toFixed(2) + ' GRAM';
         };
 
         document.querySelectorAll('#add-community-task-modal .total-option').forEach(btn => {
@@ -1635,25 +1634,6 @@ class App {
             updateTotalCost();
         });
 
-        document.querySelectorAll('#add-community-task-modal .reward-option').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('#add-community-task-modal .reward-option').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                selectedReward = parseInt(btn.dataset.value);
-                if (selectedReward >= 25) {
-                    verificationGroup.style.display = 'block';
-                    if (linkInput.value.trim().startsWith('https://t.me/')) verificationNote.style.display = 'inline';
-                } else {
-                    verificationGroup.style.display = 'none';
-                    selectedVerification = 'no';
-                    document.querySelectorAll('#add-community-task-modal .verif-option').forEach(b => b.classList.remove('active'));
-                    document.querySelector('#add-community-task-modal .verif-option[data-value="no"]')?.classList.add('active');
-                    verificationNote.style.display = 'none';
-                }
-                updateTotalCost();
-            });
-        });
-
         document.querySelectorAll('#add-community-task-modal .verif-option').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('#add-community-task-modal .verif-option').forEach(b => b.classList.remove('active'));
@@ -1667,21 +1647,15 @@ class App {
         linkInput.addEventListener('input', () => {
             const val = linkInput.value.trim();
             if (val.startsWith('https://') && !val.startsWith('https://t.me/')) {
-                verificationGroup.style.display = 'none';
                 selectedVerification = 'no';
                 document.querySelectorAll('#add-community-task-modal .verif-option').forEach(b => b.classList.remove('active'));
                 document.querySelector('#add-community-task-modal .verif-option[data-value="no"]')?.classList.add('active');
                 verificationNote.style.display = 'none';
-            } else if (val.startsWith('https://t.me/') && selectedReward >= 25) {
-                verificationGroup.style.display = 'block';
-                if (selectedVerification === 'yes') verificationNote.style.display = 'inline';
             }
         });
 
         document.querySelector('#add-community-task-modal .total-option[data-value="100"]')?.classList.add('active');
-        document.querySelector('#add-community-task-modal .reward-option[data-value="10"]')?.classList.add('active');
         document.querySelector('#add-community-task-modal .verif-option[data-value="no"]')?.classList.add('active');
-        verificationGroup.style.display = 'none';
         updateTotalCost();
 
         const payBtn = document.getElementById('pay-add-community-task-btn');
@@ -1691,35 +1665,19 @@ class App {
             newPayBtn.addEventListener('click', async () => {
                 const name = nameInput.value.trim();
                 const link = linkInput.value.trim();
-                if (name.length < 5 || name.length > 20) {
-                    this.showNotification('Error', this.t('name_required'), 'error');
-                    this.vibrate('error');
-                    return;
-                }
-                if (!link.startsWith('https://')) {
-                    this.showNotification('Error', this.t('link_required'), 'error');
-                    this.vibrate('error');
-                    return;
-                }
-                if (selectedTotal < 100 || selectedTotal > 5000) {
-                    this.showNotification('Error', this.t('invalid_total'), 'error');
-                    this.vibrate('error');
-                    return;
-                }
+                if (name.length < 5 || name.length > 20) { this.showNotification('Error', this.t('name_required'), 'error'); this.vibrate('error'); return; }
+                if (!link.startsWith('https://')) { this.showNotification('Error', this.t('link_required'), 'error'); this.vibrate('error'); return; }
+                if (selectedTotal < 100 || selectedTotal > 5000) { this.showNotification('Error', this.t('invalid_total'), 'error'); this.vibrate('error'); return; }
                 if (selectedVerification === 'yes' && link.startsWith('https://t.me/')) {
                     const channelMatch = link.match(/t\.me\/([^\/\?]+)/);
                     if (channelMatch) {
                         try {
                             const checkResult = await this.fetchFromServer('/api/check-bot-admin', { channel: channelMatch[1] });
-                            if (!checkResult.isAdmin) {
-                                this.showNotification('Error', 'Bot not admin', 'error');
-                                this.vibrate('error');
-                                return;
-                            }
+                            if (!checkResult.isAdmin) { this.showNotification('Error', 'Bot not admin', 'error'); this.vibrate('error'); return; }
                         } catch (error) { return; }
                     }
                 }
-                this.pendingTaskData = { name, link, total: selectedTotal, reward: selectedReward, verification: selectedVerification === 'yes' };
+                this.pendingTaskData = { name, link, total: selectedTotal, reward: 50, verification: selectedVerification === 'yes' };
                 modal.style.display = 'none';
                 this.showPaymentModal();
             });
@@ -1734,8 +1692,8 @@ class App {
         const walletDisplay = wallet.length > 12 ? wallet.substring(0, 10) + '.....' + wallet.substring(wallet.length - 10) : wallet;
         const storageKey = 'pending_memo_community';
         let memo = localStorage.getItem(storageKey);
-        if (!memo) { memo = `task_${userId}_${this.generateUUID()}`; localStorage.setItem(storageKey, memo); }
-        const amount = (this.pendingTaskData.total * this.pendingTaskData.reward / 1000) * (this.config.PRICE_PER_100 || 0.001);
+        if (!memo) { memo = this.generateMemo('task', userId); localStorage.setItem(storageKey, memo); }
+        const amount = (this.pendingTaskData.total * 50 / 1000) * (this.config.PRICE_PER_100 || 0.10);
 
         const walletDisplayEl = document.getElementById('payment-wallet-display');
         const memoDisplay = document.getElementById('payment-memo-display');
@@ -1743,9 +1701,9 @@ class App {
         const tonkeeperLink = document.getElementById('tonkeeper-link');
         const statusEl = document.getElementById('payment-status');
 
-        if (walletDisplayEl) { walletDisplayEl.textContent = walletDisplay; walletDisplayEl.onclick = () => this.copyToClipboard(wallet); }
-        if (memoDisplay) { memoDisplay.textContent = memo; memoDisplay.onclick = () => this.copyToClipboard(memo); }
-        if (amountDisplay) { amountDisplay.textContent = amount.toFixed(4) + ' GRAM'; amountDisplay.onclick = () => this.copyToClipboard(amount.toFixed(4) + ' GRAM'); }
+        if (walletDisplayEl) { walletDisplayEl.querySelector('span').textContent = walletDisplay; walletDisplayEl.onclick = () => this.copyToClipboard(wallet); }
+        if (memoDisplay) { memoDisplay.querySelector('span').textContent = memo; memoDisplay.onclick = () => this.copyToClipboard(memo); }
+        if (amountDisplay) { amountDisplay.querySelector('span').textContent = amount.toFixed(2) + ' GRAM'; amountDisplay.onclick = () => this.copyToClipboard(amount.toFixed(2) + ' GRAM'); }
         if (tonkeeperLink) tonkeeperLink.href = `https://app.tonkeeper.com/transfer/${wallet}?text=${encodeURIComponent(memo)}`;
         if (statusEl) statusEl.textContent = '';
         modal.style.display = 'flex';
@@ -1922,40 +1880,42 @@ class App {
         const tasksPercent = this.config.REFERRAL_TASKS_PERCENTAGE || 20;
 
         el.innerHTML = `
-            <div class="team-card blue-card">
-                <div class="team-title"><i class="fas fa-users"></i> ${this.t('invite_earn')}</div>
-                <div class="steps-row">
-                    <div class="step-item"><div class="step-number">1</div><div class="step-text">${this.t('step1')}</div></div>
-                    <div class="step-item"><div class="step-number">2</div><div class="step-text">${this.t('step2')}</div></div>
-                    <div class="step-item"><div class="step-number">3</div><div class="step-text">${this.t('step3')}</div></div>
-                </div>
+            <div class="page-title">
+                <h2>${this.t('invite_earn')}</h2>
+                <p>${this.t('invite_earn_sub')}</p>
+            </div>
 
+            <div class="team-card blue-card">
                 <div class="referral-rows">
                     <div class="referral-row">
-                        <div class="referral-row-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="referral-row-icon"><i class="fas fa-infinity"></i></div>
                         <div class="referral-row-info">
-                            <div class="referral-row-label">Per Referral</div>
-                            <div class="referral-row-value">${referralBonus} Power</div>
-                        </div>
-                    </div>
-                    <div class="referral-row">
-                        <div class="referral-row-icon"><i class="fas fa-hard-hat"></i></div>
-                        <div class="referral-row-info">
-                            <div class="referral-row-label">Mining Earnings</div>
-                            <div class="referral-row-value">${miningPercent}%</div>
+                            <div class="referral-row-label">${this.t('earn_referral_each_label')}</div>
+                            <div class="referral-row-value">${this.t('earn_referral_each')}</div>
                         </div>
                     </div>
                     <div class="referral-row">
                         <div class="referral-row-icon"><i class="fas fa-tasks"></i></div>
                         <div class="referral-row-info">
-                            <div class="referral-row-label">Tasks & Ads</div>
-                            <div class="referral-row-value">${tasksPercent}%</div>
+                            <div class="referral-row-label">${this.t('earn_referral_tasks_label')}</div>
+                            <div class="referral-row-value">${this.t('earn_referral_tasks')}</div>
+                        </div>
+                    </div>
+                    <div class="referral-row">
+                        <div class="referral-row-icon"><i class="fas fa-hard-hat"></i></div>
+                        <div class="referral-row-info">
+                            <div class="referral-row-label">${this.t('earn_referral_mining_label')}</div>
+                            <div class="referral-row-value">${this.t('earn_referral_mining')}</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="team-link-box">${link}</div>
-                <button id="copyLink" class="copy-btn"><i class="fas fa-copy"></i> ${this.t('copy_link')}</button>
+                <div class="referral-link-section">
+                    <div class="referral-link-title"><i class="fas fa-link"></i> ${this.t('referral_link_title')}</div>
+                    <div class="team-link-box">${link}</div>
+                    <button id="copyLink" class="copy-btn"><i class="fas fa-copy"></i> ${this.t('copy_link')}</button>
+                    <div class="copy-btn-desc">${this.t('share_earn_desc')}</div>
+                </div>
             </div>
 
             <div class="referral-earnings-title"><i class="fas fa-gift"></i> ${this.t('referral_earnings')}</div>
@@ -2011,55 +1971,129 @@ class App {
         if (!el) return;
 
         const exchangeRate = this.config.COIN_TO_GRAM_RATE || 1000000;
-        const minWithdrawCoin = this.config.MINIMUM_WITHDRAW || 200;
-        const maxWithdrawCoin = this.config.MAXIMUM_WITHDRAW || 3000;
-        const withdrawalFees = this.config.WITHDRAWAL_FEES || 80;
-
-        const historyHtml = this.withdrawals && this.withdrawals.length ? this.withdrawals.slice(0, 5).map(w => {
-            const statusClass = w.status || 'pending';
-            const statusText = statusClass === 'completed' ? this.t('completed') : this.t('pending');
-            return `
-                <div class="history-item blue-item">
-                    <div class="history-amount">
-                        <img src="${this.config.COIN_ICON}" style="width:16px;height:16px;border-radius:50%;">
-                        <span style="font-weight:600;">${Math.floor(w.amount)}</span>
-                        <span style="color:#888;font-size:0.65rem;">- ${(w.gram_amount || 0).toFixed(4)} GRAM</span>
-                    </div>
-                    <div class="history-status ${statusClass}">${statusText}</div>
-                </div>
-            `;
-        }).join('') : '<div class="no-data">' + this.t('no_withdrawals') + '</div>';
+        const minWithdrawCoin = this.config.MINIMUM_WITHDRAW || 10000;
 
         el.innerHTML = `
             <div class="withdraw-card blue-card">
-                <h4 style="text-align:center; color:#60A5FA; margin-bottom:14px;"><i class="fas fa-arrow-up"></i> ${this.t('convert_withdraw')}</h4>
+                <h4 style="text-align:center; color:var(--primary-light); margin-bottom:14px; font-weight:800;">
+                    <i class="fas fa-arrow-up"></i> ${this.t('withdraw_gram')}
+                </h4>
                 <div class="form-group">
-                    <label class="form-label">${this.t('enter_amount')}</label>
+                    <label class="form-label"><i class="fas fa-coins"></i> ${this.t('withdrawal_amount')}</label>
                     <div class="input-wrapper">
-                        <input type="number" id="withdraw-amount" class="form-input blue-input" placeholder="${this.t('enter_amount')}" step="1">
+                        <input type="number" id="withdraw-amount" class="form-input blue-input" placeholder="${this.t('withdrawal_amount')}" step="1">
                         <button id="max-amount" class="action-btn">MAX</button>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">${this.t('wallet_address')}</label>
-                    <input type="text" id="withdraw-wallet" class="form-input blue-input" placeholder="${this.t('enter_wallet_address')}" autocomplete="off">
+                    <label class="form-label"><i class="fas fa-wallet"></i> ${this.t('gram_wallet')}</label>
+                    <input type="text" id="withdraw-wallet" class="form-input blue-input" placeholder="${this.t('gram_wallet')}" autocomplete="off">
                 </div>
                 <div class="withdraw-preview" id="withdraw-preview"><span>≈ 0.000000 GRAM</span></div>
                 <button id="withdraw-btn" class="withdraw-confirm-btn" disabled>${this.t('confirm_withdrawal')}</button>
                 <div class="withdraw-note">
-                    ${this.t('min_withdraw_note', { amount: minWithdrawCoin })}
+                    <i class="fas fa-info-circle"></i> ${this.t('min_withdraw_note', { amount: minWithdrawCoin })}
                 </div>
             </div>
 
-            <div class="section-header blue-header" style="margin-top:16px;"><h3><i class="fas fa-history"></i> ${this.t('withdrawal_history')}</h3></div>
-            <div class="history-list">${historyHtml}</div>
+            <div class="section-header blue-header"><h3><i class="fas fa-history"></i> ${this.t('withdrawal_history')}</h3></div>
+            
+            <div class="history-tabs">
+                <button class="history-tab active" data-tab="my">${this.t('my_payments')}</button>
+                <button class="history-tab" data-tab="live">${this.t('live_payments')}</button>
+            </div>
+            
+            <div id="history-content"></div>
         `;
 
+        this._historyTab = 'my';
+        this.renderHistoryContent();
+        this.attachWithdrawHandlers();
+
+        document.querySelectorAll('.history-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.history-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                this._historyTab = tab.dataset.tab;
+                if (this._historyTab === 'live') this.loadLivePayments();
+                else this.renderHistoryContent();
+            });
+        });
+    }
+
+    renderHistoryContent() {
+        const container = document.getElementById('history-content');
+        if (!container) return;
+
+        if (this._historyTab === 'my') {
+            const historyHtml = this.withdrawals && this.withdrawals.length ? this.withdrawals.slice(0, 10).map(w => {
+                const statusClass = w.status || 'pending';
+                const statusText = statusClass === 'completed' ? this.t('completed') : (statusClass === 'processing' ? this.t('processing') : this.t('pending'));
+                const explorerLink = w.tx_hash ? `<a href="https://tonscan.org/tx/${w.tx_hash}" target="_blank" class="history-explorer-link"><i class="fas fa-arrow-up-right-from-square"></i> ${this.t('view_on_explorer')}</a>` : '';
+                return `
+                    <div class="history-item-wrapper">
+                        <div class="history-item">
+                            <div class="history-amount">
+                                <img src="${this.config.COIN_ICON}" style="width:16px;height:16px;border-radius:50%;">
+                                <span style="font-weight:600;">${Math.floor(w.amount)}</span>
+                                <span style="color:#888;font-size:0.65rem;">- ${(w.gram_amount || 0).toFixed(4)} GRAM</span>
+                            </div>
+                            <div class="history-status ${statusClass}">${statusText}</div>
+                        </div>
+                        <div class="history-meta">
+                            <span class="history-time">${this.formatTimeAgo(w.timestamp)}</span>
+                            ${explorerLink}
+                        </div>
+                    </div>
+                `;
+            }).join('') : '<div class="no-data">' + this.t('no_withdrawals') + '</div>';
+            container.innerHTML = `<div class="history-list">${historyHtml}</div>`;
+        } else {
+            if (this.liveWithdrawals && this.liveWithdrawals.length) {
+                container.innerHTML = `<div class="history-list">${this.liveWithdrawals.map(w => {
+                    const statusClass = w.status || 'pending';
+                    const statusText = statusClass === 'completed' ? this.t('completed') : (statusClass === 'processing' ? this.t('processing') : this.t('pending'));
+                    const explorerLink = w.tx_hash ? `<a href="https://tonscan.org/tx/${w.tx_hash}" target="_blank" class="history-explorer-link"><i class="fas fa-arrow-up-right-from-square"></i> ${this.t('view_explorer')}</a>` : '';
+                    return `
+                        <div class="history-item-wrapper">
+                            <div class="history-item">
+                                <div class="history-amount">
+                                    <img src="${this.config.COIN_ICON}" style="width:16px;height:16px;border-radius:50%;">
+                                    <span style="font-weight:600;">${Math.floor(w.amount)}</span>
+                                    <span style="color:#888;font-size:0.6rem;">${w.wallet_masked || '***'}</span>
+                                </div>
+                                <div class="history-status ${statusClass}">${statusText}</div>
+                            </div>
+                            <div class="history-meta">
+                                <span class="history-time">${this.formatTimeAgo(w.timestamp)}</span>
+                                ${explorerLink}
+                            </div>
+                        </div>
+                    `;
+                }).join('')}</div>`;
+            } else {
+                container.innerHTML = '<div class="no-data"><i class="fas fa-spinner fa-pulse"></i><p>Loading live payments...</p></div>';
+            }
+        }
+    }
+
+    async loadLivePayments() {
+        try {
+            const result = await this.fetchFromServer('/api/get-live-withdrawals', {});
+            if (result.withdrawals) {
+                this.liveWithdrawals = result.withdrawals;
+                this.renderHistoryContent();
+            }
+        } catch (error) {}
+    }
+
+    attachWithdrawHandlers() {
         const amountInput = document.getElementById('withdraw-amount');
         const walletInput = document.getElementById('withdraw-wallet');
         const withdrawBtn = document.getElementById('withdraw-btn');
         const maxBtn = document.getElementById('max-amount');
         const preview = document.getElementById('withdraw-preview');
+        const exchangeRate = this.config.COIN_TO_GRAM_RATE || 1000000;
 
         const updatePreview = () => {
             const amount = parseFloat(amountInput?.value);
@@ -2072,98 +2106,38 @@ class App {
 
         maxBtn?.addEventListener('click', () => {
             if (amountInput) {
-                amountInput.value = Math.min(Math.floor(this.coinBalance), maxWithdrawCoin);
+                amountInput.value = Math.floor(this.coinBalance);
                 updatePreview();
             }
         });
         amountInput?.addEventListener('input', updatePreview);
         walletInput?.addEventListener('input', updatePreview);
 
-        withdrawBtn?.addEventListener('click', () => {
+        withdrawBtn?.addEventListener('click', async () => {
             const amount = parseFloat(amountInput.value);
             const wallet = walletInput.value.trim();
 
-            if (!amount || amount <= 0) {
-                this.showNotification('Error', this.t('invalid_amount'), 'error');
-                this.vibrate('error');
-                return;
-            }
-            if (!wallet || !wallet.startsWith('UQ') || wallet.length < 20) {
-                this.showNotification('Error', this.t('wallet_invalid'), 'error');
-                this.vibrate('error');
-                return;
-            }
-            if (amount > this.coinBalance) {
-                this.showNotification('Error', this.t('insufficient_balance'), 'error');
-                this.vibrate('error');
-                return;
-            }
-            if (amount < minWithdrawCoin) {
-                this.showNotification('Error', this.t('min_withdraw_note', { amount: minWithdrawCoin }), 'error');
-                this.vibrate('error');
-                return;
-            }
-            if (amount > maxWithdrawCoin) {
-                this.showNotification('Error', `Maximum ${maxWithdrawCoin} COIN`, 'error');
-                this.vibrate('error');
-                return;
-            }
-            if ((amount - withdrawalFees) <= 0) {
-                this.showNotification('Error', `Amount must exceed ${withdrawalFees} COIN fee`, 'error');
-                this.vibrate('error');
-                return;
-            }
+            if (!amount || amount <= 0) { this.showNotification('Error', this.t('invalid_amount'), 'error'); this.vibrate('error'); return; }
+            if (!wallet || !wallet.startsWith('UQ') || wallet.length < 20) { this.showNotification('Error', this.t('wallet_invalid'), 'error'); this.vibrate('error'); return; }
+            if (amount > this.coinBalance) { this.showNotification('Error', this.t('insufficient_balance'), 'error'); this.vibrate('error'); return; }
+            if (amount < (this.config.MINIMUM_WITHDRAW || 10000)) { this.showNotification('Error', this.t('min_withdraw_note', { amount: this.config.MINIMUM_WITHDRAW || 10000 }), 'error'); this.vibrate('error'); return; }
 
-            this.showWithdrawalModal(amount, wallet, withdrawalFees, amount - withdrawalFees);
-        });
-    }
+            try {
+                const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
+                if (AdController) await AdController.show();
+            } catch (e) {}
 
-    showWithdrawalModal(amount, wallet, fees, received) {
-        const first = wallet.substring(0, 5);
-        const last = wallet.substring(wallet.length - 5);
-        const modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.style.display = 'flex';
-        modal.innerHTML = `
-            <div class="modal-content blue-modal">
-                <div class="modal-header blue-header">
-                    <h3><i class="fas fa-arrow-up"></i> ${this.t('withdrawal_details')}</h3>
-                    <button class="modal-close">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="detail-row"><span class="label">${this.t('wallet_label')}</span><span class="value">${first}...${last}</span></div>
-                    <div class="detail-row"><span class="label">${this.t('amount_label')}</span><span class="value">${amount} COIN</span></div>
-                    <div class="detail-row"><span class="label">${this.t('fees_label')}</span><span class="value fees">${fees} COIN</span></div>
-                    <div class="detail-row"><span class="label">${this.t('received_amount')}</span><span class="value received">${received} COIN</span></div>
-                    <div class="confirm-note">${this.t('are_you_sure')}</div>
-                    <button id="confirm-withdrawal-btn" class="confirm-btn blue-btn">${this.t('confirm')}</button>
-                    <a href="https://t.me/mo_scam" target="_blank" class="support-link">${this.t('contact_support')}</a>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        document.getElementById('confirm-withdrawal-btn')?.addEventListener('click', async () => {
-            modal.remove();
             await this.processWithdrawal(amount, wallet);
         });
-        modal.querySelector('.modal-close')?.addEventListener('click', () => modal.remove());
-        modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     }
 
     async processWithdrawal(coinAmount, wallet) {
-        if (this._withdrawLock) {
-            this.showNotification('Please wait', 'Try again after 10 seconds', 'warning');
-            this.vibrate('warning');
-            return;
-        }
+        if (this._withdrawLock) { this.showNotification('Please wait', 'Try again in 10s', 'warning'); this.vibrate('warning'); return; }
         this._withdrawLock = true;
         setTimeout(() => { this._withdrawLock = false; }, 10000);
 
         const withdrawBtn = document.getElementById('withdraw-btn');
-        if (withdrawBtn) {
-            withdrawBtn.disabled = true;
-            withdrawBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Sending...';
-        }
+        if (withdrawBtn) { withdrawBtn.disabled = true; withdrawBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Sending...'; }
 
         try {
             const result = await this.fetchFromServer('/api/withdraw-gram', { coinAmount, walletAddress: wallet });
@@ -2180,12 +2154,8 @@ class App {
             }
             this.showNotification('Withdrawn!', `${result.gramAmount.toFixed(5)} GRAM sent`, 'success');
             this.vibrate('success');
+            this.withdrawals.unshift(result.withdrawal);
             if (this._walletLoaded) this.renderWallet();
-            if (withdrawBtn) {
-                withdrawBtn.disabled = true;
-                withdrawBtn.innerHTML = '✓ Sent';
-                setTimeout(() => { withdrawBtn.disabled = false; withdrawBtn.innerHTML = this.t('confirm_withdrawal'); }, 5000);
-            }
             this._withdrawLock = false;
         } catch (error) {
             if (withdrawBtn) { withdrawBtn.disabled = false; withdrawBtn.innerHTML = this.t('confirm_withdrawal'); }
@@ -2213,11 +2183,15 @@ class App {
 
     setupEventListeners() {
         const langBtn = document.getElementById('lang-btn');
-        const langMenu = document.getElementById('lang-menu');
+        const langModal = document.getElementById('lang-modal');
         
         langBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
-            langMenu.style.display = langMenu.style.display === 'none' ? 'flex' : 'none';
+            langModal.style.display = 'flex';
+        });
+
+        langModal?.addEventListener('click', (e) => {
+            if (e.target === langModal) langModal.style.display = 'none';
         });
 
         document.querySelectorAll('.lang-option').forEach(opt => {
@@ -2226,7 +2200,7 @@ class App {
                 const settings = JSON.parse(localStorage.getItem('hunter_settings') || '{}');
                 settings.lang = this.lang;
                 localStorage.setItem('hunter_settings', JSON.stringify(settings));
-                langMenu.style.display = 'none';
+                langModal.style.display = 'none';
                 this.updateLangFlag();
                 this.renderMining();
                 if (this._earnLoaded) this.renderEarn();
@@ -2238,12 +2212,6 @@ class App {
                 this.showNotification(this.t('language_changed'), '', 'success');
                 this.vibrate('success');
             });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!langBtn?.contains(e.target) && !langMenu?.contains(e.target)) {
-                if (langMenu) langMenu.style.display = 'none';
-            }
         });
     }
 
@@ -2269,7 +2237,6 @@ class App {
             this.setupEventListeners();
             this.renderMining();
             this.setupNavigation();
-            this.updateLevelFromPower();
             this.updateHeaderMiner();
 
             if (this.miningActive && this.miningEndTime) {
@@ -2277,8 +2244,6 @@ class App {
                 if (currentTime >= this.miningEndTime) await this.stopMining();
                 else this.startMiningLoop();
             }
-
-            this.isInitialized = true;
         } catch (err) {
             if (err.message === 'Cooldown' || err.message === 'Banned' || err.message === 'Auth required' || err.message === 'Not registered') return;
             console.error('Init error:', err);
