@@ -34,40 +34,12 @@ const taskCompletionLocks = new Map();
 const promoCodeLocks = new Map();
 
 function logFailure(endpoint, userId, ip, error, extra = {}) {
-    console.error(`❌ [${endpoint}] FAILED`, JSON.stringify({
-        userId: userId || 'unknown',
-        ip: ip || 'unknown',
-        error: error?.message || error,
-        ...extra
-    }));
+    console.error(`❌ [${endpoint}] FAILED`, JSON.stringify({ userId: userId || 'unknown', ip: ip || 'unknown', error: error?.message || error, ...extra }));
 }
 
-const generalLimiter = rateLimit({
-    windowMs: 60 * 1000,
-    max: 120,
-    keyGenerator: (req) => req._userId?.toString() || req.ip,
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { error: 'Too many requests. Please slow down.' }
-});
-
-const strictLimiter = rateLimit({
-    windowMs: 60 * 1000,
-    max: 30,
-    keyGenerator: (req) => req._userId?.toString() || req.ip,
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { error: 'Too many requests. Please wait.' }
-});
-
-const veryStrictLimiter = rateLimit({
-    windowMs: 60 * 1000,
-    max: 5,
-    keyGenerator: (req) => req._userId?.toString() || req.ip,
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { error: 'Too many requests. Please wait longer.' }
-});
+const generalLimiter = rateLimit({ windowMs: 60 * 1000, max: 120, keyGenerator: (req) => req._userId?.toString() || req.ip, standardHeaders: true, legacyHeaders: false, message: { error: 'Too many requests.' } });
+const strictLimiter = rateLimit({ windowMs: 60 * 1000, max: 30, keyGenerator: (req) => req._userId?.toString() || req.ip, standardHeaders: true, legacyHeaders: false, message: { error: 'Please wait.' } });
+const veryStrictLimiter = rateLimit({ windowMs: 60 * 1000, max: 5, keyGenerator: (req) => req._userId?.toString() || req.ip, standardHeaders: true, legacyHeaders: false, message: { error: 'Please wait longer.' } });
 
 app.use('/api/', generalLimiter);
 
@@ -85,37 +57,25 @@ function checkTaskCompletionCooldown(userId) {
     const key = `task_completion_${userId}`;
     const lastCompletion = taskCompletionLocks.get(key) || 0;
     const cooldownMs = 10000;
-    if (now - lastCompletion < cooldownMs) {
-        const remaining = Math.ceil((cooldownMs - (now - lastCompletion)) / 1000);
-        return { allowed: false, remaining };
-    }
+    if (now - lastCompletion < cooldownMs) return { allowed: false, remaining: Math.ceil((cooldownMs - (now - lastCompletion)) / 1000) };
     return { allowed: true, remaining: 0 };
 }
 
-function setTaskCompletionCooldown(userId) {
-    const key = `task_completion_${userId}`;
-    taskCompletionLocks.set(key, Date.now());
-}
+function setTaskCompletionCooldown(userId) { taskCompletionLocks.set(`task_completion_${userId}`, Date.now()); }
 
 function checkPromoCooldown(userId) {
     const now = Date.now();
     const key = `promo_${userId}`;
     const lastPromo = promoCodeLocks.get(key) || 0;
     const cooldownMs = 5000;
-    if (now - lastPromo < cooldownMs) {
-        const remaining = Math.ceil((cooldownMs - (now - lastPromo)) / 1000);
-        return { allowed: false, remaining };
-    }
+    if (now - lastPromo < cooldownMs) return { allowed: false, remaining: Math.ceil((cooldownMs - (now - lastPromo)) / 1000) };
     return { allowed: true, remaining: 0 };
 }
 
-function setPromoCooldown(userId) {
-    const key = `promo_${userId}`;
-    promoCodeLocks.set(key, Date.now());
-}
+function setPromoCooldown(userId) { promoCodeLocks.set(`promo_${userId}`, Date.now()); }
 
 function validateTelegramInitData(initData, botToken) {
-    if (!initData || !botToken) return { valid: false, error: 'Missing initData or bot token' };
+    if (!initData || !botToken) return { valid: false, error: 'Missing data' };
     try {
         const urlParams = new URLSearchParams(initData);
         const hash = urlParams.get('hash');
@@ -126,24 +86,16 @@ function validateTelegramInitData(initData, botToken) {
         const calculatedHash = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
         if (calculatedHash !== hash) return { valid: false, error: 'Invalid hash' };
         const authDate = parseInt(urlParams.get('auth_date'));
-        const now = Math.floor(Date.now() / 1000);
-        if (now - authDate > 86400) return { valid: false, error: 'initData expired' };
+        if (Math.floor(Date.now() / 1000) - authDate > 86400) return { valid: false, error: 'Expired' };
         const userJson = urlParams.get('user');
         let user = null;
-        if (userJson) {
-            try { user = JSON.parse(userJson); } catch (e) { return { valid: false, error: 'Invalid user data' }; }
-        }
+        if (userJson) { try { user = JSON.parse(userJson); } catch (e) { return { valid: false, error: 'Invalid user' }; } }
         return { valid: true, user, authDate, queryId: urlParams.get('query_id') };
     } catch (error) { return { valid: false, error: error.message }; }
 }
 
-function generateJWT(userId, telegramId) {
-    return jwt.sign({ userId, telegramId, iat: Math.floor(Date.now() / 1000) }, JWT_SECRET, { expiresIn: '7d' });
-}
-
-function verifyJWT(token) {
-    try { return jwt.verify(token, JWT_SECRET); } catch (error) { return null; }
-}
+function generateJWT(userId, telegramId) { return jwt.sign({ userId, telegramId, iat: Math.floor(Date.now() / 1000) }, JWT_SECRET, { expiresIn: '7d' }); }
+function verifyJWT(token) { try { return jwt.verify(token, JWT_SECRET); } catch (error) { return null; } }
 
 function authenticate(req, res, next) {
     let token = req.cookies?.token;
@@ -182,9 +134,9 @@ async function checkUserInChannel(userId, channelUsername) {
 const APP_CONFIG = {
     APP_NAME: "GRAM HUNTERS 🎯",
     BOT_USERNAME: "GramHunterBot",
-    MINIMUM_WITHDRAW: 200,
-    MAXIMUM_WITHDRAW: 3000,
-    WITHDRAWAL_FEES: 80,
+    MINIMUM_WITHDRAW: 10000,
+    MAXIMUM_WITHDRAW: 1000000,
+    WITHDRAWAL_FEES: 0,
     REFERRAL_PERCENTAGE: 10,
     MINING_SESSION_HOURS: 12,
     MINING_CLAIM_HOURS: 1,
@@ -196,7 +148,7 @@ const APP_CONFIG = {
     PAYMENT_WALLET: "UQAWoiLpbPqpHjpteK2CHGizA6OimyPXZBWsx9Nw1IMPyUrm",
     INTERSTITIAL_AD_BLOCK_ID: "int-41677",
     REWARD_AD_BLOCK_ID: "41675",
-    ADEXIUM_WIDGET_ID: "008babf2-7e7e-4ad2-a7ca-3079cfb774ca",
+    ADEXIUM_WIDGET_ID: "5e0639e1-2a8b-49a1-bee9-41c9dda9b6ea",
     BOT_LINK: "https://t.me/GramHunterBot?start=",
     TASK_REWARD: 100,
     TASK_IMAGE: "https://slho.shop/i/8067",
@@ -215,10 +167,11 @@ const APP_CONFIG = {
     REFERRAL_BONUS_POWER: 100,
     AD_REWARD_POWER: 50,
     AD_REWARD_COIN: 20,
-    AD_COOLDOWN_MINUTES: 5,
-    AD_DAILY_LIMIT: 10,
+    AD_DAILY_LIMIT: 5,
     MIN_CLAIM_COIN: 1,
-    COMMUNITY_COIN_REWARD: 1,
+    PRICE_PER_100: 0.10,
+    COMMUNITY_COIN_REWARD: 50,
+    COMMUNITY_POWER_REWARD: 50,
     DAILY_BONUS_COIN: 100,
     LARGE_TRANSACTION_THRESHOLD: 50000,
     TASK_COMPLETION_COOLDOWN_SECONDS: 10,
@@ -234,12 +187,11 @@ const APP_CONFIG = {
     PAYMENTS_CHANNEL: "https://t.me/Hunters_Proof",
     QUESTS: {
         miner_quests: [
+            { miner_id: "bronze", reward: 100 },
             { miner_id: "silver", reward: 500 },
             { miner_id: "gold", reward: 1000 },
-            { miner_id: "platinum", reward: 2000 },
             { miner_id: "diamond", reward: 3000 },
             { miner_id: "master", reward: 5000 },
-            { miner_id: "grandmaster", reward: 7000 },
             { miner_id: "hunters", reward: 10000 }
         ],
         task_quests: [
@@ -261,14 +213,72 @@ const APP_CONFIG = {
         ]
     },
     MINERS: [
-        { id: "bronze", name: "Bronze Miner", speed_per_hour: 10, duration_days: 0, price_power: 0, color: "#CD7F32", gradient: "linear-gradient(135deg, #CD7F32, #B87333, #A0652A)", logo: "https://cdn-icons-png.flaticon.com/512/7645/7645366.png" },
-        { id: "silver", name: "Silver Miner", speed_per_hour: 20, duration_days: 30, price_power: 10000, color: "#C0C0C0", gradient: "linear-gradient(135deg, #C0C0C0, #A8A8A8, #888888)", logo: "https://cdn-icons-png.flaticon.com/512/7645/7645294.png" },
-        { id: "gold", name: "Gold Miner", speed_per_hour: 25, duration_days: 30, price_power: 20000, color: "#FFD700", gradient: "linear-gradient(135deg, #FFD700, #D4A800, #B8860B)", logo: "https://cdn-icons-png.flaticon.com/512/7645/7645279.png" },
-        { id: "platinum", name: "Platinum Miner", speed_per_hour: 70, duration_days: 30, price_power: 50000, color: "#E5E4E2", gradient: "linear-gradient(135deg, #E5E4E2, #C0C0C0, #A8A8A8)", logo: "https://cdn-icons-png.flaticon.com/512/7645/7645366.png" },
-        { id: "diamond", name: "Diamond Miner", speed_per_hour: 150, duration_days: 30, price_power: 100000, color: "#00CED1", gradient: "linear-gradient(135deg, #00CED1, #00BFFF, #1E90FF)", logo: "https://cdn-icons-png.flaticon.com/512/7645/7645366.png" },
-        { id: "master", name: "Master Miner", speed_per_hour: 700, duration_days: 30, price_power: 500000, color: "#9400D3", gradient: "linear-gradient(135deg, #9400D3, #8A2BE2, #7B68EE)", logo: "https://cdn-icons-png.flaticon.com/512/7645/7645366.png" },
-        { id: "grandmaster", name: "GrandMaster Miner", speed_per_hour: 1500, duration_days: 30, price_power: 1000000, color: "#FF4500", gradient: "linear-gradient(135deg, #FF4500, #FF6347, #FF7F50)", logo: "https://cdn-icons-png.flaticon.com/512/7645/7645366.png" },
-        { id: "hunters", name: "Hunters Miner", speed_per_hour: 5000, duration_days: 30, price_power: 3000000, color: "#4A90D9", gradient: "linear-gradient(135deg, #4A90D9, #2563EB, #1D4ED8)", logo: "https://slho.shop/i/8067" }
+        {
+            id: "bronze",
+            name: "Bronze Miner",
+            speed_per_hour: 10,
+            duration_days: 0,
+            price_power: 0,
+            color: "#CD7F32",
+            gradient: "linear-gradient(135deg, #B87333, #8B4513, #6B3A1F)",
+            logo: "https://slho.shop/i/8098",
+            bg_icon: "🥉"
+        },
+        {
+            id: "silver",
+            name: "Silver Miner",
+            speed_per_hour: 20,
+            duration_days: 30,
+            price_power: 10000,
+            color: "#C0C0C0",
+            gradient: "linear-gradient(135deg, #A8A8A8, #7A7A7A, #4A4A4A)",
+            logo: "https://slho.shop/i/8097",
+            bg_icon: "🥈"
+        },
+        {
+            id: "gold",
+            name: "Gold Miner",
+            speed_per_hour: 100,
+            duration_days: 30,
+            price_power: 50000,
+            color: "#FFD700",
+            gradient: "linear-gradient(135deg, #B8860B, #8B6508, #5C4A05)",
+            logo: "https://slho.shop/i/8096",
+            bg_icon: "🥇"
+        },
+        {
+            id: "diamond",
+            name: "Diamond Miner",
+            speed_per_hour: 200,
+            duration_days: 30,
+            price_power: 100000,
+            color: "#00CED1",
+            gradient: "linear-gradient(135deg, #008B8B, #005F5F, #003D3D)",
+            logo: "https://slho.shop/i/8094",
+            bg_icon: "💎"
+        },
+        {
+            id: "master",
+            name: "Master Miner",
+            speed_per_hour: 1000,
+            duration_days: 30,
+            price_power: 500000,
+            color: "#9400D3",
+            gradient: "linear-gradient(135deg, #5B0087, #3D0059, #24003A)",
+            logo: "https://slho.shop/i/8093",
+            bg_icon: "⚡"
+        },
+        {
+            id: "hunters",
+            name: "Hunters Miner",
+            speed_per_hour: 3000,
+            duration_days: 30,
+            price_power: 1000000,
+            color: "#4A90D9",
+            gradient: "linear-gradient(135deg, #2563EB, #1D4ED8, #0F2E7A)",
+            logo: "https://slho.shop/i/8099",
+            bg_icon: "🎯"
+        }
     ]
 };
 
@@ -334,14 +344,8 @@ async function checkLargeTransaction(userId, amount, source) {
         const user = await getUser(userId);
         const adminId = process.env.ADMIN_USER_ID;
         if (adminId) {
-            await sendTelegramNotification(
-                adminId,
-                '💰 LARGE TRANSACTION!',
-                `<b>⚠️ Large Transaction Alert</b>\n\n` +
-                `<b>👤 User:</b> ${user.first_name} (${userId})\n` +
-                `<b>💎 Amount:</b> +${amount.toFixed(3)} ${source.includes('COIN') ? 'COIN' : 'Power'}\n` +
-                `<b>📌 Source:</b> ${source}`
-            );
+            await sendTelegramNotification(adminId, '💰 LARGE TRANSACTION!',
+                `<b>⚠️ Large Transaction Alert</b>\n\n<b>👤 User:</b> ${user.first_name} (${userId})\n<b>💎 Amount:</b> +${amount.toFixed(3)} ${source.includes('COIN') ? 'COIN' : 'Power'}\n<b>📌 Source:</b> ${source}`);
         }
     }
 }
@@ -393,9 +397,20 @@ async function getCompletedTasks(userId) {
 
 async function getWithdrawals(userId) {
     try {
-        const { data, error } = await supabase.from('withdrawals').select('*').eq('user_id', userId).order('timestamp', { ascending: false }).limit(10);
+        const { data, error } = await supabase.from('withdrawals').select('*').eq('user_id', userId).order('timestamp', { ascending: false }).limit(20);
         if (error) throw error;
         return data || [];
+    } catch (error) { return []; }
+}
+
+async function getLiveWithdrawals() {
+    try {
+        const { data, error } = await supabase.from('withdrawals').select('*').order('timestamp', { ascending: false }).limit(20);
+        if (error) throw error;
+        return (data || []).map(w => ({
+            ...w,
+            wallet_masked: w.wallet ? w.wallet.substring(0, 5) + '***' + w.wallet.substring(w.wallet.length - 5) : '***'
+        }));
     } catch (error) { return []; }
 }
 
@@ -448,9 +463,7 @@ async function sendTelegramNotification(userId, title, message, inlineButton = n
     try {
         const payload = { chat_id: userId, text: message, parse_mode: 'HTML', disable_web_page_preview: true };
         if (inlineButton) payload.reply_markup = { inline_keyboard: [[{ text: inlineButton.text, url: inlineButton.url }]] };
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-        });
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     } catch (error) {}
 }
 
@@ -459,9 +472,7 @@ async function sendChannelNotification(channelId, message, inlineButton = null) 
     try {
         const payload = { chat_id: channelId, text: message, parse_mode: 'HTML', disable_web_page_preview: true };
         if (inlineButton) payload.reply_markup = { inline_keyboard: [[{ text: inlineButton.text, url: inlineButton.url }]] };
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-        });
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     } catch (error) {}
 }
 
@@ -471,21 +482,8 @@ async function sendWithdrawalProof(userId, wallet, gramAmount, coinAmount) {
         if (!channelId) return;
         const channelMatch = channelId.match(/t\.me\/([^\/\?]+)/);
         if (!channelMatch) return;
-        
-        const userIdStr = userId.toString();
-        const maskedUserId = userIdStr.slice(0, -3) + '***';
-        const walletFirst = wallet.substring(0, 5);
-        const walletLast = wallet.substring(wallet.length - 5);
-        const maskedWallet = walletFirst + '****' + walletLast;
-
-        const message = `<b>🆕 New Withdrawal Requested!</b>\n\n` +
-            `<b>👤 User:</b> ${maskedUserId}\n` +
-            `<b>💰 Amount:</b> ${gramAmount.toFixed(5)} GRAM\n` +
-            `<b>🪙 COIN:</b> ${coinAmount.toFixed(0)} COIN\n` +
-            `<b>📭 Wallet:</b> ${maskedWallet}\n` +
-            `<b>⏳ Status:</b> Processing\n\n` +
-            `<b>🎯 HUNT & EARN FREE GRAM</b>`;
-
+        const maskedWallet = wallet.substring(0, 5) + '****' + wallet.substring(wallet.length - 5);
+        const message = `<b>🆕 New Withdrawal Requested!</b>\n\n<b>👤 User:</b> ${userId.toString().slice(0, -3)}***\n<b>💰 Amount:</b> ${gramAmount.toFixed(5)} GRAM\n<b>🪙 COIN:</b> ${coinAmount.toFixed(0)} COIN\n<b>📭 Wallet:</b> ${maskedWallet}\n<b>⏳ Status:</b> Processing\n\n<b>🎯 HUNT & EARN FREE GRAM</b>`;
         await sendChannelNotification('@' + channelMatch[1], message, { text: '🎯 Launch Now', url: 'https://t.me/GramHunterBot?start=start' });
     } catch (error) {}
 }
@@ -496,7 +494,6 @@ class OxaPay {
         this.sandbox = config.sandbox || false;
         this.baseUrl = this.sandbox ? 'https://sandbox.oxapay.com/v1' : 'https://api.oxapay.com/v1';
     }
-
     async request(endpoint, data) {
         const url = `${this.baseUrl}${endpoint}`;
         const headers = { 'Content-Type': 'application/json', 'payout_api_key': this.apiKey };
@@ -504,26 +501,18 @@ class OxaPay {
             const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(data) });
             const responseText = await response.text();
             let result;
-            try { result = JSON.parse(responseText); } catch (e) { throw new Error('Invalid response from OxaPay'); }
+            try { result = JSON.parse(responseText); } catch (e) { throw new Error('Invalid response'); }
             if (!response.ok || result.status !== 200) throw new Error(result.message || result.error || `HTTP ${response.status}`);
             return result;
         } catch (error) { throw error; }
     }
-
     async createPayout(data) {
         try {
             const payload = { address: data.toAddress, amount: data.amount, currency: data.currency || 'GRAM', network: data.network || 'TON', description: data.description || 'Withdrawal' };
             const result = await this.request('/payout', payload);
-            return {
-                ...result,
-                trackId: result?.data?.track_id || result?.track_id || 'N/A',
-                status: result?.data?.status || result?.status || 'processing',
-                txHash: result?.data?.tx_hash || result?.tx_hash || null,
-                success: true
-            };
+            return { ...result, trackId: result?.data?.track_id || result?.track_id || 'N/A', status: result?.data?.status || result?.status || 'processing', txHash: result?.data?.tx_hash || result?.tx_hash || null, success: true };
         } catch (error) { throw error; }
     }
-
     async getPayoutStatus(trackId) {
         const url = `${this.baseUrl}/payout/${trackId}`;
         const headers = { 'payout_api_key': this.apiKey, 'Content-Type': 'application/json' };
@@ -531,7 +520,7 @@ class OxaPay {
             const response = await fetch(url, { method: 'GET', headers });
             const responseText = await response.text();
             let result;
-            try { result = JSON.parse(responseText); } catch (e) { throw new Error('Invalid response from OxaPay'); }
+            try { result = JSON.parse(responseText); } catch (e) { throw new Error('Invalid response'); }
             if (!response.ok || result.status !== 200) throw new Error(result.message || result.error || `HTTP ${response.status}`);
             return result;
         } catch (error) { throw error; }
@@ -542,9 +531,7 @@ async function checkPendingWithdrawals() {
     try {
         const { data: withdrawals, error } = await supabase.from('withdrawals').select('*').in('status', ['pending', 'processing']).limit(50);
         if (error || !withdrawals || withdrawals.length === 0) return;
-
         const oxapay = new OxaPay({ apiKey: process.env.OXAPAY_API_KEY, sandbox: process.env.NODE_ENV !== 'production' });
-
         for (const withdrawal of withdrawals) {
             try {
                 if (!withdrawal.tx_id || withdrawal.tx_id === 'N/A' || withdrawal.tx_id === 'manual') continue;
@@ -553,41 +540,20 @@ async function checkPendingWithdrawals() {
                     const oxaPayStatus = statusResult.data.status;
                     if (oxaPayStatus === 'confirmed' || oxaPayStatus === 'completed') {
                         await supabase.from('withdrawals').update({ status: 'completed', tx_hash: statusResult.data.tx_hash || withdrawal.tx_hash }).eq('id', withdrawal.id);
-
                         const txHash = statusResult.data.tx_hash || withdrawal.tx_hash;
                         const explorerUrl = txHash ? `https://tonscan.org/tx/${txHash}` : '#';
-
-                        await sendTelegramNotification(
-                            withdrawal.user_id,
-                            '✅ Withdrawal Completed',
-                            `<b>✅ Your Withdrawal Confirmed!</b>\n\n💸 <code>${withdrawal.gram_amount.toFixed(5)}</code> <b>GRAM has been sent</b>\n\n<a href="${explorerUrl}">🔘 View on Explorer</a>`
-                        );
-
+                        await sendTelegramNotification(withdrawal.user_id, '✅ Withdrawal Completed', `<b>✅ Confirmed!</b>\n\n💸 <code>${withdrawal.gram_amount.toFixed(5)}</code> <b>GRAM sent</b>\n\n<a href="${explorerUrl}">🔘 View</a>`);
                         const adminId = process.env.ADMIN_USER_ID;
                         if (adminId) {
                             const user = await getUser(withdrawal.user_id);
-                            await sendTelegramNotification(
-                                adminId,
-                                '✅ Withdrawal Completed',
-                                `<b>✅ Withdrawal Completed!</b>\n\n<b>👤 User:</b> ${withdrawal.user_id} (@${user?.username || 'N/A'})\n<b>💰 Amount:</b> ${withdrawal.gram_amount.toFixed(5)} GRAM\n<b>📭 Wallet:</b> ${withdrawal.wallet}\n<b>🔗 TX:</b> <a href="${explorerUrl}">View</a>`
-                            );
+                            await sendTelegramNotification(adminId, '✅ Withdrawal Completed', `<b>✅ Completed!</b>\n\n<b>👤 User:</b> ${withdrawal.user_id} (@${user?.username || 'N/A'})\n<b>💰 Amount:</b> ${withdrawal.gram_amount.toFixed(5)} GRAM\n<b>📭 Wallet:</b> ${withdrawal.wallet}\n<b>🔗 TX:</b> <a href="${explorerUrl}">View</a>`);
                         }
-
                         await sendWithdrawalProof(withdrawal.user_id, withdrawal.wallet, withdrawal.gram_amount, withdrawal.amount);
                     } else if (oxaPayStatus === 'failed' || oxaPayStatus === 'rejected') {
                         const user = await getUser(withdrawal.user_id);
-                        if (user) {
-                            await updateUser(withdrawal.user_id, {
-                                coin_balance: (user.coin_balance || 0) + withdrawal.amount,
-                                last_withdraw_time: 0
-                            });
-                        }
+                        if (user) await updateUser(withdrawal.user_id, { coin_balance: (user.coin_balance || 0) + withdrawal.amount, last_withdraw_time: 0 });
                         await supabase.from('withdrawals').update({ status: 'failed' }).eq('id', withdrawal.id);
-                        await sendTelegramNotification(
-                            withdrawal.user_id,
-                            '❌ Withdrawal Failed',
-                            `<b>❌ Withdrawal Failed</b>\n\nYour ${withdrawal.amount} COIN has been refunded. Please contact support if the issue persists.`
-                        );
+                        await sendTelegramNotification(withdrawal.user_id, '❌ Withdrawal Failed', `<b>❌ Failed</b>\n\n${withdrawal.amount} COIN refunded.`);
                     }
                 }
             } catch (error) { logFailure('checkPendingWithdrawals', withdrawal.user_id, null, error); }
@@ -607,9 +573,8 @@ app.get('/api/current-time', (req, res) => res.json({ serverTime: getCurrentTime
 app.post('/api/check-bot-admin', authenticate, async (req, res) => {
     try {
         const { channel } = req.body;
-        if (!channel) return res.status(400).json({ error: 'Channel is required' });
-        const isAdmin = await checkBotIsAdminInChannel(channel);
-        res.json({ isAdmin });
+        if (!channel) return res.status(400).json({ error: 'Channel required' });
+        res.json({ isAdmin: await checkBotIsAdminInChannel(channel) });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
@@ -617,12 +582,11 @@ app.post('/api/check-membership', authenticate, async (req, res) => {
     try {
         const userId = req._userId;
         const { channel } = req.body;
-        if (!channel) return res.status(400).json({ error: 'Channel is required' });
+        if (!channel) return res.status(400).json({ error: 'Channel required' });
         if (!BOT_TOKEN) return res.json({ isMember: true, error: 'bot_not_configured' });
         const isAdmin = await checkBotIsAdminInChannel(channel);
         if (!isAdmin) return res.json({ isMember: true, error: 'bot_not_admin' });
-        const isMember = await checkUserInChannel(userId, channel);
-        res.json({ isMember });
+        res.json({ isMember: await checkUserInChannel(userId, channel) });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
@@ -631,16 +595,14 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
         const { initData, userId, username, firstName, photoUrl } = req.body;
         if (!initData) return res.status(400).json({ error: 'Missing initData' });
         const validation = validateTelegramInitData(initData, BOT_TOKEN);
-        if (!validation.valid) return res.status(403).json({ error: 'Invalid Telegram data' });
+        if (!validation.valid) return res.status(403).json({ error: 'Invalid data' });
         const telegramUser = validation.user;
-        if (!telegramUser || !telegramUser.id) return res.status(403).json({ error: 'No user data' });
+        if (!telegramUser || !telegramUser.id) return res.status(403).json({ error: 'No user' });
 
         let user = await getUser(telegramUser.id);
         if (!user) {
             const userData = {
-                id: telegramUser.id,
-                username: telegramUser.username || '',
-                first_name: telegramUser.first_name || 'User',
+                id: telegramUser.id, username: telegramUser.username || '', first_name: telegramUser.first_name || 'User',
                 photo_url: photoUrl || telegramUser.photo_url || APP_CONFIG.DEFAULT_USER_AVATAR,
                 created_at: getCurrentTime(),
                 power_balance: 0, coin_balance: 0, gram_balance: 0,
@@ -653,10 +615,11 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
                 mining_active: false, mining_start_time: null, mining_end_time: null, pending_coin_reward: 0,
                 total_referrals: 0, referral_power: 0,
                 ad_watch_count: 0, ad_last_watch: 0, adexium_ad_last_watch: 0,
+                ad1_daily_count: 0, ad2_daily_count: 0, ad_daily_date: '',
                 last_withdraw_time: 0, referred_by_verified: false, wallet: null,
                 task_count: 0, promo_codes_created: 0, daily_bonus_last_claim: 0
             };
-            try { user = await createUser(userData); } catch (e) { user = await getUser(telegramUser.id); if (!user) return res.status(500).json({ error: 'Failed to create user' }); }
+            try { user = await createUser(userData); } catch (e) { user = await getUser(telegramUser.id); if (!user) return res.status(500).json({ error: 'Failed' }); }
         } else {
             const updates = {};
             if (telegramUser.username && telegramUser.username !== user.username) updates.username = telegramUser.username;
@@ -664,9 +627,7 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
             if (photoUrl && photoUrl !== user.photo_url) updates.photo_url = photoUrl;
             if (Object.keys(updates).length > 0) user = await updateUser(telegramUser.id, updates);
         }
-
         if (user.state === 'ban') return res.status(403).json({ error: 'Account banned' });
-
         const token = generateJWT(user.id, user.id);
         res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
         res.json({ success: true, user, token, authenticated: true });
@@ -675,11 +636,10 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
 
 app.post('/api/refresh', authenticate, async (req, res) => {
     try {
-        const userId = req._userId;
-        const user = await getUser(userId);
+        const user = await getUser(req._userId);
         if (!user) return res.status(404).json({ error: 'User not found' });
-        if (user.state === 'ban') return res.status(403).json({ error: 'Account banned' });
-        const token = generateJWT(userId, userId);
+        if (user.state === 'ban') return res.status(403).json({ error: 'Banned' });
+        const token = generateJWT(req._userId, req._userId);
         res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
         res.json({ success: true, token });
     } catch (error) { res.status(500).json({ error: error.message }); }
@@ -704,21 +664,27 @@ app.post('/api/get-user', authenticate, async (req, res) => {
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
+app.post('/api/get-live-withdrawals', authenticate, async (req, res) => {
+    try {
+        const withdrawals = await getLiveWithdrawals();
+        res.json({ withdrawals });
+    } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
 app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
     try {
         const userId = req._userId;
         const user = await getUser(userId);
         if (!user) return res.status(404).json({ error: 'User not found' });
         if (!user.miner_id) return res.status(400).json({ error: 'Buy a miner first' });
-        if (user.mining_active) return res.status(400).json({ error: 'Mining already active' });
+        if (user.mining_active) return res.status(400).json({ error: 'Already active' });
 
         const now = getCurrentTime();
         const today = getTodayString();
         const dailyStarts = (user.last_mining_date === today) ? (user.daily_mining_starts || 0) : 0;
-        if (dailyStarts >= APP_CONFIG.DAILY_MINING_LIMIT) return res.status(400).json({ error: `Daily limit reached` });
+        if (dailyStarts >= APP_CONFIG.DAILY_MINING_LIMIT) return res.status(400).json({ error: 'Daily limit reached' });
         if (user.last_mining_end_time && (now - user.last_mining_end_time) < (APP_CONFIG.MINING_COOLDOWN_SECONDS * 1000)) {
-            const remaining = Math.ceil((APP_CONFIG.MINING_COOLDOWN_SECONDS * 1000 - (now - user.last_mining_end_time)) / 1000);
-            return res.status(400).json({ error: `Wait ${remaining}s` });
+            return res.status(400).json({ error: `Wait ${Math.ceil((APP_CONFIG.MINING_COOLDOWN_SECONDS * 1000 - (now - user.last_mining_end_time)) / 1000)}s` });
         }
 
         const miningEndTime = now + (APP_CONFIG.MINING_SESSION_HOURS * 3600000);
@@ -734,12 +700,9 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
             const referrer = await getUser(user.referred_by);
             if (referrer) {
                 const bonusPower = APP_CONFIG.REFERRAL_BONUS_POWER || 100;
-                await updateUser(user.referred_by, {
-                    total_referrals: (referrer.total_referrals || 0) + 1,
-                    power_balance: (referrer.power_balance || 0) + bonusPower
-                });
+                await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, power_balance: (referrer.power_balance || 0) + bonusPower, referral_power_earnings: (referrer.referral_power_earnings || 0) + bonusPower });
                 await updateUser(userId, { referred_by_verified: true });
-                await sendTelegramNotification(user.referred_by, '🎉 New Referral!', `You received +${bonusPower} Power for a new verified referral!`);
+                await sendTelegramNotification(user.referred_by, '🎉 New Referral!', `You received +${bonusPower} Power!`);
             }
         }
 
@@ -757,10 +720,7 @@ app.post('/api/stop-mining', authenticate, strictLimiter, async (req, res) => {
 
         const currentTime = getCurrentTime();
         const rewardAmount = calculateMiningReward(user, user.mining_start_time, user.mining_end_time || currentTime);
-        const updatedUser = await updateUser(userId, {
-            mining_active: false, mining_start_time: null, mining_end_time: null,
-            pending_coin_reward: rewardAmount, last_mining_end_time: currentTime
-        });
+        const updatedUser = await updateUser(userId, { mining_active: false, mining_start_time: null, mining_end_time: null, pending_coin_reward: rewardAmount, last_mining_end_time: currentTime });
         res.json({ success: true, user: updatedUser, reward: rewardAmount });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -775,19 +735,14 @@ app.post('/api/claim-mining', authenticate, strictLimiter, async (req, res) => {
         const rewardAmount = user.pending_coin_reward || 0;
         if (rewardAmount <= 0) return res.status(400).json({ error: 'No rewards' });
 
-        const updatedUser = await updateUser(userId, {
-            coin_balance: (user.coin_balance || 0) + rewardAmount,
-            pending_coin_reward: 0, mining_start_time: null, mining_end_time: null, mining_active: false
-        });
-
+        const updatedUser = await updateUser(userId, { coin_balance: (user.coin_balance || 0) + rewardAmount, pending_coin_reward: 0, mining_start_time: null, mining_end_time: null, mining_active: false });
         notifiedUsers.delete(userId);
-        await checkLargeTransaction(userId, rewardAmount, 'Mining Claim COIN');
+        await checkLargeTransaction(userId, rewardAmount, 'Mining COIN');
 
         if (user.referred_by) {
             const referralEarning = rewardAmount * (APP_CONFIG.REFERRAL_MINING_PERCENTAGE / 100);
             await addReferralCommission(user.referred_by, referralEarning, 'coin');
         }
-
         await updateUserLevel(userId);
         res.json({ success: true, user: updatedUser, claimed: rewardAmount });
     } catch (error) { res.status(500).json({ error: error.message }); }
@@ -805,21 +760,16 @@ app.post('/api/buy-miner', authenticate, strictLimiter, async (req, res) => {
 
         if (miner.price_power === 0) {
             const ownedMiners = user.owned_miners || [];
-            if (!ownedMiners.includes(miner.id)) {
-                await updateUser(userId, { owned_miners: [...ownedMiners, miner.id] });
-            }
+            if (!ownedMiners.includes(miner.id)) await updateUser(userId, { owned_miners: [...ownedMiners, miner.id] });
             const updatedUser = await updateUser(userId, { miner_id: miner.id, miner_expires_at: null });
 
             if (!user.referred_by_verified && user.referred_by) {
                 const referrer = await getUser(user.referred_by);
                 if (referrer) {
                     const bonusPower = APP_CONFIG.REFERRAL_BONUS_POWER || 100;
-                    await updateUser(user.referred_by, {
-                        total_referrals: (referrer.total_referrals || 0) + 1,
-                        power_balance: (referrer.power_balance || 0) + bonusPower
-                    });
+                    await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, power_balance: (referrer.power_balance || 0) + bonusPower, referral_power_earnings: (referrer.referral_power_earnings || 0) + bonusPower });
                     await updateUser(userId, { referred_by_verified: true });
-                    await sendTelegramNotification(user.referred_by, '🎉 New Referral!', `You received +${bonusPower} Power!`);
+                    await sendTelegramNotification(user.referred_by, '🎉 New Referral!', `+${bonusPower} Power!`);
                 }
             }
             return res.json({ success: true, user: updatedUser, miner });
@@ -835,12 +785,7 @@ app.post('/api/buy-miner', authenticate, strictLimiter, async (req, res) => {
         if ((user.power_balance || 0) < miner.price_power) return res.status(400).json({ error: 'Insufficient Power' });
 
         const expiresAt = miner.duration_days > 0 ? Date.now() + (miner.duration_days * 24 * 3600000) : null;
-        const updatedUser = await updateUser(userId, {
-            power_balance: (user.power_balance || 0) - miner.price_power,
-            miner_id: miner.id, miner_expires_at: expiresAt,
-            owned_miners: [...ownedMiners, minerId]
-        });
-
+        const updatedUser = await updateUser(userId, { power_balance: (user.power_balance || 0) - miner.price_power, miner_id: miner.id, miner_expires_at: expiresAt, owned_miners: [...ownedMiners, minerId] });
         await updateUserLevel(userId);
         res.json({ success: true, user: updatedUser, miner });
     } catch (error) { res.status(500).json({ error: error.message }); }
@@ -852,12 +797,10 @@ app.post('/api/activate-miner', authenticate, strictLimiter, async (req, res) =>
         const { minerId } = req.body;
         const user = await getUser(userId);
         if (!user) return res.status(404).json({ error: 'User not found' });
-
         const ownedMiners = user.owned_miners || [];
-        if (!ownedMiners.includes(minerId)) return res.status(400).json({ error: 'Miner not owned' });
+        if (!ownedMiners.includes(minerId)) return res.status(400).json({ error: 'Not owned' });
         const miner = APP_CONFIG.MINERS.find(m => m.id === minerId);
-        if (!miner) return res.status(400).json({ error: 'Invalid miner' });
-
+        if (!miner) return res.status(400).json({ error: 'Invalid' });
         const expiresAt = miner.duration_days > 0 ? Date.now() + (miner.duration_days * 24 * 3600000) : null;
         const updatedUser = await updateUser(userId, { miner_id: miner.id, miner_expires_at: expiresAt });
         res.json({ success: true, user: updatedUser, miner });
@@ -870,7 +813,6 @@ app.post('/api/claim-quest', authenticate, strictLimiter, async (req, res) => {
         const { questType } = req.body;
         const user = await getUser(userId);
         if (!user) return res.status(404).json({ error: 'User not found' });
-
         let reward = 0, newIndex = 0;
         let quests = { ...user.quests };
 
@@ -878,25 +820,25 @@ app.post('/api/claim-quest', authenticate, strictLimiter, async (req, res) => {
             const index = user.quests?.current_miner_quest_index || 0;
             const quest = APP_CONFIG.QUESTS.miner_quests[index];
             if (!quest) return res.status(400).json({ error: 'No quest' });
-            if (!(user.owned_miners || []).includes(quest.miner_id)) return res.status(400).json({ error: 'Requirement not met' });
+            if (!(user.owned_miners || []).includes(quest.miner_id)) return res.status(400).json({ error: 'Not met' });
             reward = quest.reward; newIndex = index + 1; quests.current_miner_quest_index = newIndex;
         } else if (questType === 'task') {
             const index = user.quests?.current_task_quest_index || 0;
             const quest = APP_CONFIG.QUESTS.task_quests[index];
             if (!quest) return res.status(400).json({ error: 'No quest' });
-            if (user.total_tasks_completed < quest.target_tasks) return res.status(400).json({ error: 'Requirement not met' });
+            if (user.total_tasks_completed < quest.target_tasks) return res.status(400).json({ error: 'Not met' });
             reward = quest.reward; newIndex = index + 1; quests.current_task_quest_index = newIndex;
         } else if (questType === 'referral') {
             const index = user.quests?.current_referral_quest_index || 0;
             const quest = APP_CONFIG.QUESTS.referral_quests[index];
             if (!quest) return res.status(400).json({ error: 'No quest' });
-            if (user.total_referrals < quest.target_referrals) return res.status(400).json({ error: 'Requirement not met' });
+            if (user.total_referrals < quest.target_referrals) return res.status(400).json({ error: 'Not met' });
             reward = quest.reward; newIndex = index + 1; quests.current_referral_quest_index = newIndex;
         } else return res.status(400).json({ error: 'Invalid type' });
 
         const updatedUser = await updateUser(userId, { power_balance: (user.power_balance || 0) + reward, quests });
         await updateUserLevel(userId);
-        await checkLargeTransaction(userId, reward, 'Quest Reward Power');
+        await checkLargeTransaction(userId, reward, 'Quest Power');
         res.json({ success: true, user: updatedUser, reward, questType, questIndex: newIndex });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -905,7 +847,6 @@ app.post('/api/complete-task', authenticate, strictLimiter, async (req, res) => 
     try {
         const userId = req._userId;
         const { taskId } = req.body;
-
         const cooldownCheck = checkTaskCompletionCooldown(userId);
         if (!cooldownCheck.allowed) return res.status(429).json({ error: `Wait ${cooldownCheck.remaining}s` });
 
@@ -922,36 +863,37 @@ app.post('/api/complete-task', authenticate, strictLimiter, async (req, res) => 
                 if (!isMember) return res.status(400).json({ error: 'Join channel first' });
             }
         }
-
-        if ((task.total_completed || 0) >= task.total) return res.status(400).json({ error: 'Task full' });
-
+        if ((task.total_completed || 0) >= task.total) return res.status(400).json({ error: 'Full' });
         const { data: completed } = await supabase.from('user_completed_tasks').select('task_id').eq('user_id', userId).eq('task_id', taskId).single();
-        if (completed) return res.status(400).json({ error: 'Already completed' });
+        if (completed) return res.status(400).json({ error: 'Already done' });
 
         setTaskCompletionCooldown(userId);
-
-        const newTotalCompleted = (task.total_completed || 0) + 1;
-        await supabase.from('tasks').update({ total_completed: newTotalCompleted }).eq('id', taskId);
+        await supabase.from('tasks').update({ total_completed: (task.total_completed || 0) + 1 }).eq('id', taskId);
         await supabase.from('user_completed_tasks').insert([{ user_id: userId, task_id: taskId, completed_at: getCurrentTime() }]);
 
-        const coinReward = task.category === 'community' ? (APP_CONFIG.COMMUNITY_COIN_REWARD || 1) : 0;
+        const isCommunity = task.category === 'community';
+        const coinReward = isCommunity ? (APP_CONFIG.COMMUNITY_COIN_REWARD || 50) : 0;
+        const powerReward = task.reward || APP_CONFIG.COMMUNITY_POWER_REWARD || 50;
+
         const updatedUser = await updateUser(userId, {
-            power_balance: (user.power_balance || 0) + task.reward,
+            power_balance: (user.power_balance || 0) + powerReward,
             coin_balance: (user.coin_balance || 0) + coinReward,
             total_tasks_completed: (user.total_tasks_completed || 0) + 1,
             last_task_completion_time: getCurrentTime()
         });
 
-        await checkLargeTransaction(userId, task.reward, 'Task Power');
+        await checkLargeTransaction(userId, powerReward, 'Task Power');
         if (coinReward > 0) await checkLargeTransaction(userId, coinReward, 'Task COIN');
 
         if (user.referred_by) {
-            const referralEarning = task.reward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
-            await addReferralCommission(user.referred_by, referralEarning, 'power');
+            const rp = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
+            const rc = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
+            await addReferralCommission(user.referred_by, rp, 'power');
+            if (rc > 0) await addReferralCommission(user.referred_by, rc, 'coin');
         }
 
         await updateUserLevel(userId);
-        res.json({ success: true, user: updatedUser, reward: task.reward });
+        res.json({ success: true, user: updatedUser, reward: powerReward });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
@@ -965,11 +907,11 @@ app.post('/api/watch-ad-1', authenticate, strictLimiter, async (req, res) => {
         const now = getCurrentTime();
         if (!requestTime || (now - requestTime) < 15000) return res.status(400).json({ error: 'Ad not completed' });
 
-        const cooldownMs = APP_CONFIG.AD_COOLDOWN_MINUTES * 60 * 1000;
-        if (user.ad_last_watch && (now - user.ad_last_watch) < cooldownMs) {
-            const remaining = Math.ceil((cooldownMs - (now - user.ad_last_watch)) / 1000);
-            return res.status(400).json({ error: `Cooldown: ${remaining}s` });
-        }
+        const today = getTodayString();
+        let dailyCount = user.ad1_daily_count || 0;
+        if (user.ad_daily_date !== today) { dailyCount = 0; }
+
+        if (dailyCount >= APP_CONFIG.AD_DAILY_LIMIT) return res.status(400).json({ error: 'Daily limit reached' });
 
         const powerReward = APP_CONFIG.AD_REWARD_POWER || 50;
         const coinReward = APP_CONFIG.AD_REWARD_COIN || 20;
@@ -977,21 +919,24 @@ app.post('/api/watch-ad-1', authenticate, strictLimiter, async (req, res) => {
         const updatedUser = await updateUser(userId, {
             power_balance: (user.power_balance || 0) + powerReward,
             coin_balance: (user.coin_balance || 0) + coinReward,
-            ad_watch_count: (user.ad_watch_count || 0) + 1, ad_last_watch: now
+            ad_watch_count: (user.ad_watch_count || 0) + 1,
+            ad_last_watch: now,
+            ad1_daily_count: dailyCount + 1,
+            ad_daily_date: today
         });
 
         await checkLargeTransaction(userId, powerReward, 'Ad Power');
         await checkLargeTransaction(userId, coinReward, 'Ad COIN');
 
         if (user.referred_by) {
-            const referralPower = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
-            const referralCoin = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
-            await addReferralCommission(user.referred_by, referralPower, 'power');
-            await addReferralCommission(user.referred_by, referralCoin, 'coin');
+            const rp = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
+            const rc = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
+            await addReferralCommission(user.referred_by, rp, 'power');
+            await addReferralCommission(user.referred_by, rc, 'coin');
         }
 
         await updateUserLevel(userId);
-        res.json({ success: true, user: updatedUser, powerReward, coinReward });
+        res.json({ success: true, user: updatedUser, powerReward, coinReward, dailyCount: dailyCount + 1 });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
@@ -1005,11 +950,11 @@ app.post('/api/watch-ad-2', authenticate, strictLimiter, async (req, res) => {
         const now = getCurrentTime();
         if (!requestTime || (now - requestTime) < 15000) return res.status(400).json({ error: 'Ad not completed' });
 
-        const cooldownMs = APP_CONFIG.AD_COOLDOWN_MINUTES * 60 * 1000;
-        if (user.adexium_ad_last_watch && (now - user.adexium_ad_last_watch) < cooldownMs) {
-            const remaining = Math.ceil((cooldownMs - (now - user.adexium_ad_last_watch)) / 1000);
-            return res.status(400).json({ error: `Cooldown: ${remaining}s` });
-        }
+        const today = getTodayString();
+        let dailyCount = user.ad2_daily_count || 0;
+        if (user.ad_daily_date !== today) { dailyCount = 0; }
+
+        if (dailyCount >= APP_CONFIG.AD_DAILY_LIMIT) return res.status(400).json({ error: 'Daily limit reached' });
 
         const powerReward = APP_CONFIG.AD_REWARD_POWER || 50;
         const coinReward = APP_CONFIG.AD_REWARD_COIN || 20;
@@ -1017,21 +962,23 @@ app.post('/api/watch-ad-2', authenticate, strictLimiter, async (req, res) => {
         const updatedUser = await updateUser(userId, {
             power_balance: (user.power_balance || 0) + powerReward,
             coin_balance: (user.coin_balance || 0) + coinReward,
-            adexium_ad_last_watch: now
+            adexium_ad_last_watch: now,
+            ad2_daily_count: dailyCount + 1,
+            ad_daily_date: today
         });
 
         await checkLargeTransaction(userId, powerReward, 'Ad Power');
         await checkLargeTransaction(userId, coinReward, 'Ad COIN');
 
         if (user.referred_by) {
-            const referralPower = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
-            const referralCoin = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
-            await addReferralCommission(user.referred_by, referralPower, 'power');
-            await addReferralCommission(user.referred_by, referralCoin, 'coin');
+            const rp = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
+            const rc = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
+            await addReferralCommission(user.referred_by, rp, 'power');
+            await addReferralCommission(user.referred_by, rc, 'coin');
         }
 
         await updateUserLevel(userId);
-        res.json({ success: true, user: updatedUser, powerReward, coinReward });
+        res.json({ success: true, user: updatedUser, powerReward, coinReward, dailyCount: dailyCount + 1 });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
@@ -1040,20 +987,14 @@ app.post('/api/claim-daily-bonus', authenticate, strictLimiter, async (req, res)
         const userId = req._userId;
         const user = await getUser(userId);
         if (!user) return res.status(404).json({ error: 'User not found' });
-
         const now = getCurrentTime();
         const today = getTodayString();
         const lastClaim = user.daily_bonus_last_claim || 0;
         const lastClaimDate = lastClaim ? new Date(lastClaim).toISOString().split('T')[0] : '';
-
         if (lastClaimDate === today) return res.status(400).json({ error: 'Already claimed today' });
 
         const coinReward = APP_CONFIG.DAILY_BONUS_COIN || 100;
-        const updatedUser = await updateUser(userId, {
-            coin_balance: (user.coin_balance || 0) + coinReward,
-            daily_bonus_last_claim: now
-        });
-
+        const updatedUser = await updateUser(userId, { coin_balance: (user.coin_balance || 0) + coinReward, daily_bonus_last_claim: now });
         await checkLargeTransaction(userId, coinReward, 'Daily Bonus COIN');
         res.json({ success: true, user: updatedUser, coinReward });
     } catch (error) { res.status(500).json({ error: error.message }); }
@@ -1061,9 +1002,7 @@ app.post('/api/claim-daily-bonus', authenticate, strictLimiter, async (req, res)
 
 app.post('/api/tasks/:category', authenticate, async (req, res) => {
     try {
-        const userId = req._userId;
-        const { category } = req.params;
-        const tasks = await getTasks(category, userId);
+        const tasks = await getTasks(req.params.category, req._userId);
         res.json({ tasks });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -1079,7 +1018,6 @@ app.post('/api/claim-promo-code', authenticate, strictLimiter, async (req, res) 
     try {
         const userId = req._userId;
         const { code } = req.body;
-
         const promoCheck = checkPromoCooldown(userId);
         if (!promoCheck.allowed) return res.status(429).json({ error: `Wait ${promoCheck.remaining}s` });
 
@@ -1096,16 +1034,14 @@ app.post('/api/claim-promo-code', authenticate, strictLimiter, async (req, res) 
 
         if (promo.required_channel) {
             const isMember = await checkUserInChannel(userId, promo.required_channel);
-            if (!isMember) return res.status(400).json({ error: 'Join required channel', requiredChannel: promo.required_channel });
+            if (!isMember) return res.status(400).json({ error: 'Join channel', requiredChannel: promo.required_channel });
         }
 
         setPromoCooldown(userId);
         await usePromoCode(userId, code);
         await incrementPromoUses(code);
 
-        let updates = {};
-        let rewardMessage = '';
-
+        let updates = {}, rewardMessage = '';
         if (promo.reward_type === 'power') {
             updates.power_balance = (user.power_balance || 0) + promo.reward_amount;
             rewardMessage = `+${promo.reward_amount} Power`;
@@ -1118,7 +1054,7 @@ app.post('/api/claim-promo-code', authenticate, strictLimiter, async (req, res) 
 
         const updatedUser = await updateUser(userId, { ...updates, last_promo_time: getCurrentTime() });
 
-        if (user.referred_by && (promo.reward_type === 'power' || promo.reward_type === 'coin')) {
+        if (user.referred_by) {
             const referralEarning = promo.reward_amount * (APP_CONFIG.REFERRAL_PROMO_PERCENTAGE / 100);
             await addReferralCommission(user.referred_by, referralEarning, promo.reward_type);
         }
@@ -1150,15 +1086,14 @@ app.post('/api/claim-referral-earnings', authenticate, strictLimiter, async (req
 
         const updatedUser = await updateUser(userId, updates);
         await updateUserLevel(userId);
-        await checkLargeTransaction(userId, amount, `Referral ${type === 'power' ? 'Power' : 'COIN'}`);
+        await checkLargeTransaction(userId, amount, `Referral ${type}`);
         res.json({ success: true, user: updatedUser, claimed: amount, type });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
 app.post('/api/my-tasks', authenticate, async (req, res) => {
     try {
-        const userId = req._userId;
-        const { data: tasks, error } = await supabase.from('tasks').select('*').eq('owner', userId).eq('category', 'community').order('created_at', { ascending: false });
+        const { data: tasks, error } = await supabase.from('tasks').select('*').eq('owner', req._userId).eq('category', 'community').order('created_at', { ascending: false });
         if (error) throw error;
         res.json({ tasks: tasks || [] });
     } catch (error) { res.status(500).json({ error: error.message }); }
@@ -1168,8 +1103,8 @@ app.post('/api/delete-task', authenticate, async (req, res) => {
     try {
         const userId = req._userId;
         const { taskId } = req.body;
-        const { data: task, error: checkError } = await supabase.from('tasks').select('owner, total, total_completed').eq('id', taskId).single();
-        if (checkError || !task) return res.status(404).json({ error: 'Task not found' });
+        const { data: task } = await supabase.from('tasks').select('owner, total, total_completed').eq('id', taskId).single();
+        if (!task) return res.status(404).json({ error: 'Not found' });
         if (task.owner !== userId) return res.status(403).json({ error: 'Not authorized' });
         if ((task.total_completed || 0) < task.total) return res.status(400).json({ error: 'Not completed' });
         await supabase.from('tasks').delete().eq('id', taskId);
@@ -1185,36 +1120,30 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
         const user = await getUser(userId);
         if (!user) return res.status(404).json({ error: 'User not found' });
 
-        const address = APP_CONFIG.PAYMENT_WALLET || APP_CONFIG.TON_WALLET_ADDRESS;
-        if (!address) return res.status(500).json({ error: 'Payment wallet not configured' });
+        const address = APP_CONFIG.PAYMENT_WALLET;
+        if (!address) return res.status(500).json({ error: 'Wallet not configured' });
 
         const { data: usedMemo } = await supabase.from('confirmed_memos').select('memo').eq('memo', memo).maybeSingle();
-        if (usedMemo) return res.json({ success: false, error: 'Transaction already used' });
+        if (usedMemo) return res.json({ success: false, error: 'Used' });
 
         const response = await fetch(`https://toncenter.com/api/v2/getTransactions?address=${address}&limit=3`);
         const data = await response.json();
-        if (!data.ok) return res.status(500).json({ error: 'Payment API error' });
+        if (!data.ok) return res.status(500).json({ error: 'API error' });
 
         let foundTx = null;
-        if (data.result && data.result.length > 0) {
-            foundTx = data.result.find(tx => { const msg = tx.in_msg?.message; return msg && msg.includes(memo); });
-        }
+        if (data.result && data.result.length > 0) foundTx = data.result.find(tx => tx.in_msg?.message?.includes(memo));
+        if (!foundTx) return res.json({ success: false, error: 'Not found' });
 
-        if (!foundTx) return res.json({ success: false, error: 'Payment not found' });
-
-        const onChainMemo = foundTx.in_msg?.message || '';
-        if (onChainMemo !== memo) return res.json({ success: false, error: 'Invalid memo' });
+        if (foundTx.in_msg?.message !== memo) return res.json({ success: false, error: 'Invalid memo' });
 
         const txAmount = parseFloat(foundTx.in_msg?.value) / 1000000000 || 0;
         const rewardNum = parseInt(taskData.reward);
         const totalNum = parseInt(taskData.total);
 
-        if (rewardNum > 50 || totalNum < 100 || totalNum > 5000 || rewardNum * totalNum > 50000) {
-            return res.json({ success: false, error: 'Invalid task data' });
-        }
+        if (rewardNum > 50 || totalNum < 100 || totalNum > 5000) return res.json({ success: false, error: 'Invalid' });
 
-        const requiredAmount = (taskData.total * taskData.reward / 1000) * (APP_CONFIG.PRICE_PER_100 || 0.001);
-        if (txAmount < requiredAmount * 0.98) return res.json({ success: false, error: 'Insufficient payment' });
+        const requiredAmount = (taskData.total * taskData.reward / 1000) * (APP_CONFIG.PRICE_PER_100 || 0.10);
+        if (txAmount < requiredAmount * 0.98) return res.json({ success: false, error: 'Insufficient' });
 
         let verification = taskData.verification || false;
         if (verification && taskData.link) {
@@ -1226,26 +1155,24 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
         }
 
         const { data: existingTask } = await supabase.from('tasks').select('id').eq('id', memo).maybeSingle();
-        if (existingTask) return res.json({ success: false, error: 'Task exists' });
+        if (existingTask) return res.json({ success: false, error: 'Exists' });
 
         const taskToAdd = {
             id: memo, name: taskData.name, url: taskData.link,
-            category: 'community', reward: taskData.reward, total: taskData.total,
-            verification: verification, owner: userId, status: 'active',
-            created_at: getCurrentTime(), total_completed: 0, notified: false
+            category: 'community', reward: APP_CONFIG.COMMUNITY_POWER_REWARD || 50,
+            total: taskData.total, verification: verification, owner: userId,
+            status: 'active', created_at: getCurrentTime(), total_completed: 0, notified: false
         };
 
         const { data: taskResult, error: taskError } = await supabase.from('tasks').insert([taskToAdd]).select().single();
-        if (taskError) return res.status(500).json({ error: 'Failed to add task' });
+        if (taskError) return res.status(500).json({ error: 'Failed' });
 
         await updateUser(userId, { task_count: (user.task_count || 0) + 1 });
         await supabase.from('confirmed_memos').insert([{ memo, user_id: userId, used_at: getCurrentTime() }]);
 
-        await sendChannelNotification(
-            APP_CONFIG.TASKS_CHANNEL,
-            `<b>⚡ NEW TASK AVAILABLE!</b>\n\n<b>📋 ${taskData.name}</b>\n<b>👷 Target: ${taskData.total}</b>\n<b>🎁 Reward: ${taskData.reward} POWER + ${APP_CONFIG.COMMUNITY_COIN_REWARD || 1} COIN</b>`,
-            { text: '✅ COMPLETE NOW', url: 'https://t.me/GramHunterBot?start=start' }
-        );
+        await sendChannelNotification(APP_CONFIG.TASKS_CHANNEL,
+            `<b>⚡ NEW TASK!</b>\n\n<b>📋 ${taskData.name}</b>\n<b>👷 Target: ${taskData.total}</b>\n<b>🎁 Reward: ${APP_CONFIG.COMMUNITY_POWER_REWARD} POWER + ${APP_CONFIG.COMMUNITY_COIN_REWARD} COIN</b>`,
+            { text: '✅ COMPLETE NOW', url: 'https://t.me/GramHunterBot?start=start' });
 
         res.json({ success: true, task: taskResult, message: 'Task added' });
     } catch (error) { res.status(500).json({ error: error.message }); }
@@ -1253,8 +1180,7 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
 
 app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res) => {
     const userId = req._userId;
-
-    if (withdrawLocks.has(userId)) return res.status(429).json({ error: 'Withdrawal in progress' });
+    if (withdrawLocks.has(userId)) return res.status(429).json({ error: 'In progress' });
     withdrawLocks.set(userId, Date.now());
 
     try {
@@ -1269,31 +1195,27 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
             return res.status(400).json({ error: `Wait ${remaining}h` });
         }
 
-        if (!walletAddress || !walletAddress.startsWith('UQ') || walletAddress.length < 20) {
-            return res.status(400).json({ error: 'Invalid wallet' });
-        }
+        if (!walletAddress || !walletAddress.startsWith('UQ') || walletAddress.length < 20) return res.status(400).json({ error: 'Invalid wallet' });
 
         const coin = parseFloat(coinAmount);
         if (isNaN(coin) || coin <= 0) return res.status(400).json({ error: 'Invalid amount' });
 
-        const fees = APP_CONFIG.WITHDRAWAL_FEES || 80;
+        const fees = APP_CONFIG.WITHDRAWAL_FEES || 0;
         const netCoin = coin - fees;
-        if (netCoin <= 0) return res.status(400).json({ error: `Amount must exceed ${fees} COIN fee` });
-        if (coin < APP_CONFIG.MINIMUM_WITHDRAW) return res.status(400).json({ error: `Minimum ${APP_CONFIG.MINIMUM_WITHDRAW} COIN` });
-        if (coin > APP_CONFIG.MAXIMUM_WITHDRAW) return res.status(400).json({ error: `Maximum ${APP_CONFIG.MAXIMUM_WITHDRAW} COIN` });
+        if (netCoin <= 0) return res.status(400).json({ error: 'Amount below fees' });
+        if (coin < APP_CONFIG.MINIMUM_WITHDRAW) return res.status(400).json({ error: `Min ${APP_CONFIG.MINIMUM_WITHDRAW} COIN` });
+        if (coin > APP_CONFIG.MAXIMUM_WITHDRAW) return res.status(400).json({ error: `Max ${APP_CONFIG.MAXIMUM_WITHDRAW} COIN` });
 
-        if ((user.power_balance || 0) < 2001) return res.status(400).json({ error: 'Power too low. Need 2001+' });
+        if ((user.power_balance || 0) < 2001) return res.status(400).json({ error: 'Power low. Need 2001+' });
         const accountAge = (Date.now() - user.created_at) / 86400000;
-        if (accountAge < 2) return res.status(400).json({ error: 'Account must be 2+ days old' });
+        if (accountAge < 2) return res.status(400).json({ error: 'Account 2+ days required' });
         if ((user.total_mining_starts || 0) < 3) return res.status(400).json({ error: 'Need 3+ mining sessions' });
         if ((user.coin_balance || 0) < coin) return res.status(400).json({ error: 'Insufficient COIN' });
 
         const BLOCKED_WALLETS = ['UQCmCv32lwvOZPtYmxoGu3e-k0MLlbkIJ4gaCFYYYLbkAfGP'];
         if (BLOCKED_WALLETS.includes(walletAddress)) return res.status(403).json({ error: 'Failed' });
 
-        if (coin > 1000 && (user.total_referrals || 0) <= 3) {
-            return res.status(400).json({ error: 'Need 4+ referrals for >1000 COIN' });
-        }
+        if (coin > 1000 && (user.total_referrals || 0) <= 3) return res.status(400).json({ error: 'Need 4+ referrals for >1000 COIN' });
 
         const gramAmount = netCoin / (APP_CONFIG.COIN_TO_GRAM_RATE || 1000000);
 
@@ -1305,71 +1227,44 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
             .select()
             .single();
 
-        if (lockError || !lockResult) return res.status(429).json({ error: 'Try again later' });
+        if (lockError || !lockResult) return res.status(429).json({ error: 'Try again' });
 
         await checkLargeTransaction(userId, coin, 'Withdrawal COIN');
 
         const oxapay = new OxaPay({ apiKey: process.env.OXAPAY_API_KEY, sandbox: process.env.NODE_ENV !== 'production' });
 
         try {
-            const payout = await oxapay.createPayout({
-                toAddress: walletAddress, amount: gramAmount, currency: 'GRAM', network: 'TON',
-                description: `Withdraw ${gramAmount} GRAM for user ${userId}`
-            });
-
+            const payout = await oxapay.createPayout({ toAddress: walletAddress, amount: gramAmount, currency: 'GRAM', network: 'TON', description: `Withdraw ${gramAmount} GRAM for user ${userId}` });
             if (!payout || !payout.success) {
                 await supabase.from('users').update({ coin_balance: user.coin_balance, last_withdraw_time: user.last_withdraw_time || 0 }).eq('id', userId);
-                return res.status(500).json({ error: payout?.message || 'Payout failed' });
+                return res.status(500).json({ error: payout?.message || 'Failed' });
             }
 
-            const withdrawal = await createWithdrawal({
-                user_id: userId, amount: coin, fees, gram_amount: gramAmount,
-                wallet: walletAddress, status: 'processing', timestamp: now,
-                tx_id: payout.trackId, tx_hash: payout.txHash
-            });
+            const withdrawal = await createWithdrawal({ user_id: userId, amount: coin, fees, gram_amount: gramAmount, wallet: walletAddress, status: 'processing', timestamp: now, tx_id: payout.trackId, tx_hash: payout.txHash });
 
             const adminId = process.env.ADMIN_USER_ID;
-            if (adminId) {
-                await sendTelegramNotification(
-                    adminId,
-                    '💸 New Withdrawal',
-                    `<b>💸 New Withdrawal Request</b>\n\n<b>👤 User:</b> ${user.first_name} (${userId})\n<b>💰 Amount:</b> ${gramAmount.toFixed(5)} GRAM\n<b>📭 Wallet:</b> ${walletAddress}\n<b>🔗 Track ID:</b> ${payout.trackId}`
-                );
-            }
+            if (adminId) await sendTelegramNotification(adminId, '💸 New Withdrawal', `<b>💸 Withdrawal</b>\n\n<b>👤 User:</b> ${user.first_name} (${userId})\n<b>💰 Amount:</b> ${gramAmount.toFixed(5)} GRAM\n<b>📭 Wallet:</b> ${walletAddress}\n<b>🔗 Track:</b> ${payout.trackId}`);
 
             await sendWithdrawalProof(userId, walletAddress, gramAmount, coin);
-
-            await sendTelegramNotification(
-                userId,
-                '⏳ Withdrawal Pending',
-                `<b>⏳ Withdrawal Request Submitted</b>\n\nYour <b>${coin} COIN</b> (${gramAmount.toFixed(5)} GRAM) request has been submitted.\nIt will be processed within 24-48 hours.`
-            );
+            await sendTelegramNotification(userId, '⏳ Pending', `<b>⏳ Request Submitted</b>\n\n${coin} COIN (${gramAmount.toFixed(5)} GRAM) will be processed in 24-48h.`);
 
             res.json({ success: true, user: lockResult, withdrawal, gramAmount, trackId: payout.trackId, status: 'processing' });
-
         } catch (payoutError) {
             await supabase.from('users').update({ coin_balance: user.coin_balance, last_withdraw_time: user.last_withdraw_time || 0 }).eq('id', userId);
-            return res.status(500).json({ error: 'Payment error: ' + payoutError.message });
+            return res.status(500).json({ error: 'Error: ' + payoutError.message });
         }
-
-    } catch (error) {
-        res.status(500).json({ error: 'Failed: ' + error.message });
-    } finally {
-        setTimeout(() => withdrawLocks.delete(userId), 3000);
-    }
+    } catch (error) { res.status(500).json({ error: 'Failed: ' + error.message }); }
+    finally { setTimeout(() => withdrawLocks.delete(userId), 3000); }
 });
 
 app.post('/api/get-withdrawals', authenticate, async (req, res) => {
-    try {
-        const withdrawals = await getWithdrawals(req._userId);
-        res.json({ withdrawals });
-    } catch (error) { res.status(500).json({ error: error.message }); }
+    try { res.json({ withdrawals: await getWithdrawals(req._userId) }); }
+    catch (error) { res.status(500).json({ error: error.message }); }
 });
 
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     const secretToken = req.headers['x-telegram-bot-api-secret-token'];
     if (!WEBHOOK_SECRET || secretToken !== WEBHOOK_SECRET) return res.sendStatus(403);
-
     try {
         const update = req.body;
         if (update.message && update.message.chat && update.message.chat.type === 'private') {
@@ -1377,16 +1272,13 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             const username = update.message.chat.username || '';
             const firstName = update.message.chat.first_name || 'User';
             const text = update.message.text;
-
             let referrerId = null;
             if (text && text.startsWith('/start')) {
                 const parts = text.split(' ');
                 if (parts.length > 1 && !isNaN(parts[1])) referrerId = parseInt(parts[1]);
             }
-
             const appLink = referrerId ? `https://t.me/GramHunterBot/app?startapp=${referrerId}` : `https://t.me/GramHunterBot/app`;
             const existingUser = await getUser(chatId);
-
             if (!existingUser) {
                 const userData = {
                     id: chatId, username: username || '', first_name: firstName || 'User',
@@ -1402,27 +1294,20 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                     mining_active: false, mining_start_time: null, mining_end_time: null, pending_coin_reward: 0,
                     total_referrals: 0, referral_power: 0,
                     ad_watch_count: 0, ad_last_watch: 0, adexium_ad_last_watch: 0,
+                    ad1_daily_count: 0, ad2_daily_count: 0, ad_daily_date: '',
                     last_withdraw_time: 0, referred_by_verified: false, wallet: null,
                     task_count: 0, promo_codes_created: 0, daily_bonus_last_claim: 0
                 };
                 if (referrerId && referrerId !== chatId) userData.referred_by = referrerId;
                 try { await createUser(userData); } catch (e) {}
             }
-
             await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    chat_id: chatId,
-                    photo: APP_CONFIG.APP_LOGO,
+                    chat_id: chatId, photo: APP_CONFIG.APP_LOGO,
                     caption: `<b>🎯 Welcome to GRAM HUNTERS!</b>\n\n⛏️ Mine and earn <b>free GRAM!</b>\n\n📋 Complete tasks\n👷‍♂️ Invite friends\n🎟 Claim promo codes\n\n💰 Withdraw your funds <b>for free</b>\n⚡ Up to <b>50%</b> from referrals`,
                     parse_mode: 'HTML',
-                    reply_markup: {
-                        inline_keyboard: [
-                            [{ text: '🎯 Start App', url: appLink }],
-                            [{ text: '📋 TASKS', url: 'https://t.me/GHT_TASKS' }, { text: '💸 PAYOUTS', url: 'https://t.me/Hunters_Proof' }],
-                            [{ text: '📰 Official', url: 'https://t.me/GramHunters' }]
-                        ]
-                    }
+                    reply_markup: { inline_keyboard: [[{ text: '🎯 Start App', url: appLink }], [{ text: '📋 TASKS', url: 'https://t.me/GHT_TASKS' }, { text: '💸 PAYOUTS', url: 'https://t.me/Hunters_Proof' }], [{ text: '📰 Official', url: 'https://t.me/GramHunters' }]] }
                 })
             });
         }
@@ -1431,8 +1316,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 });
 
 const PORT = process.env.PORT || 8080;
-const server = app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🎯 GRAM HUNTERS server running on port ${PORT}`);
-});
+const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
 server.on('error', (error) => console.error('Server error:', error));
 process.on('SIGTERM', () => server.close(() => process.exit(0)));
