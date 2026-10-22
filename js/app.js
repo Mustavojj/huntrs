@@ -1,4 +1,4 @@
-const translations = {
+const translations = { 
     en: {
         power: "Power", coin: "COIN", gram: "GRAM", claim: "Claim", watch: "Watch",
         loading: "Loading", start: "Start", done: "Done", delete: "Delete",
