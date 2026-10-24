@@ -1200,205 +1200,199 @@ class App {
     }
 
     renderEarn() {
-        const el = document.getElementById('earn-page');
-        if (!el) return;
+    const el = document.getElementById('earn-page');
+    if (!el) return;
 
-        const today = new Date().toISOString().split('T')[0];
-        const ad1Count = this.adDailyDate === today ? this.ad1DailyCount : 0;
-        const ad2Count = this.adDailyDate === today ? this.ad2DailyCount : 0;
-        const ad1ReachedLimit = ad1Count >= this.adDailyLimit;
-        const ad2ReachedLimit = ad2Count >= this.adDailyLimit;
+    const today = new Date().toISOString().split('T')[0];
+    const ad1Count = this.adDailyDate === today ? this.ad1DailyCount : 0;
+    const ad2Count = this.adDailyDate === today ? this.ad2DailyCount : 0;
+    const ad1ReachedLimit = ad1Count >= this.adDailyLimit;
+    const ad2ReachedLimit = ad2Count >= this.adDailyLimit;
 
-        el.innerHTML = `
+    el.innerHTML = `
+        <div class="daily-bonus-card">
             <div class="daily-bonus-icon">
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="10" width="18" height="11" rx="1.5" fill="#4A90D9"/>
-        <rect x="3" y="7" width="18" height="4" rx="1" fill="#60A5FA"/>
-        <rect x="10.5" y="7" width="3" height="14" fill="#2563EB"/>
-        <path d="M12 7C12 7 10 7 9 6C8 5 8 3 9.5 3C11 3 12 7 12 7Z" fill="#60A5FA" stroke="#2563EB" stroke-width="0.8"/>
-        <path d="M12 7C12 7 14 7 15 6C16 5 16 3 14.5 3C13 3 12 7 12 7Z" fill="#60A5FA" stroke="#2563EB" stroke-width="0.8"/>
-    </svg>
-</div>
-                <div class="daily-bonus-info">
-                    <h4>${this.t('daily_bonus')}</h4>
-                    <div class="daily-bonus-reward-badge" style="background:rgba(0,0,0,0.35);">
-                    <img src="${this.config.COIN_ICON}">
-                    100
+                <img src="https://slho.shop/i/8126" style="width:36px;height:36px;object-fit:contain;" alt="Daily Bonus">
+            </div>
+            <div class="daily-bonus-info">
+                <h4>${this.t('daily_bonus')}</h4>
+                <div class="daily-bonus-reward-badge" style="background:rgba(0,0,0,0.35);">
+                    <img src="${this.config.COIN_ICON}"> 100
+                </div>
+            </div>
+            <button id="daily-bonus-btn" class="daily-bonus-btn" ${this.dailyBonusClaimed ? 'disabled' : ''}>
+                ${this.dailyBonusClaimed ? this.t('daily_bonus_claimed') : this.t('daily_bonus_ready')}
+            </button>
+        </div>
+
+        <div class="promo-card blue-card">
+            <div class="promo-title"><i class="fas fa-ticket-alt"></i> ${this.t('promo_code')}</div>
+            <div class="promo-input-group">
+                <input type="text" id="promo-input" class="form-input blue-input" placeholder="${this.t('enter_code')}" autocomplete="off">
+                <button id="promo-submit" class="promo-submit-btn" disabled>${this.t('claim')}</button>
+            </div>
+            <div id="active-promo-codes-container" class="promo-codes-list"></div>
+        </div>
+
+        <div class="section-header blue-header">
+            <h3><i class="fas fa-play-circle"></i> ${this.t('watch_earn')}</h3>
+        </div>
+
+        <div class="ad-card blue-card">
+            <div class="ad-header">
+                <div class="ad-icon"><i class="fas fa-tv"></i></div>
+                <div class="ad-info">
+                    <h4>${this.t('watch_ad_1')}</h4>
+                    <div class="ad-rewards">
+                        <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower}</span>
+                        <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}"> ${this.adRewardCoin}</span>
+                        <span class="ad-counter-badge">${ad1Count}/${this.adDailyLimit}</span>
                     </div>
                 </div>
-                <button id="daily-bonus-btn" class="daily-bonus-btn" ${this.dailyBonusClaimed ? 'disabled' : ''}>
-                    ${this.dailyBonusClaimed ? this.t('daily_bonus_claimed') : this.t('daily_bonus_ready')}
+                <button id="watch-ad-1-btn" class="ad-btn" ${ad1ReachedLimit ? 'disabled' : ''}>
+                    ${ad1ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}
                 </button>
             </div>
+        </div>
 
-            <div class="promo-card blue-card">
-                <div class="promo-title"><i class="fas fa-ticket-alt"></i> ${this.t('promo_code')}</div>
-                <div class="promo-input-group">
-                    <input type="text" id="promo-input" class="form-input blue-input" placeholder="${this.t('enter_code')}" autocomplete="off">
-                    <button id="promo-submit" class="promo-submit-btn" disabled>${this.t('claim')}</button>
-                </div>
-                <div id="active-promo-codes-container" class="promo-codes-list"></div>
-            </div>
-
-            <div class="section-header blue-header">
-                <h3><i class="fas fa-play-circle"></i> ${this.t('watch_earn')}</h3>
-            </div>
-
-            <div class="ad-card blue-card">
-                <div class="ad-header">
-                    <div class="ad-icon"><i class="fas fa-tv"></i></div>
-                    <div class="ad-info">
-                        <h4>${this.t('watch_ad_1')}</h4>
-                        <div class="ad-rewards">
-                            <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower}</span>
-                            <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}"> ${this.adRewardCoin}</span>
-                            <span class="ad-counter-badge">${ad1Count}/${this.adDailyLimit}</span>
-                        </div>
+        <div class="ad-card blue-card">
+            <div class="ad-header">
+                <div class="ad-icon"><i class="fas fa-tv"></i></div>
+                <div class="ad-info">
+                    <h4>${this.t('watch_ad_2')}</h4>
+                    <div class="ad-rewards">
+                        <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower}</span>
+                        <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}"> ${this.adRewardCoin}</span>
+                        <span class="ad-counter-badge">${ad2Count}/${this.adDailyLimit}</span>
                     </div>
-                    <button id="watch-ad-1-btn" class="ad-btn" ${ad1ReachedLimit ? 'disabled' : ''}>
-                        ${ad1ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}
-                    </button>
                 </div>
+                <button id="watch-ad-2-btn" class="ad-btn" ${ad2ReachedLimit ? 'disabled' : ''}>
+                    ${ad2ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}
+                </button>
             </div>
+        </div>
 
-            <div class="ad-card blue-card">
-                <div class="ad-header">
-                    <div class="ad-icon"><i class="fas fa-tv"></i></div>
-                    <div class="ad-info">
-                        <h4>${this.t('watch_ad_2')}</h4>
-                        <div class="ad-rewards">
-                            <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower}</span>
-                            <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}"> ${this.adRewardCoin}</span>
-                            <span class="ad-counter-badge">${ad2Count}/${this.adDailyLimit}</span>
-                        </div>
-                    </div>
-                    <button id="watch-ad-2-btn" class="ad-btn" ${ad2ReachedLimit ? 'disabled' : ''}>
-                        ${ad2ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}
-                    </button>
-                </div>
-            </div>
+        <div class="section-header blue-header">
+            <h3><i class="fas fa-home"></i> ${this.t('main_tasks')}</h3>
+        </div>
+        <div id="main-tasks-container" class="tasks-list">
+            <div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>${this.t('loading')}...</p></div>
+        </div>
 
-            <div class="section-header blue-header">
-                <h3><i class="fas fa-home"></i> ${this.t('main_tasks')}</h3>
-            </div>
-            <div id="main-tasks-container" class="tasks-list">
-                <div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>${this.t('loading')}...</p></div>
-            </div>
+        <div class="section-header blue-header">
+            <h3><i class="fas fa-users"></i> ${this.t('community_tasks')}</h3>
+            <button id="add-community-task-btn" class="add-btn"><i class="fas fa-plus"></i></button>
+            <button id="my-community-tasks-btn" class="my-tasks-btn"><i class="fas fa-list"></i></button>
+        </div>
+        <div id="community-tasks-container" class="tasks-list">
+            <div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>${this.t('loading')}...</p></div>
+        </div>
+    `;
 
-            <div class="section-header blue-header">
-                <h3><i class="fas fa-users"></i> ${this.t('community_tasks')}</h3>
-                <button id="add-community-task-btn" class="add-btn"><i class="fas fa-plus"></i></button>
-                <button id="my-community-tasks-btn" class="my-tasks-btn"><i class="fas fa-list"></i></button>
-            </div>
-            <div id="community-tasks-container" class="tasks-list">
-                <div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>${this.t('loading')}...</p></div>
-            </div>
-        `;
-
-        const promoInput = document.getElementById('promo-input');
-        const promoSubmit = document.getElementById('promo-submit');
-        if (promoInput && promoSubmit) {
-            promoInput.addEventListener('input', () => {
-                promoSubmit.disabled = promoInput.value.trim() === '';
-                promoSubmit.classList.toggle('active', !promoSubmit.disabled);
-            });
-            promoSubmit.addEventListener('click', () => {
-                const code = promoInput.value.trim();
-                if (code) this.applyPromoCode(code);
-                promoInput.value = '';
-                promoSubmit.disabled = true;
-                promoSubmit.classList.remove('active');
-            });
-        }
-
-        document.getElementById('daily-bonus-btn')?.addEventListener('click', async () => {
-            const btn = document.getElementById('daily-bonus-btn');
-            if (btn.disabled) return;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-            try {
-                const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
-                if (AdController) await AdController.show();
-            } catch (e) {
-                this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
-                btn.disabled = false;
-                btn.innerHTML = this.t('daily_bonus_ready');
-                return;
-            }
-            const success = await this.claimDailyBonus();
-            if (success) { btn.disabled = true; btn.innerHTML = this.t('daily_bonus_claimed'); }
-            else { btn.disabled = false; btn.innerHTML = this.t('daily_bonus_ready'); }
+    const promoInput = document.getElementById('promo-input');
+    const promoSubmit = document.getElementById('promo-submit');
+    if (promoInput && promoSubmit) {
+        promoInput.addEventListener('input', () => {
+            promoSubmit.disabled = promoInput.value.trim() === '';
+            promoSubmit.classList.toggle('active', !promoSubmit.disabled);
         });
-
-        document.getElementById('watch-ad-1-btn')?.addEventListener('click', async () => {
-            const btn = document.getElementById('watch-ad-1-btn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-            const requestTime = Date.now();
-            try {
-                const AdController = window.Adsgram?.init({ blockId: this.config.REWARD_AD_BLOCK_ID });
-                if (AdController) await AdController.show();
-                await new Promise(r => setTimeout(r, 15000));
-                const result = await this.fetchFromServer('/api/watch-ad-1', { requestTime });
-                if (!result.error && result.user) {
-                    this.powerBalance = result.user.power_balance || 0;
-                    this.coinBalance = result.user.coin_balance || 0;
-                    this.ad1DailyCount = result.user.ad1_daily_count || 0;
-                    this.adDailyDate = result.user.ad_daily_date || '';
-                    this.updateHeaderBalances();
-                    this.showNotification('Reward', `+${result.powerReward} Power +${result.coinReward} COIN`, 'success');
-                    this.vibrate('success');
-                } else if (result.error) {
-                    this.showNotification('Error', result.error, 'error');
-                    this.vibrate('error');
-                }
-            } catch (e) {
-                this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
-                this.vibrate('warning');
-            }
-            this.renderEarn();
+        promoSubmit.addEventListener('click', () => {
+            const code = promoInput.value.trim();
+            if (code) this.applyPromoCode(code);
+            promoInput.value = '';
+            promoSubmit.disabled = true;
+            promoSubmit.classList.remove('active');
         });
-
-        document.getElementById('watch-ad-2-btn')?.addEventListener('click', async () => {
-            const btn = document.getElementById('watch-ad-2-btn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-            const requestTime = Date.now();
-            try {
-                if (typeof window.showAdexora !== 'function') {
-                    throw new Error('Adexora not loaded');
-                }
-                await window.showAdexora();
-                await new Promise(r => setTimeout(r, 3000));
-                const result = await this.fetchFromServer('/api/watch-ad-2', { requestTime });
-                if (!result.error && result.user) {
-                    this.powerBalance = result.user.power_balance || 0;
-                    this.coinBalance = result.user.coin_balance || 0;
-                    this.ad2DailyCount = result.user.ad2_daily_count || 0;
-                    this.adDailyDate = result.user.ad_daily_date || '';
-                    this.updateHeaderBalances();
-                    this.showNotification('Reward', `+${result.powerReward} Power +${result.coinReward} COIN`, 'success');
-                    this.vibrate('success');
-                } else if (result.error) {
-                    this.showNotification('Error', result.error, 'error');
-                    this.vibrate('error');
-                }
-            } catch (e) {
-                console.error('Adexora error:', e);
-                this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
-                this.vibrate('warning');
-            }
-            this.renderEarn();
-        });
-
-        document.getElementById('add-community-task-btn')?.addEventListener('click', () => this.showAddCommunityTaskModal());
-        document.getElementById('my-community-tasks-btn')?.addEventListener('click', () => this.showMyTasksModal());
-
-        this.loadActivePromoCodes();
-        this.loadMainTasks();
-        this.loadCommunityTasks();
     }
 
+    document.getElementById('daily-bonus-btn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('daily-bonus-btn');
+        if (btn.disabled) return;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+        try {
+            const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
+            if (AdController) await AdController.show();
+        } catch (e) {
+            this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
+            btn.disabled = false;
+            btn.innerHTML = this.t('daily_bonus_ready');
+            return;
+        }
+        const success = await this.claimDailyBonus();
+        if (success) { btn.disabled = true; btn.innerHTML = this.t('daily_bonus_claimed'); }
+        else { btn.disabled = false; btn.innerHTML = this.t('daily_bonus_ready'); }
+    });
+
+    document.getElementById('watch-ad-1-btn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('watch-ad-1-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+        const requestTime = Date.now();
+        try {
+            const AdController = window.Adsgram?.init({ blockId: this.config.REWARD_AD_BLOCK_ID });
+            if (AdController) await AdController.show();
+            await new Promise(r => setTimeout(r, 15000));
+            const result = await this.fetchFromServer('/api/watch-ad-1', { requestTime });
+            if (!result.error && result.user) {
+                this.powerBalance = result.user.power_balance || 0;
+                this.coinBalance = result.user.coin_balance || 0;
+                this.ad1DailyCount = result.user.ad1_daily_count || 0;
+                this.adDailyDate = result.user.ad_daily_date || '';
+                this.updateHeaderBalances();
+                this.showNotification('Reward', `+${result.powerReward} Power +${result.coinReward} COIN`, 'success');
+                this.vibrate('success');
+            } else if (result.error) {
+                this.showNotification('Error', result.error, 'error');
+                this.vibrate('error');
+            }
+        } catch (e) {
+            this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
+            this.vibrate('warning');
+        }
+        this.renderEarn();
+    });
+
+    document.getElementById('watch-ad-2-btn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('watch-ad-2-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+        const requestTime = Date.now();
+        try {
+            if (typeof window.showAdexora !== 'function') {
+                throw new Error('Adexora not loaded');
+            }
+            await window.showAdexora();
+            await new Promise(r => setTimeout(r, 3000));
+            const result = await this.fetchFromServer('/api/watch-ad-2', { requestTime });
+            if (!result.error && result.user) {
+                this.powerBalance = result.user.power_balance || 0;
+                this.coinBalance = result.user.coin_balance || 0;
+                this.ad2DailyCount = result.user.ad2_daily_count || 0;
+                this.adDailyDate = result.user.ad_daily_date || '';
+                this.updateHeaderBalances();
+                this.showNotification('Reward', `+${result.powerReward} Power +${result.coinReward} COIN`, 'success');
+                this.vibrate('success');
+            } else if (result.error) {
+                this.showNotification('Error', result.error, 'error');
+                this.vibrate('error');
+            }
+        } catch (e) {
+            console.error('Adexora error:', e);
+            this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
+            this.vibrate('warning');
+        }
+        this.renderEarn();
+    });
+
+    document.getElementById('add-community-task-btn')?.addEventListener('click', () => this.showAddCommunityTaskModal());
+    document.getElementById('my-community-tasks-btn')?.addEventListener('click', () => this.showMyTasksModal());
+
+    this.loadActivePromoCodes();
+    this.loadMainTasks();
+    this.loadCommunityTasks();
+    }
+    
     async loadActivePromoCodes() {
         const container = document.getElementById('active-promo-codes-container');
         if (!container) return;
