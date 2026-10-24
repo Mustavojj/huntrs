@@ -398,3 +398,11 @@ body.theme-diamond {
 
 .miner-card.miner-diamond { background: linear-gradient(135deg, #0EA5E9, #0284C7, #075985); }  
 
+.daily-bonus-btn {
+    background: var(--theme-gradient) !important;
+    color: #fff !important;
+}
+.daily-bonus-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+} 
