@@ -8,15 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-    <script type="text/javascript" src="https://cdn.tgads.space/assets/js/adexium-widget.min.js"></script>
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof AdexiumWidget !== 'undefined') {
-                window.adexiumWidget = new AdexiumWidget({ wid: '5e0639e1-2a8b-49a1-bee9-41c9dda9b6ea', adFormat: 'interstitial' });
-                window.adexiumWidget.autoMode();
-            }
-        });
-    </script>
+    <script src="https://adexora.com/cdn/ads.js?id=2221"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -46,11 +38,13 @@
             <div class="user-info">
                 <div class="avatar-wrapper">
                     <img id="user-photo" class="user-avatar" src="https://slho.shop/i/8067">
-                    <div class="avatar-badge" id="user-miner-badge">⛏️</div>
                 </div>
                 <div class="user-details">
                     <span id="user-name" class="user-name">User</span>
-                    <div class="user-miner"><span id="user-miner-name">No Miner</span></div>
+                    <div class="user-miner" id="user-miner-display">
+                        <img id="user-miner-logo" src="https://slho.shop/i/8098" style="width:14px;height:14px;border-radius:50%;object-fit:cover;">
+                        <span id="user-miner-name">Bronze</span>
+                    </div>
                 </div>
             </div>
             <div class="header-actions">
@@ -83,20 +77,20 @@
 <div id="add-community-task-modal" class="modal" style="display:none;">
     <div class="modal-content blue-modal" style="max-width:400px;width:92%;max-height:90vh;overflow-y:auto;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(74,144,217,0.15);padding:0;">
         <div class="modal-header blue-header" style="padding:16px 20px;border-bottom:1px solid rgba(74,144,217,0.1);">
-            <h3 style="color:#60A5FA;font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-plus-circle"></i> Add Community Task</h3>
+            <h3 style="color:var(--theme-color);font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-plus-circle"></i> Add Community Task</h3>
             <button class="modal-close" onclick="document.getElementById('add-community-task-modal').style.display='none'">&times;</button>
         </div>
         <div class="modal-body" style="padding:20px;">
             <div class="form-group">
-                <label class="form-label">Name (5-20 chars)</label>
+                <label class="form-label" style="color:var(--theme-color);"><i class="fas fa-tag"></i> Name (5-20 chars)</label>
                 <input type="text" id="community-task-name" class="form-input blue-input" placeholder="Task name" maxlength="20">
             </div>
             <div class="form-group">
-                <label class="form-label">Link</label>
+                <label class="form-label" style="color:var(--theme-color);"><i class="fas fa-link"></i> Link</label>
                 <input type="text" id="community-task-link" class="form-input blue-input" placeholder="https://t.me/...">
             </div>
             <div class="form-group">
-                <label class="form-label">Total</label>
+                <label class="form-label" style="color:var(--theme-color);"><i class="fas fa-users"></i> Total</label>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                     <button class="total-option" data-value="100">100</button>
                     <button class="total-option" data-value="250">250</button>
@@ -107,21 +101,21 @@
                 </div>
             </div>
             <div class="form-group" id="community-verification-group">
-                <label class="form-label">Verification</label>
+                <label class="form-label" style="color:var(--theme-color);"><i class="fas fa-shield-alt"></i> Verification</label>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
                     <button class="verif-option active" data-value="no">NO</button>
                     <button class="verif-option" data-value="yes">YES</button>
-                    <span id="community-verification-note" style="font-size:0.6rem;color:#4A90D9;display:none;margin-left:4px;"><i class="fas fa-info-circle"></i> Bot must be admin</span>
+                    <span id="community-verification-note" style="font-size:0.6rem;color:var(--theme-color);display:none;margin-left:4px;"><i class="fas fa-info-circle"></i> Bot must be admin</span>
                 </div>
             </div>
             <div style="background:rgba(74,144,217,0.08);border-radius:12px;padding:12px;margin:12px 0;border:1px solid rgba(74,144,217,0.1);">
                 <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:6px;">
                     <span style="color:#888;">Reward:</span>
-                    <span style="color:#60A5FA;font-weight:700;">50 Power + 50 COIN</span>
+                    <span style="color:var(--theme-color);font-weight:700;">50 Power + 50 COIN</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
                     <span style="color:#888;">Total Cost:</span>
-                    <span id="community-total-cost-display" style="color:#60A5FA;font-weight:700;">0.00 GRAM</span>
+                    <span id="community-total-cost-display" style="color:var(--theme-color);font-weight:700;">0.00 GRAM</span>
                 </div>
             </div>
             <button id="pay-add-community-task-btn" class="blue-btn" style="width:100%;padding:14px;border:none;border-radius:60px;font-weight:700;font-size:0.95rem;cursor:pointer;">PAY & ADD TASK</button>
@@ -132,7 +126,7 @@
 <div id="promo-claim-modal" class="modal" style="display:none;">
     <div class="modal-content blue-modal" style="max-width:380px;width:92%;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(74,144,217,0.15);padding:0;">
         <div class="modal-header blue-header" style="padding:16px 20px;border-bottom:1px solid rgba(74,144,217,0.1);">
-            <h3 style="color:#60A5FA;font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-ticket-alt"></i> Claim Promo</h3>
+            <h3 style="color:var(--theme-color);font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-ticket-alt"></i> Claim Promo</h3>
             <button class="modal-close" onclick="document.getElementById('promo-claim-modal').style.display='none'">&times;</button>
         </div>
         <div class="modal-body" style="padding:20px;">
@@ -144,26 +138,26 @@
 <div id="payment-modal" class="modal" style="display:none;">
     <div class="modal-content blue-modal" style="max-width:380px;width:92%;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(74,144,217,0.15);padding:0;">
         <div class="modal-header blue-header" style="padding:16px 20px;border-bottom:1px solid rgba(74,144,217,0.1);">
-            <h3 style="color:#60A5FA;font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-credit-card"></i> Payment</h3>
+            <h3 style="color:var(--theme-color);font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-credit-card"></i> Payment</h3>
             <button class="modal-close" onclick="document.getElementById('payment-modal').style.display='none'">&times;</button>
         </div>
         <div class="modal-body" style="padding:20px;">
             <div class="form-group">
-                <label class="form-label">Wallet (Tap to copy)</label>
+                <label class="form-label" style="color:var(--theme-color);"><i class="fas fa-wallet"></i> Wallet (Tap to copy)</label>
                 <div style="background:rgba(0,0,0,0.3);padding:8px 14px;border-radius:40px;border:1px solid rgba(74,144,217,0.1);cursor:pointer;" id="payment-wallet-display">
-                    <span style="font-size:0.7rem;font-family:monospace;color:#60A5FA;word-break:break-all;display:block;">-</span>
+                    <span style="font-size:0.7rem;font-family:monospace;color:var(--theme-color);word-break:break-all;display:block;">-</span>
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-label">Memo (Tap to copy)</label>
+                <label class="form-label" style="color:var(--theme-color);"><i class="fas fa-tag"></i> Memo (Tap to copy)</label>
                 <div style="background:rgba(0,0,0,0.3);padding:8px 14px;border-radius:40px;border:1px solid rgba(74,144,217,0.1);cursor:pointer;" id="payment-memo-display">
-                    <span style="font-size:0.65rem;font-family:monospace;color:#60A5FA;word-break:break-all;display:block;">-</span>
+                    <span style="font-size:0.65rem;font-family:monospace;color:var(--theme-color);word-break:break-all;display:block;">-</span>
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-label">Amount (Tap to copy)</label>
+                <label class="form-label" style="color:var(--theme-color);"><i class="fas fa-coins"></i> Amount (Tap to copy)</label>
                 <div style="background:rgba(0,0,0,0.3);padding:8px 14px;border-radius:40px;border:1px solid rgba(74,144,217,0.1);cursor:pointer;" id="payment-amount-display">
-                    <span style="font-size:0.8rem;font-family:monospace;color:#60A5FA;font-weight:600;display:block;">0.00 GRAM</span>
+                    <span style="font-size:0.8rem;font-family:monospace;color:var(--theme-color);font-weight:600;display:block;">0.00 GRAM</span>
                 </div>
             </div>
             <a id="tonkeeper-link" href="#" target="_blank" class="blue-btn" style="display:block;text-align:center;padding:12px;border-radius:60px;font-weight:700;text-decoration:none;margin-bottom:10px;">Pay with Tonkeeper</a>
@@ -176,7 +170,7 @@
 <div id="my-tasks-modal" class="modal" style="display:none;">
     <div class="modal-content blue-modal" style="max-width:400px;width:92%;max-height:90vh;overflow-y:auto;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(74,144,217,0.15);padding:0;">
         <div class="modal-header blue-header" style="padding:16px 20px;border-bottom:1px solid rgba(74,144,217,0.1);">
-            <h3 style="color:#60A5FA;font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-tasks"></i> My Tasks</h3>
+            <h3 style="color:var(--theme-color);font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-tasks"></i> My Tasks</h3>
             <button class="modal-close" onclick="document.getElementById('my-tasks-modal').style.display='none'">&times;</button>
         </div>
         <div class="modal-body" style="padding:20px;">
@@ -198,4 +192,4 @@
 
 <script type="module" src="js/app.js"></script>
 </body>
-</html>
+    </html>
