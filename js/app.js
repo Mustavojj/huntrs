@@ -1,13 +1,12 @@
-const translations = { 
+const translations = {
     en: {
         power: "Power", coin: "COIN", gram: "GRAM", claim: "Claim", watch: "Watch",
         loading: "Loading", start: "Start", done: "Done", delete: "Delete",
         copy: "Copy", copy_success: "Copied!", link_copied: "Link copied",
         no_ads: "No Ads", no_ads_available: "No ads available",
         no_tasks: "No tasks", no_tasks_available: "No tasks available",
-        all_tasks_completed: "All tasks completed!", no_withdrawals: "No withdrawals",
-        no_my_tasks: "No tasks yet.", no_my_promo_codes: "No codes yet.",
-        confirm_delete: "Are you sure?", deleted: "Deleted",
+        all_tasks_completed: "All tasks completed!", no_withdrawals: "No payments created",
+        no_my_tasks: "No tasks yet.", confirm_delete: "Are you sure?", deleted: "Deleted",
         busy: "Busy", complete_current_task: "Complete current task first",
         join_required: "Join Required", join_channel_first: "Please join channel first",
         miners: "Miners", earn: "Earn", home: "Home", team: "Team", wallet_page: "Withdraw",
@@ -21,11 +20,10 @@ const translations = {
         claim_quest: "Claim", watch_ad_1: "Watch AD #1", watch_ad_2: "Watch AD #2",
         watch_earn: "WATCH & EARN", main_tasks: "Main Tasks", community_tasks: "Community Tasks",
         promo_code: "Promo Code", enter_code: "Enter code",
-        daily_bonus: "Daily Bonus", daily_bonus_reward: "100 COIN", daily_bonus_claimed: "Claimed",
-        daily_bonus_ready: "CLAIM", daily_bonus_success: "Bonus claimed! +100 COIN",
+        daily_bonus: "Daily Bonus", daily_bonus_claimed: "Claimed", daily_bonus_ready: "CLAIM",
         invite_earn: "Build Your Team", invite_earn_sub: "Invite and earn generous rewards",
-        referral_link_title: "Referral Link:", share_earn_desc: "Share and earn free GRAM",
-        copy_link: "Copy Link", referral_earnings: "Referral Rewards",
+        referral_link_title: "Referral Link:", copy_link: "Copy Link",
+        referral_earnings: "Referral Rewards",
         power_earnings: "Power Earnings", coin_earnings: "COIN Earnings",
         total_referrals: "Total Referrals",
         earn_referral_each_label: "Unlimited Power", earn_referral_each: "Earn 100 power per referral",
@@ -34,35 +32,30 @@ const translations = {
         withdraw_gram: "Withdraw GRAM", withdrawal_amount: "Withdrawal Amount", gram_wallet: "GRAM Wallet",
         confirm_withdrawal: "Confirm Withdrawal", withdrawal_history: "Withdrawal History",
         my_payments: "My Payments", live_payments: "Live Payments",
-        pending: "PENDING", completed: "PAID", processing: "PROCESSING",
+        pending: "PENDING", completed: "PAID", processing: "PROCESSING", failed: "FAILED",
         min_withdraw_note: "Minimum Withdrawal: {amount} COIN",
         invalid_amount: "Invalid amount", wallet_invalid: "Invalid wallet. Must start with UQ and be 20+ chars.",
         insufficient_balance: "Insufficient balance",
+        live_channel_title: "Live Payments Channel",
+        live_channel_desc: "Get live payouts notifications in real-time",
+        join_channel: "Join Channel",
+        no_live_payments: "No payments created",
         not_registered_title: "Not Registered", not_registered_message: "Start the bot first to register.",
         register_now: "Register Now",
         task_added: "Task Added!", task_added_success: "Community task added.",
         name_required: "Name 5-20 chars", link_required: "Valid https:// link required",
         invalid_total: "Total 100-5000", payment_verified: "Payment verified!",
         payment_failed: "Payment failed", payment_checking: "Checking...", payment_error: "Payment error",
-        my_tasks: "My Tasks", claim_promo_code: "Claim Promo",
-        promo_requirements: "Requirements", join_channel: "Join Channel",
-        watch_ad_requirement: "Watch Ad", promo_reward_preview: "You receive",
-        promo_claim_final: "CLAIM REWARD", join_first: "Join channel first",
-        language_changed: "Language Changed!",
+        my_tasks: "My Tasks", promo_requirements: "Requirements",
+        join_channel_btn: "Join Channel", watch_ad_requirement: "Watch Ad",
+        promo_reward_preview: "You receive", promo_claim_final: "CLAIM REWARD",
+        join_first: "Join channel first", language_changed: "Language Changed!",
         task_cooldown: "Wait {s}s", promo_code_cooldown: "Wait {s}s",
-        daily_bonus_already: "Already claimed today",
-        quests_title: "Quests",
-        reward_claimed: "Reward Claimed",
+        quests_title: "Quests", reward_claimed: "Reward Claimed",
         daily_limit_reached: "Daily limit reached",
-        ads_today: "Today: {count}/{max}",
-        view_on_explorer: "View on Explorer",
-        just_now: "Just now",
-        time_ago: "{time} ago",
-        buy_miner: "BUY MINER",
-        quest_buy_miner: "BUY MINER",
-        quest_complete_tasks: "COMPLETE TASKS",
-        quest_invite: "INVITE HUNTERS",
-        view_explorer: "View"
+        view_on_explorer: "View", just_now: "Just now", time_ago: "{time} ago",
+        buy_miner: "BUY MINER", quest_buy_miner: "BUY MINER",
+        quest_complete_tasks: "COMPLETE TASKS", quest_invite: "INVITE HUNTERS"
     },
     ar: {
         power: "قوة", coin: "عملة", gram: "جرام", claim: "استلام", watch: "مشاهدة",
@@ -70,9 +63,8 @@ const translations = {
         copy: "نسخ", copy_success: "تم النسخ!", link_copied: "تم نسخ الرابط",
         no_ads: "لا إعلانات", no_ads_available: "لا إعلانات متاحة",
         no_tasks: "لا مهام", no_tasks_available: "لا مهام متاحة",
-        all_tasks_completed: "تم إكمال الجميع!", no_withdrawals: "لا سحوبات",
-        no_my_tasks: "لا مهام.", no_my_promo_codes: "لا أكواد.",
-        confirm_delete: "متأكد؟", deleted: "تم الحذف",
+        all_tasks_completed: "تم إكمال الجميع!", no_withdrawals: "لا مدفوعات",
+        no_my_tasks: "لا مهام.", confirm_delete: "متأكد؟", deleted: "تم الحذف",
         busy: "مشغول", complete_current_task: "أكمل المهمة الحالية",
         join_required: "الانضمام مطلوب", join_channel_first: "انضم للقناة أولاً",
         miners: "المناجم", earn: "ربح", home: "الرئيسية", team: "الفريق", wallet_page: "السحب",
@@ -86,11 +78,10 @@ const translations = {
         claim_quest: "استلام", watch_ad_1: "إعلان #1", watch_ad_2: "إعلان #2",
         watch_earn: "شاهد واربح", main_tasks: "المهام الرئيسية", community_tasks: "المهام المجتمعية",
         promo_code: "رمز ترويجي", enter_code: "أدخل الرمز",
-        daily_bonus: "المكافأة اليومية", daily_bonus_reward: "100 عملة", daily_bonus_claimed: "مستلمة",
-        daily_bonus_ready: "استلام", daily_bonus_success: "تم الاستلام! +100 عملة",
+        daily_bonus: "المكافأة اليومية", daily_bonus_claimed: "مستلمة", daily_bonus_ready: "استلام",
         invite_earn: "ابني فريقك", invite_earn_sub: "ادعُ واربح مكافآت سخية",
-        referral_link_title: "رابط الإحالة:", share_earn_desc: "شارك واربح جرام مجاناً",
-        copy_link: "نسخ الرابط", referral_earnings: "مكافآت الإحالة",
+        referral_link_title: "رابط الإحالة:", copy_link: "نسخ الرابط",
+        referral_earnings: "مكافآت الإحالة",
         power_earnings: "أرباح القوة", coin_earnings: "أرباح العملات",
         total_referrals: "إجمالي الإحالات",
         earn_referral_each_label: "قوة غير محدودة", earn_referral_each: "اربح 100 قوة لكل إحالة",
@@ -99,35 +90,30 @@ const translations = {
         withdraw_gram: "سحب جرام", withdrawal_amount: "مبلغ السحب", gram_wallet: "محفظة جرام",
         confirm_withdrawal: "تأكيد السحب", withdrawal_history: "سجل السحوبات",
         my_payments: "مدفوعاتي", live_payments: "المدفوعات الحية",
-        pending: "قيد الانتظار", completed: "مدفوع", processing: "قيد المعالجة",
+        pending: "قيد الانتظار", completed: "مدفوع", processing: "قيد المعالجة", failed: "فشل",
         min_withdraw_note: "الحد الأدنى للسحب: {amount} عملة",
         invalid_amount: "مبلغ غير صالح", wallet_invalid: "محفظة غير صالحة. يجب أن تبدأ بـ UQ و20+ حرف.",
         insufficient_balance: "رصيد غير كافٍ",
+        live_channel_title: "قناة المدفوعات الحية",
+        live_channel_desc: "احصل على إشعارات المدفوعات في الوقت الفعلي",
+        join_channel: "انضم للقناة",
+        no_live_payments: "لا مدفوعات",
         not_registered_title: "غير مسجل", not_registered_message: "ابدأ البوت أولاً.",
         register_now: "سجل الآن",
         task_added: "تمت الإضافة!", task_added_success: "تمت إضافة المهمة.",
         name_required: "الاسم 5-20 حرف", link_required: "رابط https:// صحيح",
         invalid_total: "الإجمالي 100-5000", payment_verified: "تم التحقق!",
         payment_failed: "فشل الدفع", payment_checking: "جارٍ التحقق...", payment_error: "خطأ دفع",
-        my_tasks: "مهامي", claim_promo_code: "استلام",
-        promo_requirements: "المتطلبات", join_channel: "انضم للقناة",
-        watch_ad_requirement: "شاهد الإعلان", promo_reward_preview: "ستحصل على",
-        promo_claim_final: "استلام", join_first: "انضم أولاً",
-        language_changed: "تم تغيير اللغة!",
+        my_tasks: "مهامي", promo_requirements: "المتطلبات",
+        join_channel_btn: "انضم", watch_ad_requirement: "شاهد الإعلان",
+        promo_reward_preview: "ستحصل على", promo_claim_final: "استلام",
+        join_first: "انضم أولاً", language_changed: "تم تغيير اللغة!",
         task_cooldown: "انتظر {s}ث", promo_code_cooldown: "انتظر {s}ث",
-        daily_bonus_already: "تم الاستلام اليوم",
-        quests_title: "المهام",
-        reward_claimed: "تم الاستلام",
+        quests_title: "المهام", reward_claimed: "تم الاستلام",
         daily_limit_reached: "تم بلوغ الحد اليومي",
-        ads_today: "اليوم: {count}/{max}",
-        view_on_explorer: "عرض على المستكشف",
-        just_now: "الآن",
-        time_ago: "منذ {time}",
-        buy_miner: "شراء منجم",
-        quest_buy_miner: "شراء منجم",
-        quest_complete_tasks: "أكمل المهام",
-        quest_invite: "ادعُ الصيادين",
-        view_explorer: "عرض"
+        view_on_explorer: "عرض", just_now: "الآن", time_ago: "منذ {time}",
+        buy_miner: "شراء منجم", quest_buy_miner: "شراء منجم",
+        quest_complete_tasks: "أكمل المهام", quest_invite: "ادعُ الصيادين"
     },
     ru: {
         power: "Мощность", coin: "МОНЕТА", gram: "GRAM", claim: "Забрать", watch: "Смотреть",
@@ -135,9 +121,8 @@ const translations = {
         copy: "Копировать", copy_success: "Скопировано!", link_copied: "Ссылка скопирована",
         no_ads: "Нет рекламы", no_ads_available: "Реклама недоступна",
         no_tasks: "Нет заданий", no_tasks_available: "Заданий нет",
-        all_tasks_completed: "Все выполнены!", no_withdrawals: "Выводов нет",
-        no_my_tasks: "Заданий нет.", no_my_promo_codes: "Промокодов нет.",
-        confirm_delete: "Уверены?", deleted: "Удалено",
+        all_tasks_completed: "Все выполнены!", no_withdrawals: "Платежей нет",
+        no_my_tasks: "Заданий нет.", confirm_delete: "Уверены?", deleted: "Удалено",
         busy: "Занято", complete_current_task: "Завершите задание",
         join_required: "Нужна подписка", join_channel_first: "Подпишитесь на канал",
         miners: "Майнеры", earn: "Заработать", home: "Главная", team: "Команда", wallet_page: "Вывод",
@@ -151,11 +136,10 @@ const translations = {
         claim_quest: "Забрать", watch_ad_1: "Реклама #1", watch_ad_2: "Реклама #2",
         watch_earn: "СМОТРИ", main_tasks: "Основные", community_tasks: "Сообщества",
         promo_code: "Промокод", enter_code: "Введите код",
-        daily_bonus: "Бонус", daily_bonus_reward: "100 МОНЕТ", daily_bonus_claimed: "Получено",
-        daily_bonus_ready: "ЗАБРАТЬ", daily_bonus_success: "+100 МОНЕТ",
+        daily_bonus: "Бонус", daily_bonus_claimed: "Получено", daily_bonus_ready: "ЗАБРАТЬ",
         invite_earn: "Построй команду", invite_earn_sub: "Приглашай и зарабатывай",
-        referral_link_title: "Реф. ссылка:", share_earn_desc: "Поделись и заработай GRAM",
-        copy_link: "Копировать", referral_earnings: "Реферальные награды",
+        referral_link_title: "Реф. ссылка:", copy_link: "Копировать",
+        referral_earnings: "Реферальные награды",
         power_earnings: "Мощность", coin_earnings: "Монеты",
         total_referrals: "Всего рефералов",
         earn_referral_each_label: "Неограниченная мощь", earn_referral_each: "100 мощности за реферала",
@@ -164,35 +148,30 @@ const translations = {
         withdraw_gram: "Вывод GRAM", withdrawal_amount: "Сумма вывода", gram_wallet: "GRAM Кошелёк",
         confirm_withdrawal: "Подтвердить", withdrawal_history: "История",
         my_payments: "Мои платежи", live_payments: "Живые платежи",
-        pending: "ОЖИДАНИЕ", completed: "ОПЛАЧЕНО", processing: "ОБРАБОТКА",
+        pending: "ОЖИДАНИЕ", completed: "ОПЛАЧЕНО", processing: "ОБРАБОТКА", failed: "ОШИБКА",
         min_withdraw_note: "Минимум: {amount} МОНЕТ",
         invalid_amount: "Неверная сумма", wallet_invalid: "Неверный кошелёк. UQ + 20+ символов.",
         insufficient_balance: "Недостаточно",
+        live_channel_title: "Канал живых платежей",
+        live_channel_desc: "Получайте уведомления о выплатах в реальном времени",
+        join_channel: "Присоединиться",
+        no_live_payments: "Платежей нет",
         not_registered_title: "Не зарегистрирован", not_registered_message: "Запустите бота.",
         register_now: "Регистрация",
         task_added: "Добавлено!", task_added_success: "Задание добавлено.",
         name_required: "Имя 5-20 символов", link_required: "Ссылка https://",
         invalid_total: "Всего 100-5000", payment_verified: "Оплата принята!",
         payment_failed: "Ошибка", payment_checking: "Проверка...", payment_error: "Ошибка оплаты",
-        my_tasks: "Мои задания", claim_promo_code: "Забрать",
-        promo_requirements: "Требования", join_channel: "Подписаться",
-        watch_ad_requirement: "Смотреть рекламу", promo_reward_preview: "Вы получите",
-        promo_claim_final: "ЗАБРАТЬ", join_first: "Сначала подписка",
-        language_changed: "Язык изменён!",
+        my_tasks: "Мои задания", promo_requirements: "Требования",
+        join_channel_btn: "Подписаться", watch_ad_requirement: "Смотреть рекламу",
+        promo_reward_preview: "Вы получите", promo_claim_final: "ЗАБРАТЬ",
+        join_first: "Сначала подписка", language_changed: "Язык изменён!",
         task_cooldown: "Ждите {s}с", promo_code_cooldown: "Ждите {s}с",
-        daily_bonus_already: "Уже получено",
-        quests_title: "Задания",
-        reward_claimed: "Награда получена",
+        quests_title: "Задания", reward_claimed: "Награда получена",
         daily_limit_reached: "Дневной лимит",
-        ads_today: "Сегодня: {count}/{max}",
-        view_on_explorer: "Открыть",
-        just_now: "Только что",
-        time_ago: "{time} назад",
-        buy_miner: "КУПИТЬ",
-        quest_buy_miner: "КУПИТЬ МАЙНЕР",
-        quest_complete_tasks: "ВЫПОЛНИТЬ",
-        quest_invite: "ПРИГЛАСИТЬ",
-        view_explorer: "Открыть"
+        view_on_explorer: "Открыть", just_now: "Только что", time_ago: "{time} назад",
+        buy_miner: "КУПИТЬ", quest_buy_miner: "КУПИТЬ МАЙНЕР",
+        quest_complete_tasks: "ВЫПОЛНИТЬ", quest_invite: "ПРИГЛАСИТЬ"
     },
     fa: {
         power: "قدرت", coin: "سکه", gram: "گرم", claim: "دریافت", watch: "تماشا",
@@ -200,9 +179,8 @@ const translations = {
         copy: "کپی", copy_success: "کپی شد!", link_copied: "لینک کپی شد",
         no_ads: "تبلیغ نیست", no_ads_available: "تبلیغی موجود نیست",
         no_tasks: "وظیفه‌ای نیست", no_tasks_available: "وظیفه‌ای نیست",
-        all_tasks_completed: "همه تکمیل شد!", no_withdrawals: "برداشتی نیست",
-        no_my_tasks: "وظیفه‌ای نیست.", no_my_promo_codes: "کدی نیست.",
-        confirm_delete: "مطمئنید؟", deleted: "حذف شد",
+        all_tasks_completed: "همه تکمیل شد!", no_withdrawals: "پرداختی نیست",
+        no_my_tasks: "وظیفه‌ای نیست.", confirm_delete: "مطمئنید؟", deleted: "حذف شد",
         busy: "مشغول", complete_current_task: "ابتدا وظیفه فعلی",
         join_required: "نیاز به عضویت", join_channel_first: "ابتدا عضو شوید",
         miners: "ماینرها", earn: "درآمد", home: "خانه", team: "تیم", wallet_page: "برداشت",
@@ -216,11 +194,10 @@ const translations = {
         claim_quest: "دریافت", watch_ad_1: "تبلیغ #۱", watch_ad_2: "تبلیغ #۲",
         watch_earn: "تماشا", main_tasks: "اصلی", community_tasks: "اجتماعی",
         promo_code: "کد", enter_code: "کد را وارد کنید",
-        daily_bonus: "پاداش روزانه", daily_bonus_reward: "۱۰۰ سکه", daily_bonus_claimed: "دریافت شد",
-        daily_bonus_ready: "دریافت", daily_bonus_success: "+۱۰۰ سکه",
+        daily_bonus: "پاداش روزانه", daily_bonus_claimed: "دریافت شد", daily_bonus_ready: "دریافت",
         invite_earn: "تیم خود را بسازید", invite_earn_sub: "دعوت کنید و پاداش بگیرید",
-        referral_link_title: "لینک معرفی:", share_earn_desc: "به اشتراک بگذارید و GRAM رایگان بگیرید",
-        copy_link: "کپی لینک", referral_earnings: "پاداش‌ها",
+        referral_link_title: "لینک معرفی:", copy_link: "کپی لینک",
+        referral_earnings: "پاداش‌های معرفی",
         power_earnings: "قدرت", coin_earnings: "سکه",
         total_referrals: "کل معرفی‌ها",
         earn_referral_each_label: "قدرت نامحدود", earn_referral_each: "۱۰۰ قدرت هر معرفی",
@@ -229,35 +206,30 @@ const translations = {
         withdraw_gram: "برداشت GRAM", withdrawal_amount: "مبلغ برداشت", gram_wallet: "کیف GRAM",
         confirm_withdrawal: "تأیید", withdrawal_history: "تاریخچه",
         my_payments: "پرداخت‌های من", live_payments: "پرداخت‌های زنده",
-        pending: "در انتظار", completed: "پرداخت شده", processing: "در حال پردازش",
+        pending: "در انتظار", completed: "پرداخت شده", processing: "در حال پردازش", failed: "ناموفق",
         min_withdraw_note: "حداقل برداشت: {amount} سکه",
         invalid_amount: "مبلغ نامعتبر", wallet_invalid: "کیف پول نامعتبر. UQ + ۲۰+ کاراکتر.",
         insufficient_balance: "موجودی ناکافی",
+        live_channel_title: "کانال پرداخت‌های زنده",
+        live_channel_desc: "اعلان‌های پرداخت را در زمان واقعی دریافت کنید",
+        join_channel: "پیوستن",
+        no_live_payments: "پرداختی نیست",
         not_registered_title: "ثبت نشده", not_registered_message: "ربات را استارت کنید.",
         register_now: "ثبت نام",
         task_added: "اضافه شد!", task_added_success: "وظیفه اضافه شد.",
         name_required: "نام ۵-۲۰ کاراکتر", link_required: "لینک https://",
         invalid_total: "کل ۱۰۰-۵۰۰۰", payment_verified: "پرداخت تأیید شد!",
         payment_failed: "ناموفق", payment_checking: "بررسی...", payment_error: "خطای پرداخت",
-        my_tasks: "وظایف من", claim_promo_code: "دریافت",
-        promo_requirements: "الزامات", join_channel: "پیوستن",
-        watch_ad_requirement: "تماشای تبلیغ", promo_reward_preview: "دریافت می‌کنید",
-        promo_claim_final: "دریافت", join_first: "ابتدا عضو شوید",
-        language_changed: "زبان تغییر کرد!",
+        my_tasks: "وظایف من", promo_requirements: "الزامات",
+        join_channel_btn: "پیوستن", watch_ad_requirement: "تماشای تبلیغ",
+        promo_reward_preview: "دریافت می‌کنید", promo_claim_final: "دریافت",
+        join_first: "ابتدا عضو شوید", language_changed: "زبان تغییر کرد!",
         task_cooldown: "{s}ثانیه صبر", promo_code_cooldown: "{s}ثانیه صبر",
-        daily_bonus_already: "امروز دریافت شد",
-        quests_title: "وظایف",
-        reward_claimed: "پاداش دریافت شد",
+        quests_title: "وظایف", reward_claimed: "پاداش دریافت شد",
         daily_limit_reached: "حد روزانه",
-        ads_today: "امروز: {count}/{max}",
-        view_on_explorer: "مشاهده",
-        just_now: "همین حالا",
-        time_ago: "{time} پیش",
-        buy_miner: "خرید ماینر",
-        quest_buy_miner: "خرید ماینر",
-        quest_complete_tasks: "تکمیل وظایف",
-        quest_invite: "دعوت شکارچیان",
-        view_explorer: "مشاهده"
+        view_on_explorer: "مشاهده", just_now: "همین حالا", time_ago: "{time} پیش",
+        buy_miner: "خرید ماینر", quest_buy_miner: "خرید ماینر",
+        quest_complete_tasks: "تکمیل وظایف", quest_invite: "دعوت شکارچیان"
     }
 };
 
@@ -314,6 +286,8 @@ class App {
         this._minersLoaded = false;
         this._withdrawLock = false;
         this._historyTab = 'my';
+        this._lastAdTime1 = 0;
+        this._lastAdTime2 = 0;
 
         this.membershipCache = new Map();
         this._lastFetchTime = new Map();
@@ -376,7 +350,13 @@ class App {
     formatCoin(num) {
         if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
         if (num >= 1000) return (num / 1000).toFixed(2) + 'K';
-        return num.toFixed(2);
+        return Math.floor(num).toString();
+    }
+
+    formatMining(num) {
+        if (num >= 1000000) return (num / 1000000).toFixed(3) + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(3) + 'K';
+        return num.toFixed(3);
     }
 
     getActiveMiner() { return this.activeMiner; }
@@ -396,14 +376,10 @@ class App {
 
     updateHeaderMiner() {
         const minerName = document.getElementById('user-miner-name');
-        const minerBadge = document.getElementById('user-miner-badge');
+        const minerLogo = document.getElementById('user-miner-logo');
         const activeMiner = this.getActiveMiner();
         if (minerName) minerName.innerText = activeMiner ? activeMiner.name : this.t('no_miner');
-        if (minerBadge && activeMiner) {
-            minerBadge.innerHTML = `<img src="${activeMiner.logo}" style="width:100%;height:100%;object-fit:contain;border-radius:50%;">`;
-        } else if (minerBadge) {
-            minerBadge.innerHTML = '⛏️';
-        }
+        if (minerLogo && activeMiner) minerLogo.src = activeMiner.logo;
         this.applyThemeForMiner(activeMiner);
     }
 
@@ -444,6 +420,7 @@ class App {
             if (result.error === 'user_not_registered') { this.showNotRegisteredPage(); throw new Error('Not registered'); }
             if (result.error === 'Account banned') { this.showBanModal(); throw new Error('Banned'); }
             if (result.error === 'Too many requests') throw new Error('Cooldown');
+            if (result.serverTime) this.serverTimeOffset = result.serverTime - Date.now();
             return result;
         } catch (error) { throw error; }
     }
@@ -708,7 +685,7 @@ class App {
         const progressText = document.querySelector('.mining-progress-text .percent');
         if (progressText) progressText.innerText = Math.floor(progressPercent) + '%';
         const amountEl = document.querySelector('.mining-status .amount');
-        if (amountEl) amountEl.innerText = this.formatCoin(minedAmount);
+        if (amountEl) amountEl.innerText = this.formatMining(minedAmount);
     }
 
     async buyMiner(minerId) {
@@ -894,18 +871,11 @@ class App {
         });
     }
 
-    generateUUID() {
-        if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = Math.random() * 16 | 0;
-            const v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
-
-    generateMemo(prefix, userId) {
-        const random10 = Math.random().toString(36).substring(2, 12).padEnd(10, '0').toUpperCase();
-        return `${prefix}_${userId}_${random10}`;
+    generateShortMemo(prefix, userId) {
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let random8 = '';
+        for (let i = 0; i < 8; i++) random8 += chars[Math.floor(Math.random() * chars.length)];
+        return `${prefix}_${userId}_${random8}`;
     }
 
     showNotification(title, message, type) {
@@ -953,7 +923,9 @@ class App {
         if (hours < 24) return this.t('time_ago', { time: `${hours}h` });
         const days = Math.floor(hours / 24);
         return this.t('time_ago', { time: `${days}d` });
-        }
+    }
+
+
         renderMiners() {
         const el = document.getElementById('miners-page');
         if (!el) return;
@@ -1040,7 +1012,7 @@ class App {
             actionHtml = `<button id="buy-miner-btn" class="mining-action-btn buy-miner"><i class="fas fa-shopping-cart"></i> ${this.t('buy_miner')}</button>`;
         } else if (this.miningActive) {
             const minedAmount = this.getMinedAmount();
-            statusHtml = `<div class="mining-status active"><span class="amount">${this.formatCoin(minedAmount)}</span><span class="label">${this.t('coin_mined')}</span></div>`;
+            statusHtml = `<div class="mining-status active"><span class="amount">${this.formatMining(minedAmount)}</span><span class="label">${this.t('coin_mined')}</span></div>`;
             actionHtml = `
                 <div class="mining-progress-container">
                     <div class="mining-progress-bar"><div class="mining-progress-fill" style="width: ${progressPercent}%"></div></div>
@@ -1049,8 +1021,8 @@ class App {
                 <div class="mining-timer">${this.t('time_left')} 00:00:00</div>
             `;
         } else if (this.pendingCoinReward > 0) {
-            statusHtml = `<div class="mining-status active"><span class="amount">${this.formatCoin(this.pendingCoinReward)}</span><span class="label">${this.t('ready_to_claim')}</span></div>`;
-            actionHtml = `<button id="claim-mining-btn" class="mining-claim-btn"><i class="fas fa-gift"></i> ${this.t('claim_reward', { amount: this.formatCoin(this.pendingCoinReward) })}</button>`;
+            statusHtml = `<div class="mining-status active"><span class="amount">${this.formatMining(this.pendingCoinReward)}</span><span class="label">${this.t('ready_to_claim')}</span></div>`;
+            actionHtml = `<button id="claim-mining-btn" class="mining-claim-btn"><img src="${this.config.COIN_ICON}" class="claim-coin-icon"> ${this.t('claim_reward', { amount: this.formatCoin(this.pendingCoinReward) })}</button>`;
         } else {
             statusHtml = `<div class="mining-status not-active">${this.t('not_active')}</div>`;
             actionHtml = `<button id="start-mining-btn" class="mining-action-btn"><i class="fas fa-play"></i> ${this.t('start_mining')}</button>`;
@@ -1064,7 +1036,7 @@ class App {
                 <div class="miner-name-display">${activeMiner ? activeMiner.name : this.t('no_miner')}</div>
                 ${statusHtml}
                 <div class="speed-card">
-                    <div class="speed-item"><div class="speed-label">${this.t('speed')}</div><div class="speed-value">${speedPerHour} ${this.t('coin')}${this.t('per_hour')}</div></div>
+                    <div class="speed-item"><div class="speed-label">${this.t('speed')}</div><div class="speed-value">${speedPerHour}${this.t('per_hour')}</div></div>
                     <div class="speed-item"><div class="speed-label">${this.t('session')}</div><div class="speed-value">${this.miningSessionHours}H</div></div>
                 </div>
                 ${actionHtml}
@@ -1099,13 +1071,18 @@ class App {
         if (currentMinerQuest && minerQuestsContainer) {
             const ownedMiners = this.ownedMiners || [];
             const hasMiner = ownedMiners.includes(currentMinerQuest.miner_id);
-            const minerName = currentMinerQuest.miner_id.charAt(0).toUpperCase() + currentMinerQuest.miner_id.slice(1);
+            const targetMiner = (this.config.MINERS || []).find(m => m.id === currentMinerQuest.miner_id);
+            const targetLogo = targetMiner?.logo || 'https://slho.shop/i/8098';
+            const targetName = targetMiner?.name || currentMinerQuest.miner_id;
+
             minerQuestsContainer.innerHTML = `
-                <div class="quest-card blue-quest" data-icon="⛏️">
+                <div class="quest-card blue-quest">
                     <div class="quest-header">
-                        <div class="quest-icon blue-icon"><i class="fas fa-hammer"></i></div>
+                        <div class="quest-icon blue-icon" style="background:transparent;">
+                            <img src="${targetLogo}" class="quest-miner-logo" alt="${targetName}">
+                        </div>
                         <div class="quest-info">
-                            <h4>${this.t('quest_buy_miner')} - ${minerName.toUpperCase()}</h4>
+                            <h4>${this.t('quest_buy_miner')} - ${targetName}</h4>
                             <div class="quest-rewards-row">
                                 <span class="quest-reward-badge"><i class="fas fa-bolt"></i> ${this.formatNumber(currentMinerQuest.reward)}</span>
                             </div>
@@ -1136,7 +1113,7 @@ class App {
             const taskQuestComplete = this.totalTasksCompleted >= currentTaskQuest.target_tasks;
             const taskProgress = Math.min(100, (this.totalTasksCompleted / currentTaskQuest.target_tasks) * 100);
             taskQuestsContainer.innerHTML = `
-                <div class="quest-card blue-quest" data-icon="📋">
+                <div class="quest-card blue-quest">
                     <div class="quest-header">
                         <div class="quest-icon blue-icon"><i class="fas fa-clipboard-list"></i></div>
                         <div class="quest-info">
@@ -1173,7 +1150,7 @@ class App {
             const referralQuestComplete = this.totalReferrals >= currentReferralQuest.target_referrals;
             const referralProgress = Math.min(100, (this.totalReferrals / currentReferralQuest.target_referrals) * 100);
             referralQuestsContainer.innerHTML = `
-                <div class="quest-card blue-quest" data-icon="👫">
+                <div class="quest-card blue-quest">
                     <div class="quest-header">
                         <div class="quest-icon blue-icon"><i class="fas fa-users"></i></div>
                         <div class="quest-info">
@@ -1245,9 +1222,9 @@ class App {
                 </div>
                 <div class="daily-bonus-info">
                     <h4>${this.t('daily_bonus')}</h4>
-                    <div class="daily-bonus-reward">
-                        <img src="${this.config.COIN_ICON}" style="width:16px;height:16px;border-radius:50%;">
-                        ${this.t('daily_bonus_reward')}
+                    <div class="daily-bonus-reward-badge">
+                        <img src="${this.config.COIN_ICON}">
+                        100
                     </div>
                 </div>
                 <button id="daily-bonus-btn" class="daily-bonus-btn" ${this.dailyBonusClaimed ? 'disabled' : ''}>
@@ -1268,14 +1245,14 @@ class App {
                 <h3><i class="fas fa-play-circle"></i> ${this.t('watch_earn')}</h3>
             </div>
 
-            <div class="ad-card blue-card" data-icon="📺">
+            <div class="ad-card blue-card">
                 <div class="ad-header">
                     <div class="ad-icon"><i class="fas fa-tv"></i></div>
                     <div class="ad-info">
                         <h4>${this.t('watch_ad_1')}</h4>
                         <div class="ad-rewards">
-                            <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower} ${this.t('power')}</span>
-                            <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${this.adRewardCoin} ${this.t('coin')}</span>
+                            <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower}</span>
+                            <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}"> ${this.adRewardCoin}</span>
                             <span class="ad-counter-badge">${ad1Count}/${this.adDailyLimit}</span>
                         </div>
                     </div>
@@ -1285,14 +1262,14 @@ class App {
                 </div>
             </div>
 
-            <div class="ad-card blue-card" data-icon="📺">
+            <div class="ad-card blue-card">
                 <div class="ad-header">
                     <div class="ad-icon"><i class="fas fa-tv"></i></div>
                     <div class="ad-info">
                         <h4>${this.t('watch_ad_2')}</h4>
                         <div class="ad-rewards">
-                            <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower} ${this.t('power')}</span>
-                            <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${this.adRewardCoin} ${this.t('coin')}</span>
+                            <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower}</span>
+                            <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}"> ${this.adRewardCoin}</span>
                             <span class="ad-counter-badge">${ad2Count}/${this.adDailyLimit}</span>
                         </div>
                     </div>
@@ -1389,16 +1366,11 @@ class App {
             btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
             const requestTime = Date.now();
             try {
-                if (window.adexiumWidget) {
-                    await window.adexiumWidget.show();
-                } else if (typeof AdexiumWidget !== 'undefined') {
-                    const widget = new AdexiumWidget({ wid: this.config.ADEXIUM_WIDGET_ID || '5e0639e1-2a8b-49a1-bee9-41c9dda9b6ea', adFormat: 'interstitial' });
-                    widget.autoMode();
-                    await widget.show();
-                } else {
-                    throw new Error('AdexiumWidget not loaded');
+                if (typeof window.showAdexora !== 'function') {
+                    throw new Error('Adexora not loaded');
                 }
-                await new Promise(r => setTimeout(r, 15000));
+                await window.showAdexora();
+                await new Promise(r => setTimeout(r, 3000));
                 const result = await this.fetchFromServer('/api/watch-ad-2', { requestTime });
                 if (!result.error && result.user) {
                     this.powerBalance = result.user.power_balance || 0;
@@ -1413,7 +1385,7 @@ class App {
                     this.vibrate('error');
                 }
             } catch (e) {
-                console.error('Adexium error:', e);
+                console.error('Adexora error:', e);
                 this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
                 this.vibrate('warning');
             }
@@ -1436,8 +1408,8 @@ class App {
             if (codes.length === 0) { container.innerHTML = ''; return; }
             container.innerHTML = codes.map(code => {
                 const rewardDisplay = code.reward_type === 'power'
-                    ? `<i class="fas fa-bolt"></i> ${code.reward_amount} ${this.t('power')}`
-                    : `<img src="${this.config.COIN_ICON}" style="width:12px;height:12px;border-radius:50%;"> ${code.reward_amount} ${this.t('coin')}`;
+                    ? `<i class="fas fa-bolt"></i> ${code.reward_amount}`
+                    : `<img src="${this.config.COIN_ICON}" style="width:12px;height:12px;border-radius:50%;"> ${code.reward_amount}`;
                 return `
                     <div class="promo-code-card">
                         <div class="promo-code-info">
@@ -1600,7 +1572,6 @@ class App {
         const nameInput = document.getElementById('community-task-name');
         const linkInput = document.getElementById('community-task-link');
         const totalCustom = document.getElementById('community-task-total-custom');
-        const verificationGroup = document.getElementById('community-verification-group');
         const verificationNote = document.getElementById('community-verification-note');
         const totalCostDisplay = document.getElementById('community-total-cost-display');
 
@@ -1692,7 +1663,7 @@ class App {
         const walletDisplay = wallet.length > 12 ? wallet.substring(0, 10) + '.....' + wallet.substring(wallet.length - 10) : wallet;
         const storageKey = 'pending_memo_community';
         let memo = localStorage.getItem(storageKey);
-        if (!memo) { memo = this.generateMemo('task', userId); localStorage.setItem(storageKey, memo); }
+        if (!memo) { memo = this.generateShortMemo('task', userId); localStorage.setItem(storageKey, memo); }
         const amount = (this.pendingTaskData.total * 50 / 1000) * (this.config.PRICE_PER_100 || 0.10);
 
         const walletDisplayEl = document.getElementById('payment-wallet-display');
@@ -1741,7 +1712,7 @@ class App {
         if (!modal || !content) return;
 
         const rewardDisplay = codeData.reward_type === 'power'
-            ? `<i class="fas fa-bolt" style="color:#4A90D9;"></i> ${codeData.reward_amount} Power`
+            ? `<i class="fas fa-bolt" style="color:var(--theme-color);"></i> ${codeData.reward_amount} Power`
             : `<img src="${this.config.COIN_ICON}" style="width:20px;height:20px;border-radius:50%;"> ${codeData.reward_amount} COIN`;
 
         let requirementsHtml = '';
@@ -1750,7 +1721,7 @@ class App {
                 <div class="promo-requirement-item" id="req-channel-${codeData.code}">
                     <div class="promo-requirement-icon"><i class="fab fa-telegram"></i></div>
                     <div class="promo-requirement-info"><h5>${this.t('join_channel')}</h5><p>@${codeData.required_channel}</p></div>
-                    <a href="https://t.me/${codeData.required_channel}" target="_blank" class="promo-requirement-btn" id="join-btn-${codeData.code}">Join</a>
+                    <a href="https://t.me/${codeData.required_channel}" target="_blank" class="promo-requirement-btn" id="join-btn-${codeData.code}">${this.t('join_channel_btn')}</a>
                 </div>
             `;
         }
@@ -1790,7 +1761,7 @@ class App {
                         updateClaimState();
                     } else {
                         joinBtn.classList.remove('completed');
-                        joinBtn.textContent = 'Join';
+                        joinBtn.textContent = this.t('join_channel_btn');
                         this.showNotification(this.t('join_required'), this.t('join_first'), 'warning');
                         this.vibrate('warning');
                     }
@@ -1875,9 +1846,6 @@ class App {
         const el = document.getElementById('team-page');
         if (!el) return;
         const link = (this.config.BOT_LINK || 'https://t.me/GramHunterBot?start=') + this.tgUser.id;
-        const referralBonus = this.config.REFERRAL_BONUS_POWER || 100;
-        const miningPercent = this.config.REFERRAL_MINING_PERCENTAGE || 10;
-        const tasksPercent = this.config.REFERRAL_TASKS_PERCENTAGE || 20;
 
         el.innerHTML = `
             <div class="page-title">
@@ -1914,11 +1882,10 @@ class App {
                     <div class="referral-link-title"><i class="fas fa-link"></i> ${this.t('referral_link_title')}</div>
                     <div class="team-link-box">${link}</div>
                     <button id="copyLink" class="copy-btn"><i class="fas fa-copy"></i> ${this.t('copy_link')}</button>
-                    <div class="copy-btn-desc">${this.t('share_earn_desc')}</div>
                 </div>
             </div>
 
-            <div class="referral-earnings-title"><i class="fas fa-gift"></i> ${this.t('referral_earnings')}</div>
+            <div class="referral-earnings-title">${this.t('referral_earnings')}</div>
 
             <div class="earnings-row">
                 <div class="earning-card power-card">
@@ -1974,6 +1941,14 @@ class App {
         const minWithdrawCoin = this.config.MINIMUM_WITHDRAW || 10000;
 
         el.innerHTML = `
+            <div class="live-channel-card blue-card">
+                <div class="live-channel-title"><i class="fas fa-bullhorn"></i> ${this.t('live_channel_title')}</div>
+                <div class="live-channel-desc">${this.t('live_channel_desc')}</div>
+                <a href="${this.config.LIVE_PAYMENTS_CHANNEL || 'https://t.me/Hunters_Proof'}" target="_blank" class="live-channel-btn">
+                    <i class="fab fa-telegram"></i> ${this.t('join_channel')}
+                </a>
+            </div>
+
             <div class="withdraw-card blue-card">
                 <h4 style="text-align:center; color:var(--primary-light); margin-bottom:14px; font-weight:800;">
                     <i class="fas fa-arrow-up"></i> ${this.t('withdraw_gram')}
@@ -2028,13 +2003,13 @@ class App {
         if (this._historyTab === 'my') {
             const historyHtml = this.withdrawals && this.withdrawals.length ? this.withdrawals.slice(0, 10).map(w => {
                 const statusClass = w.status || 'pending';
-                const statusText = statusClass === 'completed' ? this.t('completed') : (statusClass === 'processing' ? this.t('processing') : this.t('pending'));
+                const statusText = statusClass === 'completed' ? this.t('completed') : (statusClass === 'processing' ? this.t('processing') : (statusClass === 'failed' ? this.t('failed') : this.t('pending')));
                 const explorerLink = w.tx_hash ? `<a href="https://tonscan.org/tx/${w.tx_hash}" target="_blank" class="history-explorer-link"><i class="fas fa-arrow-up-right-from-square"></i> ${this.t('view_on_explorer')}</a>` : '';
                 return `
                     <div class="history-item-wrapper">
                         <div class="history-item">
                             <div class="history-amount">
-                                <img src="${this.config.COIN_ICON}" style="width:16px;height:16px;border-radius:50%;">
+                                <img src="${this.config.COIN_ICON}">
                                 <span style="font-weight:600;">${Math.floor(w.amount)}</span>
                                 <span style="color:#888;font-size:0.65rem;">- ${(w.gram_amount || 0).toFixed(4)} GRAM</span>
                             </div>
@@ -2052,13 +2027,13 @@ class App {
             if (this.liveWithdrawals && this.liveWithdrawals.length) {
                 container.innerHTML = `<div class="history-list">${this.liveWithdrawals.map(w => {
                     const statusClass = w.status || 'pending';
-                    const statusText = statusClass === 'completed' ? this.t('completed') : (statusClass === 'processing' ? this.t('processing') : this.t('pending'));
-                    const explorerLink = w.tx_hash ? `<a href="https://tonscan.org/tx/${w.tx_hash}" target="_blank" class="history-explorer-link"><i class="fas fa-arrow-up-right-from-square"></i> ${this.t('view_explorer')}</a>` : '';
+                    const statusText = statusClass === 'completed' ? this.t('completed') : (statusClass === 'processing' ? this.t('processing') : (statusClass === 'failed' ? this.t('failed') : this.t('pending')));
+                    const explorerLink = w.tx_hash ? `<a href="https://tonscan.org/tx/${w.tx_hash}" target="_blank" class="history-explorer-link"><i class="fas fa-arrow-up-right-from-square"></i> ${this.t('view_on_explorer')}</a>` : '';
                     return `
                         <div class="history-item-wrapper">
                             <div class="history-item">
                                 <div class="history-amount">
-                                    <img src="${this.config.COIN_ICON}" style="width:16px;height:16px;border-radius:50%;">
+                                    <img src="${this.config.COIN_ICON}">
                                     <span style="font-weight:600;">${Math.floor(w.amount)}</span>
                                     <span style="color:#888;font-size:0.6rem;">${w.wallet_masked || '***'}</span>
                                 </div>
@@ -2072,19 +2047,27 @@ class App {
                     `;
                 }).join('')}</div>`;
             } else {
-                container.innerHTML = '<div class="no-data"><i class="fas fa-spinner fa-pulse"></i><p>Loading live payments...</p></div>';
+                container.innerHTML = `<div class="no-data"><i class="fas fa-inbox"></i><p>${this.t('no_live_payments')}</p></div>`;
             }
         }
     }
 
     async loadLivePayments() {
+        const container = document.getElementById('history-content');
+        if (container) container.innerHTML = '<div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>Loading...</p></div>';
         try {
             const result = await this.fetchFromServer('/api/get-live-withdrawals', {});
             if (result.withdrawals) {
                 this.liveWithdrawals = result.withdrawals;
                 this.renderHistoryContent();
+            } else {
+                this.liveWithdrawals = [];
+                this.renderHistoryContent();
             }
-        } catch (error) {}
+        } catch (error) {
+            this.liveWithdrawals = [];
+            this.renderHistoryContent();
+        }
     }
 
     attachWithdrawHandlers() {
