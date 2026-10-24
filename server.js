@@ -165,7 +165,7 @@ const APP_CONFIG = {
     TASK_REWARD: 100,
     TASK_IMAGE: "https://slho.shop/i/8067",
     GRAM_ICON: "https://i.ibb.co/Q3LyfHL6/file-00000000aec481f4a4599f4c3a9fee9a.png",
-    COIN_ICON: "https://slho.shop/i/8125",
+    COIN_ICON: "https://slho.shop/i/8124",
     MINING_ICON: "https://slho.shop/i/8067",
     APP_LOGO: "https://slho.shop/i/8067",
     COIN_TO_GRAM_RATE: 1000000,
