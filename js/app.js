@@ -1212,7 +1212,7 @@ class App {
     el.innerHTML = `
         <div class="daily-bonus-card">
             <div class="daily-bonus-icon">
-                <img src="https://slho.shop/i/8126" style="width:36px;height:36px;object-fit:contain;" alt="Daily Bonus">
+                <img src="https://slho.shop/i/8127" style="width:36px;height:36px;object-fit:contain;" alt="Daily Bonus">
             </div>
             <div class="daily-bonus-info">
                 <h4>${this.t('daily_bonus')}</h4>
