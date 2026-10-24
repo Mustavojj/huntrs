@@ -377,4 +377,24 @@ body {
 @media (max-width: 400px) {
     .header-balance { font-size: 0.55rem; padding: 3px 6px; }
     .miner-stats-row { grid-template-columns: 1fr 1fr; }
-        }
+}
+
+.miner-bg-icons {
+    display: none !important;
+}
+
+.miner-card.miner-diamond {
+    background: linear-gradient(135deg, #0EA5E9, #0284C7, #075985) !important;
+}
+
+body.theme-diamond {
+    --theme-gradient: linear-gradient(135deg, #0EA5E9, #0284C7, #075985);
+    --theme-color: #0EA5E9;
+    --theme-glow: rgba(14, 165, 233, 0.5);
+    --primary: #0EA5E9;
+    --primary-dark: #0284C7;
+    --primary-light: #38BDF8;
+}
+
+.miner-card.miner-diamond { background: linear-gradient(135deg, #0EA5E9, #0284C7, #075985); }  
+
