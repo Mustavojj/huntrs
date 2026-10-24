@@ -32,6 +32,7 @@ const getUserCache = new Map();
 const withdrawLocks = new Map();
 const taskCompletionLocks = new Map();
 const promoCodeLocks = new Map();
+const adCooldowns = new Map();
 
 function logFailure(endpoint, userId, ip, error, extra = {}) {
     console.error(`❌ [${endpoint}] FAILED`, JSON.stringify({ userId: userId || 'unknown', ip: ip || 'unknown', error: error?.message || error, ...extra }));
@@ -73,6 +74,17 @@ function checkPromoCooldown(userId) {
 }
 
 function setPromoCooldown(userId) { promoCodeLocks.set(`promo_${userId}`, Date.now()); }
+
+function checkAdCooldown(userId, adType) {
+    const now = Date.now();
+    const key = `ad_${adType}_${userId}`;
+    const lastWatch = adCooldowns.get(key) || 0;
+    const cooldownMs = 3 * 60 * 1000;
+    if (now - lastWatch < cooldownMs) return { allowed: false, remaining: Math.ceil((cooldownMs - (now - lastWatch)) / 1000) };
+    return { allowed: true, remaining: 0 };
+}
+
+function setAdCooldown(userId, adType) { adCooldowns.set(`ad_${adType}_${userId}`, Date.now()); }
 
 function validateTelegramInitData(initData, botToken) {
     if (!initData || !botToken) return { valid: false, error: 'Missing data' };
@@ -148,7 +160,7 @@ const APP_CONFIG = {
     PAYMENT_WALLET: "UQAWoiLpbPqpHjpteK2CHGizA6OimyPXZBWsx9Nw1IMPyUrm",
     INTERSTITIAL_AD_BLOCK_ID: "int-41677",
     REWARD_AD_BLOCK_ID: "41675",
-    ADEXIUM_WIDGET_ID: "5e0639e1-2a8b-49a1-bee9-41c9dda9b6ea",
+    ADEXORA_ZONE_ID: "2221",
     BOT_LINK: "https://t.me/GramHunterBot?start=",
     TASK_REWARD: 100,
     TASK_IMAGE: "https://slho.shop/i/8067",
@@ -168,6 +180,7 @@ const APP_CONFIG = {
     AD_REWARD_POWER: 50,
     AD_REWARD_COIN: 20,
     AD_DAILY_LIMIT: 5,
+    AD_COOLDOWN_MINUTES: 3,
     MIN_CLAIM_COIN: 1,
     PRICE_PER_100: 0.10,
     COMMUNITY_COIN_REWARD: 50,
@@ -185,6 +198,7 @@ const APP_CONFIG = {
     NOTIFICATIONS_CHANNEL: "@GramHunters_Notifications",
     TASKS_CHANNEL: "@GHT_TASKS",
     PAYMENTS_CHANNEL: "https://t.me/Hunters_Proof",
+    LIVE_PAYMENTS_CHANNEL: "https://t.me/Hunters_Proof",
     QUESTS: {
         miner_quests: [
             { miner_id: "bronze", reward: 100 },
@@ -213,72 +227,12 @@ const APP_CONFIG = {
         ]
     },
     MINERS: [
-        {
-            id: "bronze",
-            name: "Bronze Miner",
-            speed_per_hour: 10,
-            duration_days: 0,
-            price_power: 0,
-            color: "#CD7F32",
-            gradient: "linear-gradient(135deg, #B87333, #8B4513, #6B3A1F)",
-            logo: "https://slho.shop/i/8098",
-            bg_icon: "🥉"
-        },
-        {
-            id: "silver",
-            name: "Silver Miner",
-            speed_per_hour: 20,
-            duration_days: 30,
-            price_power: 10000,
-            color: "#C0C0C0",
-            gradient: "linear-gradient(135deg, #A8A8A8, #7A7A7A, #4A4A4A)",
-            logo: "https://slho.shop/i/8097",
-            bg_icon: "🥈"
-        },
-        {
-            id: "gold",
-            name: "Gold Miner",
-            speed_per_hour: 100,
-            duration_days: 30,
-            price_power: 50000,
-            color: "#FFD700",
-            gradient: "linear-gradient(135deg, #B8860B, #8B6508, #5C4A05)",
-            logo: "https://slho.shop/i/8096",
-            bg_icon: "🥇"
-        },
-        {
-            id: "diamond",
-            name: "Diamond Miner",
-            speed_per_hour: 200,
-            duration_days: 30,
-            price_power: 100000,
-            color: "#00CED1",
-            gradient: "linear-gradient(135deg, #008B8B, #005F5F, #003D3D)",
-            logo: "https://slho.shop/i/8094",
-            bg_icon: "💎"
-        },
-        {
-            id: "master",
-            name: "Master Miner",
-            speed_per_hour: 1000,
-            duration_days: 30,
-            price_power: 500000,
-            color: "#9400D3",
-            gradient: "linear-gradient(135deg, #5B0087, #3D0059, #24003A)",
-            logo: "https://slho.shop/i/8093",
-            bg_icon: "⚡"
-        },
-        {
-            id: "hunters",
-            name: "Hunters Miner",
-            speed_per_hour: 3000,
-            duration_days: 30,
-            price_power: 1000000,
-            color: "#4A90D9",
-            gradient: "linear-gradient(135deg, #2563EB, #1D4ED8, #0F2E7A)",
-            logo: "https://slho.shop/i/8099",
-            bg_icon: "🎯"
-        }
+        { id: "bronze", name: "Bronze", speed_per_hour: 10, duration_days: 0, price_power: 0, color: "#CD7F32", gradient: "linear-gradient(135deg, #B87333, #8B4513, #6B3A1F)", logo: "https://slho.shop/i/8098", bg_icon: "🥉" },
+        { id: "silver", name: "Silver", speed_per_hour: 20, duration_days: 30, price_power: 10000, color: "#C0C0C0", gradient: "linear-gradient(135deg, #A8A8A8, #7A7A7A, #4A4A4A)", logo: "https://slho.shop/i/8097", bg_icon: "🥈" },
+        { id: "gold", name: "Gold", speed_per_hour: 100, duration_days: 30, price_power: 50000, color: "#FFD700", gradient: "linear-gradient(135deg, #B8860B, #8B6508, #5C4A05)", logo: "https://slho.shop/i/8096", bg_icon: "🥇" },
+        { id: "diamond", name: "Diamond", speed_per_hour: 200, duration_days: 30, price_power: 100000, color: "#00CED1", gradient: "linear-gradient(135deg, #008B8B, #005F5F, #003D3D)", logo: "https://slho.shop/i/8094", bg_icon: "💎" },
+        { id: "master", name: "Master", speed_per_hour: 1000, duration_days: 30, price_power: 500000, color: "#9400D3", gradient: "linear-gradient(135deg, #5B0087, #3D0059, #24003A)", logo: "https://slho.shop/i/8093", bg_icon: "⚡" },
+        { id: "hunters", name: "Hunters", speed_per_hour: 3000, duration_days: 30, price_power: 1000000, color: "#4A90D9", gradient: "linear-gradient(135deg, #2563EB, #1D4ED8, #0F2E7A)", logo: "https://slho.shop/i/8099", bg_icon: "🎯" }
     ]
 };
 
@@ -660,7 +614,7 @@ app.post('/api/get-user', authenticate, async (req, res) => {
         const [completedTasks, withdrawals] = await Promise.all([getCompletedTasks(userId), getWithdrawals(userId)]);
         await updateUserLevel(userId);
         user = await getUser(userId);
-        res.json({ user, completedTasks, withdrawals });
+        res.json({ user, completedTasks, withdrawals, serverTime: getCurrentTime() });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
@@ -707,7 +661,7 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
         }
 
         await updateUserLevel(userId);
-        res.json({ success: true, user: updatedUser });
+        res.json({ success: true, user: updatedUser, serverTime: getCurrentTime() });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
@@ -721,7 +675,7 @@ app.post('/api/stop-mining', authenticate, strictLimiter, async (req, res) => {
         const currentTime = getCurrentTime();
         const rewardAmount = calculateMiningReward(user, user.mining_start_time, user.mining_end_time || currentTime);
         const updatedUser = await updateUser(userId, { mining_active: false, mining_start_time: null, mining_end_time: null, pending_coin_reward: rewardAmount, last_mining_end_time: currentTime });
-        res.json({ success: true, user: updatedUser, reward: rewardAmount });
+        res.json({ success: true, user: updatedUser, reward: rewardAmount, serverTime: currentTime });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
@@ -731,6 +685,12 @@ app.post('/api/claim-mining', authenticate, strictLimiter, async (req, res) => {
         const user = await getUser(userId);
         if (!user) return res.status(404).json({ error: 'User not found' });
         if (user.mining_active) return res.status(400).json({ error: 'Mining active' });
+
+        const currentTime = getCurrentTime();
+        if (user.mining_end_time && currentTime < user.mining_end_time) {
+            const remaining = Math.ceil((user.mining_end_time - currentTime) / 1000);
+            return res.status(400).json({ error: `Session not ended. Wait ${remaining}s` });
+        }
 
         const rewardAmount = user.pending_coin_reward || 0;
         if (rewardAmount <= 0) return res.status(400).json({ error: 'No rewards' });
@@ -744,7 +704,7 @@ app.post('/api/claim-mining', authenticate, strictLimiter, async (req, res) => {
             await addReferralCommission(user.referred_by, referralEarning, 'coin');
         }
         await updateUserLevel(userId);
-        res.json({ success: true, user: updatedUser, claimed: rewardAmount });
+        res.json({ success: true, user: updatedUser, claimed: rewardAmount, serverTime: currentTime });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
@@ -905,7 +865,10 @@ app.post('/api/watch-ad-1', authenticate, strictLimiter, async (req, res) => {
         if (!user) return res.status(404).json({ error: 'User not found' });
 
         const now = getCurrentTime();
-        if (!requestTime || (now - requestTime) < 15000) return res.status(400).json({ error: 'Ad not completed' });
+        if (!requestTime || (now - requestTime) < 10000) return res.status(400).json({ error: 'Ad not completed' });
+
+        const cooldownCheck = checkAdCooldown(userId, 'ad1');
+        if (!cooldownCheck.allowed) return res.status(400).json({ error: `Cooldown: ${cooldownCheck.remaining}s` });
 
         const today = getTodayString();
         let dailyCount = user.ad1_daily_count || 0;
@@ -925,6 +888,7 @@ app.post('/api/watch-ad-1', authenticate, strictLimiter, async (req, res) => {
             ad_daily_date: today
         });
 
+        setAdCooldown(userId, 'ad1');
         await checkLargeTransaction(userId, powerReward, 'Ad Power');
         await checkLargeTransaction(userId, coinReward, 'Ad COIN');
 
@@ -948,7 +912,10 @@ app.post('/api/watch-ad-2', authenticate, strictLimiter, async (req, res) => {
         if (!user) return res.status(404).json({ error: 'User not found' });
 
         const now = getCurrentTime();
-        if (!requestTime || (now - requestTime) < 15000) return res.status(400).json({ error: 'Ad not completed' });
+        if (!requestTime || (now - requestTime) < 10000) return res.status(400).json({ error: 'Ad not completed' });
+
+        const cooldownCheck = checkAdCooldown(userId, 'ad2');
+        if (!cooldownCheck.allowed) return res.status(400).json({ error: `Cooldown: ${cooldownCheck.remaining}s` });
 
         const today = getTodayString();
         let dailyCount = user.ad2_daily_count || 0;
@@ -967,6 +934,7 @@ app.post('/api/watch-ad-2', authenticate, strictLimiter, async (req, res) => {
             ad_daily_date: today
         });
 
+        setAdCooldown(userId, 'ad2');
         await checkLargeTransaction(userId, powerReward, 'Ad Power');
         await checkLargeTransaction(userId, coinReward, 'Ad COIN');
 
@@ -1001,17 +969,13 @@ app.post('/api/claim-daily-bonus', authenticate, strictLimiter, async (req, res)
 });
 
 app.post('/api/tasks/:category', authenticate, async (req, res) => {
-    try {
-        const tasks = await getTasks(req.params.category, req._userId);
-        res.json({ tasks });
-    } catch (error) { res.status(500).json({ error: error.message }); }
+    try { res.json({ tasks: await getTasks(req.params.category, req._userId) }); }
+    catch (error) { res.status(500).json({ error: error.message }); }
 });
 
 app.post('/api/promo-codes', authenticate, async (req, res) => {
-    try {
-        const codes = await getActivePromoCodes(req._userId);
-        res.json({ codes });
-    } catch (error) { res.status(500).json({ error: error.message }); }
+    try { res.json({ codes: await getActivePromoCodes(req._userId) }); }
+    catch (error) { res.status(500).json({ error: error.message }); }
 });
 
 app.post('/api/claim-promo-code', authenticate, strictLimiter, async (req, res) => {
@@ -1137,12 +1101,11 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
         if (foundTx.in_msg?.message !== memo) return res.json({ success: false, error: 'Invalid memo' });
 
         const txAmount = parseFloat(foundTx.in_msg?.value) / 1000000000 || 0;
-        const rewardNum = parseInt(taskData.reward);
         const totalNum = parseInt(taskData.total);
 
-        if (rewardNum > 50 || totalNum < 100 || totalNum > 5000) return res.json({ success: false, error: 'Invalid' });
+        if (totalNum < 100 || totalNum > 5000) return res.json({ success: false, error: 'Invalid' });
 
-        const requiredAmount = (taskData.total * taskData.reward / 1000) * (APP_CONFIG.PRICE_PER_100 || 0.10);
+        const requiredAmount = (taskData.total * 50 / 1000) * (APP_CONFIG.PRICE_PER_100 || 0.10);
         if (txAmount < requiredAmount * 0.98) return res.json({ success: false, error: 'Insufficient' });
 
         let verification = taskData.verification || false;
@@ -1200,9 +1163,6 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
         const coin = parseFloat(coinAmount);
         if (isNaN(coin) || coin <= 0) return res.status(400).json({ error: 'Invalid amount' });
 
-        const fees = APP_CONFIG.WITHDRAWAL_FEES || 0;
-        const netCoin = coin - fees;
-        if (netCoin <= 0) return res.status(400).json({ error: 'Amount below fees' });
         if (coin < APP_CONFIG.MINIMUM_WITHDRAW) return res.status(400).json({ error: `Min ${APP_CONFIG.MINIMUM_WITHDRAW} COIN` });
         if (coin > APP_CONFIG.MAXIMUM_WITHDRAW) return res.status(400).json({ error: `Max ${APP_CONFIG.MAXIMUM_WITHDRAW} COIN` });
 
@@ -1217,7 +1177,7 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
 
         if (coin > 1000 && (user.total_referrals || 0) <= 3) return res.status(400).json({ error: 'Need 4+ referrals for >1000 COIN' });
 
-        const gramAmount = netCoin / (APP_CONFIG.COIN_TO_GRAM_RATE || 1000000);
+        const gramAmount = coin / (APP_CONFIG.COIN_TO_GRAM_RATE || 1000000);
 
         const { data: lockResult, error: lockError } = await supabase
             .from('users')
@@ -1240,7 +1200,7 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
                 return res.status(500).json({ error: payout?.message || 'Failed' });
             }
 
-            const withdrawal = await createWithdrawal({ user_id: userId, amount: coin, fees, gram_amount: gramAmount, wallet: walletAddress, status: 'processing', timestamp: now, tx_id: payout.trackId, tx_hash: payout.txHash });
+            const withdrawal = await createWithdrawal({ user_id: userId, amount: coin, fees: 0, gram_amount: gramAmount, wallet: walletAddress, status: 'processing', timestamp: now, tx_id: payout.trackId, tx_hash: payout.txHash });
 
             const adminId = process.env.ADMIN_USER_ID;
             if (adminId) await sendTelegramNotification(adminId, '💸 New Withdrawal', `<b>💸 Withdrawal</b>\n\n<b>👤 User:</b> ${user.first_name} (${userId})\n<b>💰 Amount:</b> ${gramAmount.toFixed(5)} GRAM\n<b>📭 Wallet:</b> ${walletAddress}\n<b>🔗 Track:</b> ${payout.trackId}`);
