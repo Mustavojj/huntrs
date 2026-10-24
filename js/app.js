@@ -1210,21 +1210,20 @@ class App {
         const ad2ReachedLimit = ad2Count >= this.adDailyLimit;
 
         el.innerHTML = `
-            <div class="daily-bonus-card">
-                <div class="daily-bonus-icon">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="3" y="10" width="18" height="11" rx="1.5" fill="#FFD700"/>
-                        <rect x="3" y="7" width="18" height="4" rx="1" fill="#FFE44D"/>
-                        <rect x="10.5" y="7" width="3" height="14" fill="#D4A800"/>
-                        <path d="M12 7C12 7 10 7 9 6C8 5 8 3 9.5 3C11 3 12 7 12 7Z" fill="#FFE44D" stroke="#D4A800" stroke-width="0.8"/>
-                        <path d="M12 7C12 7 14 7 15 6C16 5 16 3 14.5 3C13 3 12 7 12 7Z" fill="#FFE44D" stroke="#D4A800" stroke-width="0.8"/>
-                    </svg>
-                </div>
+            <div class="daily-bonus-icon">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="10" width="18" height="11" rx="1.5" fill="#4A90D9"/>
+        <rect x="3" y="7" width="18" height="4" rx="1" fill="#60A5FA"/>
+        <rect x="10.5" y="7" width="3" height="14" fill="#2563EB"/>
+        <path d="M12 7C12 7 10 7 9 6C8 5 8 3 9.5 3C11 3 12 7 12 7Z" fill="#60A5FA" stroke="#2563EB" stroke-width="0.8"/>
+        <path d="M12 7C12 7 14 7 15 6C16 5 16 3 14.5 3C13 3 12 7 12 7Z" fill="#60A5FA" stroke="#2563EB" stroke-width="0.8"/>
+    </svg>
+</div>
                 <div class="daily-bonus-info">
                     <h4>${this.t('daily_bonus')}</h4>
-                    <div class="daily-bonus-reward-badge">
-                        <img src="${this.config.COIN_ICON}">
-                        100
+                    <div class="daily-bonus-reward-badge" style="background:rgba(0,0,0,0.35);">
+                    <img src="${this.config.COIN_ICON}">
+                    100
                     </div>
                 </div>
                 <button id="daily-bonus-btn" class="daily-bonus-btn" ${this.dailyBonusClaimed ? 'disabled' : ''}>
