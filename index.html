@@ -7,12 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
-    <script type="text/javascript" src="https://cdn.tgads.space/assets/js/adexium-widget.min.js"></script>
     <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', () => {
-        const adexiumWidget = new AdexiumWidget({wid: '5e0639e1-2a8b-49a1-bee9-41c9dda9b6ea', adFormat: 'interstitial'});
-        adexiumWidget.autoMode();
-    });
+        document.addEventListener('DOMContentLoaded', () => {
+            window.adexiumWidget = new AdexiumWidget({wid: '5e0639e1-2a8b-49a1-bee9-41c9dda9b6ea', adFormat: 'interstitial'});
+            setTimeout(() => {
+                window.adexiumWidget.show().catch(() => {});
+            }, 15000);
+        });
     </script>
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
     <script src="https://adexora.com/cdn/ads.js?id=2221"></script>
