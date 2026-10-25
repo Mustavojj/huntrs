@@ -1362,6 +1362,20 @@ class App {
             if (typeof window.showAdexora !== 'function') {
                 throw new Error('Adexora not loaded');
             }
+            
+            let retries = 0;
+            while (typeof window.showAdexora !== 'function' && retries < 20) {
+                await new Promise(r => setTimeout(r, 250));
+                retries++;
+            }
+            
+            if (typeof window.showAdexora !== 'function') {
+                this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
+                this.vibrate('warning');
+                this.renderEarn();
+                return;
+            }
+            
             await window.showAdexora();
             await new Promise(r => setTimeout(r, 3000));
             const result = await this.fetchFromServer('/api/watch-ad-2', { requestTime });
