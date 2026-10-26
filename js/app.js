@@ -18,6 +18,7 @@ const translations = {
         not_active: "Not Active", session: "Session", start_mining: "START MINING",
         claim_reward: "CLAIM {amount} COIN", mining_active: "MINING ACTIVE", time_left: "TIME LEFT:",
         claim_quest: "Claim", watch_ad_1: "Watch AD #1", watch_ad_2: "Watch AD #2",
+        watch_ad_3: "Watch AD #3", watch_ad_4: "Watch AD #4",
         watch_earn: "WATCH & EARN", main_tasks: "Main Tasks", community_tasks: "Community Tasks",
         promo_code: "Promo Code", enter_code: "Enter code",
         daily_bonus: "Daily Bonus", daily_bonus_claimed: "Claimed", daily_bonus_ready: "CLAIM",
@@ -76,6 +77,7 @@ const translations = {
         not_active: "غير نشط", session: "الجلسة", start_mining: "بدء التعدين",
         claim_reward: "استلام {amount} عملة", mining_active: "التعدين نشط", time_left: "الوقت المتبقي:",
         claim_quest: "استلام", watch_ad_1: "إعلان #1", watch_ad_2: "إعلان #2",
+        watch_ad_3: "إعلان #3", watch_ad_4: "إعلان #4",
         watch_earn: "شاهد واربح", main_tasks: "المهام الرئيسية", community_tasks: "المهام المجتمعية",
         promo_code: "رمز ترويجي", enter_code: "أدخل الرمز",
         daily_bonus: "المكافأة اليومية", daily_bonus_claimed: "مستلمة", daily_bonus_ready: "استلام",
@@ -134,6 +136,7 @@ const translations = {
         not_active: "Не активно", session: "Сессия", start_mining: "НАЧАТЬ",
         claim_reward: "ЗАБРАТЬ {amount}", mining_active: "АКТИВЕН", time_left: "ОСТАЛОСЬ:",
         claim_quest: "Забрать", watch_ad_1: "Реклама #1", watch_ad_2: "Реклама #2",
+        watch_ad_3: "Реклама #3", watch_ad_4: "Реклама #4",
         watch_earn: "СМОТРИ", main_tasks: "Основные", community_tasks: "Сообщества",
         promo_code: "Промокод", enter_code: "Введите код",
         daily_bonus: "Бонус", daily_bonus_claimed: "Получено", daily_bonus_ready: "ЗАБРАТЬ",
@@ -192,6 +195,7 @@ const translations = {
         not_active: "غیرفعال", session: "جلسه", start_mining: "شروع استخراج",
         claim_reward: "دریافت {amount}", mining_active: "فعال", time_left: "زمان باقی‌مانده:",
         claim_quest: "دریافت", watch_ad_1: "تبلیغ #۱", watch_ad_2: "تبلیغ #۲",
+        watch_ad_3: "تبلیغ #۳", watch_ad_4: "تبلیغ #۴",
         watch_earn: "تماشا", main_tasks: "اصلی", community_tasks: "اجتماعی",
         promo_code: "کد", enter_code: "کد را وارد کنید",
         daily_bonus: "پاداش روزانه", daily_bonus_claimed: "دریافت شد", daily_bonus_ready: "دریافت",
@@ -265,6 +269,8 @@ class App {
         this.adWatchCount = 0;
         this.ad1DailyCount = 0;
         this.ad2DailyCount = 0;
+        this.ad3DailyCount = 0;
+        this.ad4DailyCount = 0;
         this.adDailyDate = '';
         this.adLastWatch = 0;
         this.adexiumAdLastWatch = 0;
@@ -544,6 +550,8 @@ class App {
             this.adexiumAdLastWatch = user.adexium_ad_last_watch || 0;
             this.ad1DailyCount = user.ad1_daily_count || 0;
             this.ad2DailyCount = user.ad2_daily_count || 0;
+            this.ad3DailyCount = user.ad3_daily_count || 0;
+            this.ad4DailyCount = user.ad4_daily_count || 0;
             this.adDailyDate = user.ad_daily_date || '';
             this.isAuthenticated = true;
             this.ownedMiners = user.owned_miners || [];
@@ -633,8 +641,7 @@ class App {
     async claimMiningRewards() {
         if (this.pendingCoinReward <= 0) { this.showNotification('Error', 'No rewards', 'error'); this.vibrate('error'); return; }
         try {
-            const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
-            if (AdController) await AdController.show();
+            await this.showMonetagAd();
         } catch (e) { this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning'); this.vibrate('warning'); return; }
         const result = await this.fetchFromServer('/api/claim-mining', {});
         if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return; }
@@ -760,8 +767,7 @@ class App {
 
     async claimReferralEarnings(type) {
         try {
-            const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
-            if (AdController) await AdController.show();
+            await this.showMonetagAd();
         } catch (e) { this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning'); this.vibrate('warning'); return false; }
         try {
             const result = await this.fetchFromServer('/api/claim-referral-earnings', { type });
@@ -925,8 +931,36 @@ class App {
         return this.t('time_ago', { time: `${days}d` });
     }
 
+    async showMonetagAd() {
+        if (typeof window.show_12129587 !== 'function') {
+            throw new Error('Monetag not loaded');
+        }
+        await window.show_12129587();
+    }
 
-        renderMiners() {
+    async showGigahubAd() {
+        if (typeof window.showGiga !== 'function') {
+            throw new Error('Gigahub not loaded');
+        }
+        await window.showGiga();
+    }
+
+    async showAdexiumAd() {
+        if (typeof window.AdexiumWidget !== 'function') {
+            throw new Error('Adexium not loaded');
+        }
+        const widget = new window.AdexiumWidget({ wid: '5e0639e1-2a8b-49a1-bee9-41c9dda9b6ea', adFormat: 'interstitial' });
+        await widget.show();
+    }
+
+    async showAdexoraAd() {
+        if (typeof window.showAdexora !== 'function') {
+            throw new Error('Adexora not loaded');
+        }
+        await window.showAdexora();
+    }
+
+    renderMiners() {
         const el = document.getElementById('miners-page');
         if (!el) return;
 
@@ -942,19 +976,19 @@ class App {
                     const canAfford = this.powerBalance >= miner.price_power;
                     let btnText = '';
                     let btnDisabled = false;
-                    if (isActive) { btnText = '✓ ' + this.t('active'); btnDisabled = true; }
+                    let showButton = true;
+                    if (isActive) { showButton = false; }
                     else if (isOwned) { btnText = this.t('activate'); btnDisabled = false; }
                     else if (miner.price_power === 0) { btnText = this.t('free'); btnDisabled = false; }
-                    else if (!canAfford) { btnText = this.t('need_power', { amount: this.formatNumber(miner.price_power) }); btnDisabled = true; }
+                    else if (!canAfford) {
+                        const remaining = miner.price_power - this.powerBalance;
+                        btnText = this.t('need_power', { amount: this.formatNumber(remaining) });
+                        btnDisabled = true;
+                    }
                     else { btnText = this.t('buy_for_power', { amount: this.formatNumber(miner.price_power) }); btnDisabled = false; }
 
                     return `
                         <div class="miner-card miner-${miner.id}">
-                            <div class="miner-bg-icons">
-                                <span>${miner.bg_icon}</span>
-                                <span>${miner.bg_icon}</span>
-                                <span>${miner.bg_icon}</span>
-                            </div>
                             <div class="miner-card-header">
                                 <div class="miner-icon"><img src="${miner.logo}" alt="${miner.name}"></div>
                                 <div class="miner-card-title">${miner.name}</div>
@@ -973,9 +1007,7 @@ class App {
                                     <div class="stat-value">${miner.price_power === 0 ? this.t('free') : this.formatNumber(miner.price_power)}</div>
                                 </div>
                             </div>
-                            <button class="miner-buy-btn ${isActive ? 'active' : ''}" data-miner-id="${miner.id}" data-owned="${isOwned}" ${btnDisabled ? 'disabled' : ''}>
-                                ${btnText}
-                            </button>
+                            ${showButton ? `<button class="miner-buy-btn ${isActive ? 'active' : ''}" data-miner-id="${miner.id}" data-owned="${isOwned}" ${btnDisabled ? 'disabled' : ''}>${btnText}</button>` : ''}
                         </div>
                     `;
                 }).join('')}
@@ -1029,10 +1061,9 @@ class App {
         }
 
         const minerClass = activeMiner ? `miner-${activeMiner.id}` : 'miner-bronze';
-        const bgIcon = activeMiner?.bg_icon || '⛏️';
 
         el.innerHTML = `
-            <div class="mining-card ${minerClass}" data-bg-icon="${bgIcon}">
+            <div class="mining-card ${minerClass}">
                 <div class="miner-name-display">${activeMiner ? activeMiner.name : this.t('no_miner')}</div>
                 ${statusHtml}
                 <div class="speed-card">
@@ -1096,8 +1127,7 @@ class App {
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
                 try {
-                    const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
-                    if (AdController) await AdController.show();
+                    await this.showMonetagAd();
                 } catch (e) {}
                 const success = await this.claimQuest('miner');
                 if (success) this.renderMining();
@@ -1133,8 +1163,7 @@ class App {
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
                 try {
-                    const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
-                    if (AdController) await AdController.show();
+                    await this.showMonetagAd();
                 } catch (e) {}
                 const success = await this.claimQuest('task');
                 if (success) this.renderMining();
@@ -1170,8 +1199,7 @@ class App {
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
                 try {
-                    const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
-                    if (AdController) await AdController.show();
+                    await this.showMonetagAd();
                 } catch (e) {}
                 const success = await this.claimQuest('referral');
                 if (success) this.renderMining();
@@ -1206,8 +1234,12 @@ class App {
     const today = new Date().toISOString().split('T')[0];
     const ad1Count = this.adDailyDate === today ? this.ad1DailyCount : 0;
     const ad2Count = this.adDailyDate === today ? this.ad2DailyCount : 0;
+    const ad3Count = this.adDailyDate === today ? this.ad3DailyCount : 0;
+    const ad4Count = this.adDailyDate === today ? this.ad4DailyCount : 0;
     const ad1ReachedLimit = ad1Count >= this.adDailyLimit;
     const ad2ReachedLimit = ad2Count >= this.adDailyLimit;
+    const ad3ReachedLimit = ad3Count >= this.adDailyLimit;
+    const ad4ReachedLimit = ad4Count >= this.adDailyLimit;
 
     el.innerHTML = `
         <div class="daily-bonus-card">
@@ -1272,6 +1304,40 @@ class App {
             </div>
         </div>
 
+        <div class="ad-card blue-card">
+            <div class="ad-header">
+                <div class="ad-icon"><i class="fas fa-tv"></i></div>
+                <div class="ad-info">
+                    <h4>${this.t('watch_ad_3')}</h4>
+                    <div class="ad-rewards">
+                        <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower}</span>
+                        <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}"> ${this.adRewardCoin}</span>
+                        <span class="ad-counter-badge">${ad3Count}/${this.adDailyLimit}</span>
+                    </div>
+                </div>
+                <button id="watch-ad-3-btn" class="ad-btn" ${ad3ReachedLimit ? 'disabled' : ''}>
+                    ${ad3ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}
+                </button>
+            </div>
+        </div>
+
+        <div class="ad-card blue-card">
+            <div class="ad-header">
+                <div class="ad-icon"><i class="fas fa-tv"></i></div>
+                <div class="ad-info">
+                    <h4>${this.t('watch_ad_4')}</h4>
+                    <div class="ad-rewards">
+                        <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower}</span>
+                        <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}"> ${this.adRewardCoin}</span>
+                        <span class="ad-counter-badge">${ad4Count}/${this.adDailyLimit}</span>
+                    </div>
+                </div>
+                <button id="watch-ad-4-btn" class="ad-btn" ${ad4ReachedLimit ? 'disabled' : ''}>
+                    ${ad4ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}
+                </button>
+            </div>
+        </div>
+
         <div class="section-header blue-header">
             <h3><i class="fas fa-home"></i> ${this.t('main_tasks')}</h3>
         </div>
@@ -1311,8 +1377,7 @@ class App {
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         try {
-            const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
-            if (AdController) await AdController.show();
+            await this.showMonetagAd();
         } catch (e) {
             this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
             btn.disabled = false;
@@ -1330,8 +1395,7 @@ class App {
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         const requestTime = Date.now();
         try {
-            const AdController = window.Adsgram?.init({ blockId: this.config.REWARD_AD_BLOCK_ID });
-            if (AdController) await AdController.show();
+            await this.showGigahubAd();
             await new Promise(r => setTimeout(r, 15000));
             const result = await this.fetchFromServer('/api/watch-ad-1', { requestTime });
             if (!result.error && result.user) {
@@ -1359,24 +1423,7 @@ class App {
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         const requestTime = Date.now();
         try {
-            if (typeof window.showAdexora !== 'function') {
-                throw new Error('Adexora not loaded');
-            }
-            
-            let retries = 0;
-            while (typeof window.showAdexora !== 'function' && retries < 20) {
-                await new Promise(r => setTimeout(r, 250));
-                retries++;
-            }
-            
-            if (typeof window.showAdexora !== 'function') {
-                this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
-                this.vibrate('warning');
-                this.renderEarn();
-                return;
-            }
-            
-            await window.showAdexora();
+            await this.showMonetagAd();
             await new Promise(r => setTimeout(r, 3000));
             const result = await this.fetchFromServer('/api/watch-ad-2', { requestTime });
             if (!result.error && result.user) {
@@ -1392,7 +1439,62 @@ class App {
                 this.vibrate('error');
             }
         } catch (e) {
-            console.error('Adexora error:', e);
+            this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
+            this.vibrate('warning');
+        }
+        this.renderEarn();
+    });
+
+    document.getElementById('watch-ad-3-btn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('watch-ad-3-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+        const requestTime = Date.now();
+        try {
+            await this.showAdexiumAd();
+            await new Promise(r => setTimeout(r, 3000));
+            const result = await this.fetchFromServer('/api/watch-ad-3', { requestTime });
+            if (!result.error && result.user) {
+                this.powerBalance = result.user.power_balance || 0;
+                this.coinBalance = result.user.coin_balance || 0;
+                this.ad3DailyCount = result.user.ad3_daily_count || 0;
+                this.adDailyDate = result.user.ad_daily_date || '';
+                this.updateHeaderBalances();
+                this.showNotification('Reward', `+${result.powerReward} Power +${result.coinReward} COIN`, 'success');
+                this.vibrate('success');
+            } else if (result.error) {
+                this.showNotification('Error', result.error, 'error');
+                this.vibrate('error');
+            }
+        } catch (e) {
+            this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
+            this.vibrate('warning');
+        }
+        this.renderEarn();
+    });
+
+    document.getElementById('watch-ad-4-btn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('watch-ad-4-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+        const requestTime = Date.now();
+        try {
+            await this.showAdexoraAd();
+            await new Promise(r => setTimeout(r, 3000));
+            const result = await this.fetchFromServer('/api/watch-ad-4', { requestTime });
+            if (!result.error && result.user) {
+                this.powerBalance = result.user.power_balance || 0;
+                this.coinBalance = result.user.coin_balance || 0;
+                this.ad4DailyCount = result.user.ad4_daily_count || 0;
+                this.adDailyDate = result.user.ad_daily_date || '';
+                this.updateHeaderBalances();
+                this.showNotification('Reward', `+${result.powerReward} Power +${result.coinReward} COIN`, 'success');
+                this.vibrate('success');
+            } else if (result.error) {
+                this.showNotification('Error', result.error, 'error');
+                this.vibrate('error');
+            }
+        } catch (e) {
             this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
             this.vibrate('warning');
         }
@@ -1782,8 +1884,7 @@ class App {
                 watchBtn.disabled = true;
                 watchBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
                 try {
-                    const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
-                    if (AdController) await AdController.show();
+                    await this.showMonetagAd();
                     adWatched = true;
                     watchBtn.classList.add('completed');
                     watchBtn.textContent = '✓';
@@ -2111,11 +2212,6 @@ class App {
             if (!wallet || !wallet.startsWith('UQ') || wallet.length < 20) { this.showNotification('Error', this.t('wallet_invalid'), 'error'); this.vibrate('error'); return; }
             if (amount > this.coinBalance) { this.showNotification('Error', this.t('insufficient_balance'), 'error'); this.vibrate('error'); return; }
             if (amount < (this.config.MINIMUM_WITHDRAW || 10000)) { this.showNotification('Error', this.t('min_withdraw_note', { amount: this.config.MINIMUM_WITHDRAW || 10000 }), 'error'); this.vibrate('error'); return; }
-
-            try {
-                const AdController = window.Adsgram?.init({ blockId: this.config.INTERSTITIAL_AD_BLOCK_ID });
-                if (AdController) await AdController.show();
-            } catch (e) {}
 
             await this.processWithdrawal(amount, wallet);
         });
