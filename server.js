@@ -569,7 +569,7 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
                 mining_active: false, mining_start_time: null, mining_end_time: null, pending_coin_reward: 0,
                 total_referrals: 0, referral_power: 0,
                 ad_watch_count: 0, ad_last_watch: 0, adexium_ad_last_watch: 0,
-                ad1_daily_count: 0, ad2_daily_count: 0, ad_daily_date: '',
+                ad1_daily_count: 0, ad2_daily_count: 0, ad3_daily_count: 0, ad4_daily_count: 0, ad_daily_date: '',
                 last_withdraw_time: 0, referred_by_verified: false, wallet: null,
                 task_count: 0, promo_codes_created: 0, daily_bonus_last_claim: 0
             };
@@ -950,6 +950,96 @@ app.post('/api/watch-ad-2', authenticate, strictLimiter, async (req, res) => {
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
+app.post('/api/watch-ad-3', authenticate, strictLimiter, async (req, res) => {
+    try {
+        const userId = req._userId;
+        const { requestTime } = req.body;
+        const user = await getUser(userId);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        const now = getCurrentTime();
+        if (!requestTime || (now - requestTime) < 10000) return res.status(400).json({ error: 'Ad not completed' });
+
+        const cooldownCheck = checkAdCooldown(userId, 'ad3');
+        if (!cooldownCheck.allowed) return res.status(400).json({ error: `Cooldown: ${cooldownCheck.remaining}s` });
+
+        const today = getTodayString();
+        let dailyCount = user.ad3_daily_count || 0;
+        if (user.ad_daily_date !== today) { dailyCount = 0; }
+
+        if (dailyCount >= APP_CONFIG.AD_DAILY_LIMIT) return res.status(400).json({ error: 'Daily limit reached' });
+
+        const powerReward = APP_CONFIG.AD_REWARD_POWER || 50;
+        const coinReward = APP_CONFIG.AD_REWARD_COIN || 20;
+
+        const updatedUser = await updateUser(userId, {
+            power_balance: (user.power_balance || 0) + powerReward,
+            coin_balance: (user.coin_balance || 0) + coinReward,
+            ad3_daily_count: dailyCount + 1,
+            ad_daily_date: today
+        });
+
+        setAdCooldown(userId, 'ad3');
+        await checkLargeTransaction(userId, powerReward, 'Ad Power');
+        await checkLargeTransaction(userId, coinReward, 'Ad COIN');
+
+        if (user.referred_by) {
+            const rp = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
+            const rc = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
+            await addReferralCommission(user.referred_by, rp, 'power');
+            await addReferralCommission(user.referred_by, rc, 'coin');
+        }
+
+        await updateUserLevel(userId);
+        res.json({ success: true, user: updatedUser, powerReward, coinReward, dailyCount: dailyCount + 1 });
+    } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.post('/api/watch-ad-4', authenticate, strictLimiter, async (req, res) => {
+    try {
+        const userId = req._userId;
+        const { requestTime } = req.body;
+        const user = await getUser(userId);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        const now = getCurrentTime();
+        if (!requestTime || (now - requestTime) < 10000) return res.status(400).json({ error: 'Ad not completed' });
+
+        const cooldownCheck = checkAdCooldown(userId, 'ad4');
+        if (!cooldownCheck.allowed) return res.status(400).json({ error: `Cooldown: ${cooldownCheck.remaining}s` });
+
+        const today = getTodayString();
+        let dailyCount = user.ad4_daily_count || 0;
+        if (user.ad_daily_date !== today) { dailyCount = 0; }
+
+        if (dailyCount >= APP_CONFIG.AD_DAILY_LIMIT) return res.status(400).json({ error: 'Daily limit reached' });
+
+        const powerReward = APP_CONFIG.AD_REWARD_POWER || 50;
+        const coinReward = APP_CONFIG.AD_REWARD_COIN || 20;
+
+        const updatedUser = await updateUser(userId, {
+            power_balance: (user.power_balance || 0) + powerReward,
+            coin_balance: (user.coin_balance || 0) + coinReward,
+            ad4_daily_count: dailyCount + 1,
+            ad_daily_date: today
+        });
+
+        setAdCooldown(userId, 'ad4');
+        await checkLargeTransaction(userId, powerReward, 'Ad Power');
+        await checkLargeTransaction(userId, coinReward, 'Ad COIN');
+
+        if (user.referred_by) {
+            const rp = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
+            const rc = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
+            await addReferralCommission(user.referred_by, rp, 'power');
+            await addReferralCommission(user.referred_by, rc, 'coin');
+        }
+
+        await updateUserLevel(userId);
+        res.json({ success: true, user: updatedUser, powerReward, coinReward, dailyCount: dailyCount + 1 });
+    } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
 app.post('/api/claim-daily-bonus', authenticate, strictLimiter, async (req, res) => {
     try {
         const userId = req._userId;
@@ -1237,7 +1327,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                 const parts = text.split(' ');
                 if (parts.length > 1 && !isNaN(parts[1])) referrerId = parseInt(parts[1]);
             }
-            const appLink = referrerId ? `https://t.me/GramHunterBot/app?startapp=${referrerId}` : `https://t.me/GramHunterBot/app`;
+            const appLink = referrerId ? `https://t.me/GramHtrsbot/app?startapp=${referrerId}` : `https://t.me/GramHunterBot/app`;
             const existingUser = await getUser(chatId);
             if (!existingUser) {
                 const userData = {
@@ -1254,7 +1344,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                     mining_active: false, mining_start_time: null, mining_end_time: null, pending_coin_reward: 0,
                     total_referrals: 0, referral_power: 0,
                     ad_watch_count: 0, ad_last_watch: 0, adexium_ad_last_watch: 0,
-                    ad1_daily_count: 0, ad2_daily_count: 0, ad_daily_date: '',
+                    ad1_daily_count: 0, ad2_daily_count: 0, ad3_daily_count: 0, ad4_daily_count: 0, ad_daily_date: '',
                     last_withdraw_time: 0, referred_by_verified: false, wallet: null,
                     task_count: 0, promo_codes_created: 0, daily_bonus_last_claim: 0
                 };
@@ -1267,7 +1357,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                     chat_id: chatId, photo: APP_CONFIG.APP_LOGO,
                     caption: `<b>🎯 Welcome to GRAM HUNTERS!</b>\n\n⛏️ Mine and earn <b>free GRAM!</b>\n\n📋 Complete tasks\n👷‍♂️ Invite friends\n🎟 Claim promo codes\n\n💰 Withdraw your funds <b>for free</b>\n⚡ Up to <b>50%</b> from referrals`,
                     parse_mode: 'HTML',
-                    reply_markup: { inline_keyboard: [[{ text: '🎯 Start App', url: appLink }], [{ text: '📋 TASKS', url: 'https://t.me/GHT_TASKS' }, { text: '💸 PAYOUTS', url: 'https://t.me/Hunters_Proof' }], [{ text: '📰 Official', url: 'https://t.me/GramHunters' }]] }
+                    reply_markup: { inline_keyboard: [[{ text: '🚀 Start App', url: appLink }], [{ text: '📰 Get News', url: 'https://t.me/GRAM_Huntrs' }, { text: '💸 PAYOUTS', url: 'https://t.me/Hunters_Proof' }] ] }
                 })
             });
         }
