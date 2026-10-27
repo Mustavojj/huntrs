@@ -950,16 +950,17 @@ class App {
         await window.showGiga();
     }
 
-    async showOnClickAd() {
+    async showAdsunAd() {
         let retries = 0;
-        while (typeof window.showOnClickAd !== 'function' && retries < 40) {
+        while (typeof window.Adsun?.init !== 'function' && retries < 40) {
             await new Promise(r => setTimeout(r, 250));
             retries++;
         }
-        if (typeof window.showOnClickAd !== 'function') {
-            throw new Error('OnClick not loaded');
+        if (typeof window.Adsun?.init !== 'function') {
+            throw new Error('AdsUn not loaded');
         }
-        await window.showOnClickAd();
+        const controller = window.Adsun.init({ blockId: '50066' });
+        await controller.show();
     }
 
     async showLiteBitsAd() {
