@@ -1040,6 +1040,32 @@ app.post('/api/watch-ad-4', authenticate, strictLimiter, async (req, res) => {
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
+app.post('/lba/callback', express.raw({ type: '*/*', limit: '64kb' }), async (req, res) => {
+    const ts = Number(req.get('x-lba-timestamp'));
+    const eventId = req.get('x-lba-event-id');
+    const sig = req.get('x-lba-signature') || '';
+    const SECRET = process.env.LBA_CALLBACK_SECRET;
+    if (!ts || !eventId || !SECRET) return res.status(400).end();
+    if (Math.abs(Date.now() / 1000 - ts) > 300) return res.status(400).end();
+
+    const expected = crypto.createHmac('sha256', SECRET)
+        .update(`${ts}.${req.body.toString('utf8')}`).digest('base64url');
+    const a = Buffer.from(sig), b = Buffer.from(expected);
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return res.status(401).end();
+
+    const evt = JSON.parse(req.body.toString('utf8'));
+    if (evt.event === 'impression.verified') {
+        const user = await getUser(evt.telegram_user_id);
+        if (user) {
+            await updateUser(evt.telegram_user_id, {
+                power_balance: (user.power_balance || 0) + 50,
+                coin_balance: (user.coin_balance || 0) + 20
+            });
+        }
+    }
+    res.status(200).end();
+});
+
 app.post('/api/claim-daily-bonus', authenticate, strictLimiter, async (req, res) => {
     try {
         const userId = req._userId;
