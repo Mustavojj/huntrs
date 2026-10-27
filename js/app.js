@@ -1436,53 +1436,53 @@ class App {
         }
         this.renderEarn();
     });
-
+        
     document.getElementById('watch-ad-2-btn')?.addEventListener('click', async () => {
     const btn = document.getElementById('watch-ad-2-btn');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-    const prevCoin = this.coinBalance;
-    const prevPower = this.powerBalance;
+    const requestTime = Date.now();
     try {
-        await this.showLiteBitsAd();
-        this.showNotification('Verifying...', 'Checking reward status', 'info');
-        await this.waitForReward(prevCoin, prevPower);
-    } catch (e) {
-        let title = 'Ad Error';
-        let msg = 'Unknown error';
-        if (e.code === 'NO_FILL') { title = 'No Ads'; msg = 'No ads available right now'; }
-        else if (e.code === 'NOT_CONFIGURED') { title = 'Not Configured'; msg = 'Publisher bot not configured'; }
-        else if (e.code === 'AUTH') { title = 'Auth Failed'; msg = 'Invalid Telegram data'; }
-        else if (e.code === 'TIMEOUT') { title = 'Timeout'; msg = 'Ad request timed out'; }
-        else if (e.code === 'NETWORK') { title = 'Network Error'; msg = 'Connection failed'; }
-        else if (e.code === 'BUSY') { title = 'Busy'; msg = 'Another ad is open'; }
-        else if (e.code === 'SDK_NOT_LOADED') { title = 'SDK Error'; msg = 'LiteBits SDK not loaded'; }
-        else if (e.code === 'NOT_VERIFIED') {
-            title = 'Not Credited ⚠️';
-            const reasons = {
-                self_view: 'You cannot watch your own ad (same account as publisher)',
-                self_device: 'Same device as publisher account',
-                too_fast: 'Ad closed too early',
-                frequency: 'You already saw this ad in last 24h',
-                user_cap: 'Daily limit reached for this placement',
-                publisher_cap: 'Publisher daily cap reached',
-                campaign_cap: 'Campaign daily cap reached',
-                exhausted: 'Campaign budget exhausted',
-                expired: 'View expired',
-                mismatch: 'Device mismatch'
-            };
-            msg = reasons[e.reason] || ('Reason: ' + e.reason);
-        } else {
-            msg = e.message || 'Unknown';
+        const r = await this.showLiteBitsAd();
+        if (!r || !r.verified) {
+            throw Object.assign(new Error('Not verified'), { code: 'NOT_VERIFIED', reason: r?.reason });
         }
-        this.showNotification(title, msg, 'error');
-        this.vibrate('error');
+        await new Promise(res => setTimeout(res, 11000)); // ≥10s للتحقق في السيرفر
+        const result = await this.fetchFromServer('/api/watch-ad-2', { requestTime });
+        if (!result.error && result.user) {
+            this.powerBalance = result.user.power_balance || 0;
+            this.coinBalance = result.user.coin_balance || 0;
+            this.ad2DailyCount = result.user.ad2_daily_count || 0;
+            this.adDailyDate = result.user.ad_daily_date || '';
+            this.updateHeaderBalances();
+            this.showNotification('Reward', `+${result.powerReward} Power +${result.coinReward} COIN`, 'success');
+            this.vibrate('success');
+        } else if (result.error) {
+            this.showNotification('Error', result.error, 'error');
+            this.vibrate('error');
+        }
+    } catch (e) {
+        const reasons = {
+            self_view: 'Cannot credit your own ad',
+            self_device: 'Same device as publisher',
+            too_fast: 'Ad closed too early',
+            frequency: 'Already seen recently',
+            user_cap: 'Daily limit reached',
+            publisher_cap: 'Publisher cap reached',
+            campaign_cap: 'Campaign cap reached',
+            exhausted: 'Campaign exhausted',
+            expired: 'Expired',
+            mismatch: 'Device mismatch'
+        };
+        const msg = reasons[e.reason] || e.message || 'Ad not verified';
+        this.showNotification('Not Credited', msg, 'warning');
+        this.vibrate('warning');
     }
-    setTimeout(() => this.renderEarn(), 3000);
+    setTimeout(() => this.renderEarn(), 1000);
     btn.disabled = false;
     btn.innerHTML = this.t('watch');
 });
-
+        
     document.getElementById('watch-ad-3-btn')?.addEventListener('click', async () => {
         const btn = document.getElementById('watch-ad-3-btn');
         btn.disabled = true;
