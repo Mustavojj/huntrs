@@ -203,5 +203,10 @@
 </div>
 
 <script type="module" src="js/app.js"></script>
+    <script>
+window.initCdTma?.({ id: '470001' })
+  .then(show => { window.showOnClickAd = show; })
+  .catch(e => console.log('OnClick init:', e));
+    </script>
 </body>
 </html>
