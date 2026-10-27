@@ -965,13 +965,19 @@ class App {
 
     async showLiteBitsAd() {
         let retries = 0;
-        while (!window._liteBits && retries < 40) {
+        while (typeof window.LiteBitsAds !== 'function' && retries < 40) {
             await new Promise(r => setTimeout(r, 250));
             retries++;
         }
-        
-        if (!window._liteBits) throw new Error('LiteBits not loaded');
-        await window._liteBits.show();
+        if (typeof window.LiteBitsAds !== 'function') {
+            throw new Error('LiteBits not loaded');
+        }
+        const ads = new window.LiteBitsAds({
+            apiKey: 'lba_96434dab6015df7aa965cfd3da4e564d',
+            placementId: 'e9858a2d-4efa-42a3-b458-56b0999b0ff2',
+        });
+        const r = await ads.show();
+        if (!r.verified) throw new Error('LiteBits view not verified: ' + (r.reason || 'unknown'));
     }
     
     renderMiners() {
@@ -1409,7 +1415,7 @@ class App {
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         const requestTime = Date.now();
         try {
-            await this.showGigahubAd();
+            await this.showMonetagAd();
             await new Promise(r => setTimeout(r, 15000));
             const result = await this.fetchFromServer('/api/watch-ad-1', { requestTime });
             if (!result.error && result.user) {
@@ -1437,7 +1443,7 @@ class App {
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         const requestTime = Date.now();
         try {
-            await this.showMonetagAd();
+            await this.showLiteBitsAd();
             await new Promise(r => setTimeout(r, 3000));
             const result = await this.fetchFromServer('/api/watch-ad-2', { requestTime });
             if (!result.error && result.user) {
@@ -1465,7 +1471,7 @@ class App {
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         const requestTime = Date.now();
         try {
-            await this.showOnClickAd();
+            await this.showAdsunAd();
             await new Promise(r => setTimeout(r, 3000));
             const result = await this.fetchFromServer('/api/watch-ad-3', { requestTime });
             if (!result.error && result.user) {
@@ -1493,7 +1499,7 @@ class App {
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         const requestTime = Date.now();
         try {
-            await this.showLiteBitsAd();
+            await this.showGigahubAd();
             await new Promise(r => setTimeout(r, 3000));
             const result = await this.fetchFromServer('/api/watch-ad-4', { requestTime });
             if (!result.error && result.user) {
