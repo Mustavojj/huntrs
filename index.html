@@ -10,6 +10,7 @@
     <script src='//libtl.com/sdk.js' data-zone='12129587' data-sdk='show_12129587'></script>
     <script src="https://ad.gigapub.tech/script?id=8837"></script>
     <script src="https://js.onclckvd.com/in-stream-ad-admanager/tma.js"></script>
+    <script src="https://ads.litebits.io/sdk/v1.js"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -207,6 +208,21 @@
 window.initCdTma?.({ id: '470001' })
   .then(show => { window.showOnClickAd = show; })
   .catch(e => console.log('OnClick init:', e));
-    </script>
+</script>
+
+<script>
+  window.addEventListener('load', () => {
+    try {
+      if (typeof LiteBitsAds !== 'function') return;
+      window._liteBits = new LiteBitsAds({
+        apiKey: 'lba_96434dab6015df7aa965cfd3da4e564d',
+        placementId: 'e9858a2d-4efa-42a3-b458-56b0999b0ff2',
+        baseUrl: 'https://ads.litebits.io',
+        sandbox: true
+      });
+    } catch (e) { console.log('LiteBits init:', e); }
+  });
+</script>
+    
 </body>
 </html>
