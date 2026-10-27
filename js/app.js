@@ -962,13 +962,17 @@ class App {
         await window.showOnClickAd();
     }
 
-    async showAdexoraAd() {
-        if (typeof window.showAdexora !== 'function') {
-            throw new Error('Adexora not loaded');
+    async showLiteBitsAd() {
+        let retries = 0;
+        while (!window._liteBits && retries < 40) {
+            await new Promise(r => setTimeout(r, 250));
+            retries++;
         }
-        await window.showAdexora();
+        
+        if (!window._liteBits) throw new Error('LiteBits not loaded');
+        await window._liteBits.show();
     }
-
+    
     renderMiners() {
         const el = document.getElementById('miners-page');
         if (!el) return;
@@ -1488,7 +1492,7 @@ class App {
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         const requestTime = Date.now();
         try {
-            await this.showAdexoraAd();
+            await this.showLiteBitsAd();
             await new Promise(r => setTimeout(r, 3000));
             const result = await this.fetchFromServer('/api/watch-ad-4', { requestTime });
             if (!result.error && result.user) {
