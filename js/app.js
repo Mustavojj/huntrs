@@ -950,21 +950,16 @@ class App {
         await window.showGiga();
     }
 
-    async showAdexiumAd() {
+    async showOnClickAd() {
         let retries = 0;
-        while (typeof window.AdexiumWidget !== 'function' && retries < 40) {
+        while (typeof window.showOnClickAd !== 'function' && retries < 40) {
             await new Promise(r => setTimeout(r, 250));
             retries++;
         }
-        if (typeof window.AdexiumWidget !== 'function') {
-            throw new Error('Adexium not loaded');
+        if (typeof window.showOnClickAd !== 'function') {
+            throw new Error('OnClick not loaded');
         }
-        let widget = window._adexiumWidgetInstance;
-        if (!widget) {
-            widget = new window.AdexiumWidget({ wid: '5e0639e1-2a8b-49a1-bee9-41c9dda9b6ea', adFormat: 'interstitial' });
-            window._adexiumWidgetInstance = widget;
-        }
-        await widget.show();
+        await window.showOnClickAd();
     }
 
     async showAdexoraAd() {
@@ -1465,7 +1460,7 @@ class App {
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         const requestTime = Date.now();
         try {
-            await this.showAdexiumAd();
+            await this.showOnClickAd();
             await new Promise(r => setTimeout(r, 3000));
             const result = await this.fetchFromServer('/api/watch-ad-3', { requestTime });
             if (!result.error && result.user) {
