@@ -1040,29 +1040,85 @@ app.post('/api/watch-ad-4', authenticate, strictLimiter, async (req, res) => {
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
+
 app.post('/lba/callback', express.raw({ type: '*/*', limit: '64kb' }), async (req, res) => {
+    console.log('🔔 [LBA] Callback received at', new Date().toISOString());
+
     const ts = Number(req.get('x-lba-timestamp'));
     const eventId = req.get('x-lba-event-id');
     const sig = req.get('x-lba-signature') || '';
     const SECRET = process.env.LBA_CALLBACK_SECRET;
-    if (!ts || !eventId || !SECRET) return res.status(400).end();
-    if (Math.abs(Date.now() / 1000 - ts) > 300) return res.status(400).end();
+
+    console.log('🔔 [LBA] Headers:', { ts, eventId, hasSig: !!sig, hasSecret: !!SECRET });
+
+    if (!ts || !eventId || !SECRET) {
+        console.log('❌ [LBA] Missing ts/eventId/secret');
+        return res.status(400).end();
+    }
+    if (Math.abs(Date.now() / 1000 - ts) > 300) {
+        console.log('❌ [LBA] Timestamp skew too large:', Math.abs(Date.now() / 1000 - ts));
+        return res.status(400).end();
+    }
 
     const expected = crypto.createHmac('sha256', SECRET)
         .update(`${ts}.${req.body.toString('utf8')}`).digest('base64url');
     const a = Buffer.from(sig), b = Buffer.from(expected);
-    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return res.status(401).end();
-
-    const evt = JSON.parse(req.body.toString('utf8'));
-    if (evt.event === 'impression.verified') {
-        const user = await getUser(evt.telegram_user_id);
-        if (user) {
-            await updateUser(evt.telegram_user_id, {
-                power_balance: (user.power_balance || 0) + 50,
-                coin_balance: (user.coin_balance || 0) + 20
-            });
-        }
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+        console.log('❌ [LBA] Signature mismatch');
+        return res.status(401).end();
     }
+    console.log('✅ [LBA] Signature verified');
+
+    let evt;
+    try { evt = JSON.parse(req.body.toString('utf8')); } catch (e) {
+        console.log('❌ [LBA] Invalid JSON:', e.message);
+        return res.status(400).end();
+    }
+    console.log('📦 [LBA] Event:', JSON.stringify(evt));
+
+    if (evt.event === 'impression.verified') {
+        const userId = evt.telegram_user_id;
+        console.log('👤 [LBA] Looking up user:', userId);
+
+        const user = await getUser(userId);
+        if (!user) {
+            console.log('❌ [LBA] User not found in DB:', userId);
+            return res.status(200).end();
+        }
+        console.log('✅ [LBA] User found:', { id: user.id, coin: user.coin_balance, power: user.power_balance });
+
+        const today = getTodayString();
+        let dailyCount = user.ad2_daily_count || 0;
+        if (user.ad_daily_date !== today) dailyCount = 0;
+        console.log('📊 [LBA] Daily count:', dailyCount, '/', APP_CONFIG.AD_DAILY_LIMIT, 'date:', today);
+
+        if (dailyCount >= APP_CONFIG.AD_DAILY_LIMIT) {
+            console.log('⚠️ [LBA] Daily limit reached, skipping reward');
+            return res.status(200).end();
+        }
+
+        const powerReward = APP_CONFIG.AD_REWARD_POWER || 50;
+        const coinReward = APP_CONFIG.AD_REWARD_COIN || 20;
+
+        try {
+            const updated = await updateUser(userId, {
+                power_balance: (user.power_balance || 0) + powerReward,
+                coin_balance: (user.coin_balance || 0) + coinReward,
+                ad2_daily_count: dailyCount + 1,
+                ad_daily_date: today
+            });
+            console.log('✅ [LBA] Reward credited:', {
+                newPower: updated.power_balance,
+                newCoin: updated.coin_balance,
+                newCount: updated.ad2_daily_count
+            });
+        } catch (e) {
+            console.log('❌ [LBA] Failed to update user:', e.message);
+        }
+    } else {
+        console.log('ℹ️ [LBA] Non-reward event ignored:', evt.event);
+    }
+
     res.status(200).end();
 });
 
