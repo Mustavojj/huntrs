@@ -939,6 +939,11 @@ class App {
     }
 
     async showGigahubAd() {
+        let retries = 0;
+        while (typeof window.showGiga !== 'function' && retries < 40) {
+            await new Promise(r => setTimeout(r, 250));
+            retries++;
+        }
         if (typeof window.showGiga !== 'function') {
             throw new Error('Gigahub not loaded');
         }
@@ -946,10 +951,19 @@ class App {
     }
 
     async showAdexiumAd() {
+        let retries = 0;
+        while (typeof window.AdexiumWidget !== 'function' && retries < 40) {
+            await new Promise(r => setTimeout(r, 250));
+            retries++;
+        }
         if (typeof window.AdexiumWidget !== 'function') {
             throw new Error('Adexium not loaded');
         }
-        const widget = new window.AdexiumWidget({ wid: '5e0639e1-2a8b-49a1-bee9-41c9dda9b6ea', adFormat: 'interstitial' });
+        let widget = window._adexiumWidgetInstance;
+        if (!widget) {
+            widget = new window.AdexiumWidget({ wid: '5e0639e1-2a8b-49a1-bee9-41c9dda9b6ea', adFormat: 'interstitial' });
+            window._adexiumWidgetInstance = widget;
+        }
         await widget.show();
     }
 
