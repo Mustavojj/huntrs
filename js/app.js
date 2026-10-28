@@ -294,6 +294,8 @@ class App {
         this._historyTab = 'my';
         this._lastAdTime1 = 0;
         this._lastAdTime2 = 0;
+        this._lastRealNow = 0;
+        this._serverTimeSyncInterval = null;
 
         this.membershipCache = new Map();
         this._lastFetchTime = new Map();
@@ -460,8 +462,15 @@ class App {
         } catch (error) { return Date.now(); }
     }
 
-    getCurrentTime() { return Date.now() + this.serverTimeOffset; }
-
+    getCurrentTime() {
+        const realNow = Date.now() + this.serverTimeOffset;
+        if (this._lastRealNow && realNow > this._lastRealNow + 60000) {
+            return this._lastRealNow;
+        }
+        this._lastRealNow = realNow;
+        return realNow;
+    }
+    
     async refreshToken() {
         try {
             const result = await this.fetchFromServer('/api/refresh', {});
@@ -606,6 +615,16 @@ class App {
         return speedPerHour * elapsed;
     }
 
+    startServerTimeSync() {
+        if (this._serverTimeSyncInterval) clearInterval(this._serverTimeSyncInterval);
+        this._serverTimeSyncInterval = setInterval(async () => {
+            try {
+                const data = await this.getFromServer('/api/current-time');
+                if (data?.serverTime) this.serverTimeOffset = data.serverTime - Date.now();
+            } catch (e) {}
+        }, 30000);
+    }
+    
     async startMining() {
         const serverTime = await this.getServerTime();
         const result = await this.fetchFromServer('/api/start-mining', { serverTime });
@@ -2339,6 +2358,7 @@ class App {
         });
     }
 
+    
     async initialize() {
         try {
             if (!window.Telegram?.WebApp) throw new Error('Open from Telegram');
@@ -2354,6 +2374,7 @@ class App {
             await this.getConfig();
             await this.getServerTime();
             await this.loadUserData();
+            this.startServerTimeSync();
 
             if (this.userState === 'ban') { this.showBanModal(); return; }
             if (!this.isAuthenticated) return;
