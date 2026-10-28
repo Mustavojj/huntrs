@@ -14,6 +14,65 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.set('trust proxy', 1);
 app.use(cors({ origin: true, credentials: true }));
+
+app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+    const secretToken = req.headers['x-telegram-bot-api-secret-token'];
+    if (!WEBHOOK_SECRET || secretToken !== WEBHOOK_SECRET) return res.sendStatus(403);
+    try {
+        const update = JSON.parse(req.body.toString('utf8'));
+        if (update.message && update.message.chat && update.message.chat.type === 'private') {
+            const chatId = update.message.chat.id;
+            const username = update.message.chat.username || '';
+            const firstName = update.message.chat.first_name || 'User';
+            const text = update.message.text;
+            let referrerId = null;
+            if (text && text.startsWith('/start')) {
+                const parts = text.split(' ');
+                if (parts.length > 1 && !isNaN(parts[1])) referrerId = parseInt(parts[1]);
+            }
+            const appLink = referrerId ? `https://t.me/GramHtrsbot/app?startapp=${referrerId}` : `https://t.me/GramHtrsbot/app`;
+            const existingUser = await getUser(chatId);
+            if (!existingUser) {
+                const userData = {
+                    id: chatId, username: username || '', first_name: firstName || 'User',
+                    photo_url: update.message.chat.photo_url || APP_CONFIG.DEFAULT_USER_AVATAR,
+                    created_at: getCurrentTime(),
+                    power_balance: 0, coin_balance: 0, gram_balance: 0,
+                    referral_power_earnings: 0, referral_coin_earnings: 0,
+                    level: 1, total_tasks_completed: 0, total_mining_starts: 0,
+                    daily_mining_starts: 0, last_mining_date: '', last_mining_end_time: 0,
+                    referral_reward_given: false, state: 'active', verified: true,
+                    miner_id: null, miner_expires_at: null, owned_miners: [],
+                    quests: { current_miner_quest_index: 0, current_task_quest_index: 0, current_referral_quest_index: 0 },
+                    mining_active: false, mining_start_time: null, mining_end_time: null, pending_coin_reward: 0,
+                    total_referrals: 0, referral_power: 0,
+                    ad_watch_count: 0, ad_last_watch: 0, adexium_ad_last_watch: 0,
+                    ad1_daily_count: 0, ad2_daily_count: 0, ad3_daily_count: 0, ad4_daily_count: 0, ad_daily_date: '',
+                    last_withdraw_time: 0, referred_by_verified: false, wallet: null,
+                    task_count: 0, promo_codes_created: 0, daily_bonus_last_claim: 0, visitor_ids: [],
+                };
+                if (referrerId && referrerId !== chatId) userData.referred_by = referrerId;
+                try { await createUser(userData); } catch (e) {}
+            }
+            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId, photo: APP_CONFIG.APP_LOGO,
+                    caption: `<b>🎯 Welcome to GRAM HUNTERS</b>\n\n💰 Mine free GRAM daily\n📺 Watch ads → earn instantly\n👥 Invite friends → 50% commission\n💸 Withdraw anytime\n\n<b>Start earning now 👇</b>`,
+                    parse_mode: 'HTML',
+                    reply_markup: {
+                        inline_keyboard: [
+                            [{ text: '🚀 Start App', url: appLink }],
+                            [{ text: '📰 Get News', url: 'https://t.me/GRAM_Huntrs' }, { text: '💸 PAYOUTS', url: 'https://t.me/Hunters_Proof' }]
+                        ]
+                    }
+                })
+            });
+        }
+        res.sendStatus(200);
+    } catch (error) { res.sendStatus(500); }
+});
+
 app.use(express.json({ limit: '2mb' }));
 app.use(cookieParser());
 app.use(express.static(__dirname));
@@ -1384,10 +1443,6 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
         await updateUser(userId, { task_count: (user.task_count || 0) + 1 });
         await supabase.from('confirmed_memos').insert([{ memo, user_id: userId, used_at: getCurrentTime() }]);
 
-        await sendChannelNotification(APP_CONFIG.TASKS_CHANNEL,
-            `<b>⚡ NEW TASK!</b>\n\n<b>📋 ${taskData.name}</b>\n<b>👷 Target: ${taskData.total}</b>\n<b>🎁 Reward: ${APP_CONFIG.COMMUNITY_POWER_REWARD} POWER + ${APP_CONFIG.COMMUNITY_COIN_REWARD} COIN</b>`,
-            { text: '✅ COMPLETE NOW', url: 'https://t.me/GramHunterBot?start=start' });
-
         res.json({ success: true, task: taskResult, message: 'Task added' });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -1457,7 +1512,7 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
             if (adminId) await sendTelegramNotification(adminId, '💸 New Withdrawal', `<b>💸 Withdrawal</b>\n\n<b>👤 User:</b> ${user.first_name} (${userId})\n<b>💰 Amount:</b> ${gramAmount.toFixed(5)} GRAM\n<b>📭 Wallet:</b> ${walletAddress}\n<b>🔗 Track:</b> ${payout.trackId}`);
 
             await sendWithdrawalProof(userId, walletAddress, gramAmount, coin);
-            await sendTelegramNotification(userId, '⏳ Pending', `<b>⏳ Request Submitted</b>\n\n${coin} COIN (${gramAmount.toFixed(5)} GRAM) will be processed in 24-48h.`);
+            await sendTelegramNotification(userId, '⏳ Pending', `<b>⏳ Request Submitted</b>\n\n${coin} COIN (${gramAmount.toFixed(5)} GRAM) will be processed soon.`);
 
             res.json({ success: true, user: lockResult, withdrawal, gramAmount, trackId: payout.trackId, status: 'processing' });
         } catch (payoutError) {
@@ -1472,62 +1527,6 @@ app.post('/api/get-withdrawals', authenticate, async (req, res) => {
     try { res.json({ withdrawals: await getWithdrawals(req._userId) }); }
     catch (error) { res.status(500).json({ error: error.message }); }
 });
-
-app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-    const secretToken = req.headers['x-telegram-bot-api-secret-token'];
-    if (!WEBHOOK_SECRET || secretToken !== WEBHOOK_SECRET) return res.sendStatus(403);
-    try {
-        const update = req.body;
-        if (update.message && update.message.chat && update.message.chat.type === 'private') {
-            const chatId = update.message.chat.id;
-            const username = update.message.chat.username || '';
-            const firstName = update.message.chat.first_name || 'User';
-            const text = update.message.text;
-            let referrerId = null;
-            if (text && text.startsWith('/start')) {
-                const parts = text.split(' ');
-                if (parts.length > 1 && !isNaN(parts[1])) referrerId = parseInt(parts[1]);
-            }
-            const appLink = referrerId ? `https://t.me/GramHtrsbot/app?startapp=${referrerId}` : `https://t.me/GramHtrsbot/app`;
-            const existingUser = await getUser(chatId);
-            if (!existingUser) {
-                const userData = {
-                    id: chatId, username: username || '', first_name: firstName || 'User',
-                    photo_url: update.message.chat.photo_url || APP_CONFIG.DEFAULT_USER_AVATAR,
-                    created_at: getCurrentTime(),
-                    power_balance: 0, coin_balance: 0, gram_balance: 0,
-                    referral_power_earnings: 0, referral_coin_earnings: 0,
-                    level: 1, total_tasks_completed: 0, total_mining_starts: 0,
-                    daily_mining_starts: 0, last_mining_date: '', last_mining_end_time: 0,
-                    referral_reward_given: false, state: 'active', verified: true,
-                    miner_id: null, miner_expires_at: null, owned_miners: [],
-                    quests: { current_miner_quest_index: 0, current_task_quest_index: 0, current_referral_quest_index: 0 },
-                    mining_active: false, mining_start_time: null, mining_end_time: null, pending_coin_reward: 0,
-                    total_referrals: 0, referral_power: 0,
-                    ad_watch_count: 0, ad_last_watch: 0, adexium_ad_last_watch: 0,
-                    ad1_daily_count: 0, ad2_daily_count: 0, ad3_daily_count: 0, ad4_daily_count: 0, ad_daily_date: '',
-                    last_withdraw_time: 0, referred_by_verified: false, wallet: null,
-                    task_count: 0, promo_codes_created: 0, daily_bonus_last_claim: 0, visitor_ids: [],
-                };
-                if (referrerId && referrerId !== chatId) userData.referred_by = referrerId;
-                try { await createUser(userData); } catch (e) {}
-            }
-            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: chatId, photo: APP_CONFIG.APP_LOGO,
-                    caption: `<b>🎯 Welcome to GRAM HUNTERS</b>\n\n💰 Mine free GRAM daily\n📺 Watch ads → earn instantly\n👥 Invite friends → 50% commission\n💸 Withdraw anytime\n\n<b>Start earning now 👇</b>`,
-                    parse_mode: 'HTML',
-                    reply_markup: {
-                        inline_keyboard: [
-                            [{ text: '🚀 Start App', url: appLink }],
-                            [{ text: '📰 Get News', url: 'https://t.me/GRAM_Huntrs' },{ text: '💸 PAYOUTS', url: 'https://t.me/Hunters_Proof' }]]
-                    }  })
-            });
-        }
-        res.sendStatus(200);
-    } catch (error) { res.sendStatus(500); }
-}); 
 
 setInterval(sendDailyBonusNotifications, 3600000);
 setTimeout(sendDailyBonusNotifications, 60000);
