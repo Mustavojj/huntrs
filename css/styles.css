@@ -387,3 +387,7 @@ body {
     border: 1px solid rgba(74, 144, 217, 0.15);
     font-weight: 600;
 } 
+
+.task-info h4 { font-size: 0.85rem; margin-bottom: 4px; color: var(--primary-light); font-weight: 700; }
+.promo-reward-preview { background: rgba(74, 144, 217, 0.08); border-color: rgba(74, 144, 217, 0.15); }
+.promo-reward-preview .reward-value { font-size: 1.3rem; font-weight: 800; color: var(--primary-light); margin-bottom: 4px; }  
