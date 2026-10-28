@@ -1371,40 +1371,6 @@ class App {
             </div>
         </div>
 
-        <div class="ad-card blue-card">
-            <div class="ad-header">
-                <div class="ad-icon"><i class="fas fa-tv"></i></div>
-                <div class="ad-info">
-                    <h4>${this.t('watch_ad_3')}</h4>
-                    <div class="ad-rewards">
-                        <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower}</span>
-                        <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}"> ${this.adRewardCoin}</span>
-                        <span class="ad-counter-badge">${ad3Count}/${this.adDailyLimit}</span>
-                    </div>
-                </div>
-                <button id="watch-ad-3-btn" class="ad-btn" ${ad3ReachedLimit ? 'disabled' : ''}>
-                    ${ad3ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}
-                </button>
-            </div>
-        </div>
-
-        <div class="ad-card blue-card">
-            <div class="ad-header">
-                <div class="ad-icon"><i class="fas fa-tv"></i></div>
-                <div class="ad-info">
-                    <h4>${this.t('watch_ad_4')}</h4>
-                    <div class="ad-rewards">
-                        <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower}</span>
-                        <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}"> ${this.adRewardCoin}</span>
-                        <span class="ad-counter-badge">${ad4Count}/${this.adDailyLimit}</span>
-                    </div>
-                </div>
-                <button id="watch-ad-4-btn" class="ad-btn" ${ad4ReachedLimit ? 'disabled' : ''}>
-                    ${ad4ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}
-                </button>
-            </div>
-        </div>
-
         <div class="section-header blue-header">
             <h3><i class="fas fa-home"></i> ${this.t('main_tasks')}</h3>
         </div>
