@@ -1677,8 +1677,9 @@ class App {
                                     <span class="reward-badge"><i class="fas fa-bolt"></i> ${task.reward || 50}</span>
                                     <span class="reward-badge"><img src="${this.config.COIN_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${coinReward}</span>
                                 </div>
-                                <div style="font-size:0.55rem;color:#888;margin-top:2px;">${task.total_completed || 0}/${task.total}</div>
-                            </div>
+                                <div style="display:inline-flex;align-items:center;gap:4px;background:rgba(74,144,217,0.1);border:1px solid rgba(74,144,217,0.15);border-radius:20px;padding:2px 10px;font-size:0.6rem;font-weight:700;color:var(--primary-light);margin-top:4px;">
+                                <i class="fas fa-users" style="font-size:0.55rem;"></i>${task.total_completed || 0}/${task.total}</div>
+                                </div>
                             <button class="task-btn start" data-id="${task.id}" data-url="${task.url || ''}" data-verify="${task.verification || false}">${this.t('start')}</button>
                         </div>
                     </div>
