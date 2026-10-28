@@ -546,7 +546,7 @@ app.post('/api/check-membership', authenticate, async (req, res) => {
 
 app.post('/api/auth', strictLimiter, async (req, res) => {
     try {
-        const { initData, userId, username, firstName, photoUrl } = req.body;
+        const { initData, userId, username, firstName, photoUrl, visitorId } = req.body;
         if (!initData) return res.status(400).json({ error: 'Missing initData' });
         const validation = validateTelegramInitData(initData, BOT_TOKEN);
         if (!validation.valid) return res.status(403).json({ error: 'Invalid data' });
@@ -554,6 +554,19 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
         if (!telegramUser || !telegramUser.id) return res.status(403).json({ error: 'No user' });
 
         let user = await getUser(telegramUser.id);
+
+        if (visitorId) {
+            const { data: conflicting } = await supabase
+                .from('users')
+                .select('id')
+                .neq('id', telegramUser.id)
+                .contains('visitor_ids', JSON.stringify([visitorId]));
+            
+            if (conflicting && conflicting.length > 0) {
+                return res.status(403).json({ error: 'device_already_linked' });
+            }
+        }
+        
         if (!user) {
             const userData = {
                 id: telegramUser.id, username: telegramUser.username || '', first_name: telegramUser.first_name || 'User',
@@ -571,7 +584,8 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
                 ad_watch_count: 0, ad_last_watch: 0, adexium_ad_last_watch: 0,
                 ad1_daily_count: 0, ad2_daily_count: 0, ad3_daily_count: 0, ad4_daily_count: 0, ad_daily_date: '',
                 last_withdraw_time: 0, referred_by_verified: false, wallet: null,
-                task_count: 0, promo_codes_created: 0, daily_bonus_last_claim: 0
+                task_count: 0, promo_codes_created: 0, daily_bonus_last_claim: 0,
+                visitor_ids: visitorId ? [visitorId] : [],
             };
             try { user = await createUser(userData); } catch (e) { user = await getUser(telegramUser.id); if (!user) return res.status(500).json({ error: 'Failed' }); }
         } else {
@@ -580,6 +594,12 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
             if (telegramUser.first_name && telegramUser.first_name !== user.first_name) updates.first_name = telegramUser.first_name;
             if (photoUrl && photoUrl !== user.photo_url) updates.photo_url = photoUrl;
             if (Object.keys(updates).length > 0) user = await updateUser(telegramUser.id, updates);
+        }
+        if (visitorId && user) {
+                const existing = Array.isArray(user.visitor_ids) ? user.visitor_ids : [];
+                if (!existing.includes(visitorId)) {
+                    user = await updateUser(user.id, { visitor_ids: [...existing, visitorId] });
+                }
         }
         if (user.state === 'ban') return res.status(403).json({ error: 'Account banned' });
         const token = generateJWT(user.id, user.id);
@@ -1345,7 +1365,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                     ad_watch_count: 0, ad_last_watch: 0, adexium_ad_last_watch: 0,
                     ad1_daily_count: 0, ad2_daily_count: 0, ad3_daily_count: 0, ad4_daily_count: 0, ad_daily_date: '',
                     last_withdraw_time: 0, referred_by_verified: false, wallet: null,
-                    task_count: 0, promo_codes_created: 0, daily_bonus_last_claim: 0
+                    task_count: 0, promo_codes_created: 0, daily_bonus_last_claim: 0, visitor_ids: [],
                 };
                 if (referrerId && referrerId !== chatId) userData.referred_by = referrerId;
                 try { await createUser(userData); } catch (e) {}
