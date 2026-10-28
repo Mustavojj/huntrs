@@ -521,7 +521,7 @@ async function sendMiningEndNotifications() {
         let success = 0, blocked = 0, deleted = 0, other = 0, skipped = 0;
 
         for (const u of users) {
-            if (u.last_mining_notif && (now - u.last_mining_notif) < 3600000) {
+            if (u.last_mining_notif && (now - u.last_mining_notif) < 28800000) {
                 skipped++;
                 continue;
             }
