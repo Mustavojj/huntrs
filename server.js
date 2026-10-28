@@ -237,14 +237,14 @@ const APP_CONFIG = {
     REFERRAL_MAX_COMMISSION_POWER: 100,
     REFERRAL_BONUS_POWER: 100,
     AD_REWARD_POWER: 50,
-    AD_REWARD_COIN: 20,
+    AD_REWARD_COIN: 25,
     AD_DAILY_LIMIT: 10,
     AD_COOLDOWN_MINUTES: 3,
     MIN_CLAIM_COIN: 1,
     PRICE_PER_100: 0.10,
-    COMMUNITY_COIN_REWARD: 50,
-    COMMUNITY_POWER_REWARD: 50,
-    DAILY_BONUS_COIN: 100,
+    COMMUNITY_COIN_REWARD: 100,
+    COMMUNITY_POWER_REWARD: 100,
+    DAILY_BONUS_COIN: 250,
     LARGE_TRANSACTION_THRESHOLD: 50000,
     TASK_COMPLETION_COOLDOWN_SECONDS: 10,
     PROMO_CODE_COOLDOWN_SECONDS: 5,
@@ -1061,8 +1061,8 @@ app.post('/api/complete-task', authenticate, strictLimiter, async (req, res) => 
 
         const isCommunity = task.category === 'community';
         const coinReward = isCommunity ? (APP_CONFIG.COMMUNITY_COIN_REWARD || 50) : 0;
-        const powerReward = task.reward || APP_CONFIG.COMMUNITY_POWER_REWARD || 50;
-
+        const powerReward = isCommunity ? (APP_CONFIG.COMMUNITY_POWER_REWARD || 50) : (task.reward || 50);
+        
         const updatedUser = await updateUser(userId, {
             power_balance: (user.power_balance || 0) + powerReward,
             coin_balance: (user.coin_balance || 0) + coinReward,
