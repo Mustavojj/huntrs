@@ -1527,7 +1527,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
         }
         res.sendStatus(200);
     } catch (error) { res.sendStatus(500); }
-});
+}); 
 
 setInterval(sendDailyBonusNotifications, 3600000);
 setTimeout(sendDailyBonusNotifications, 60000);
