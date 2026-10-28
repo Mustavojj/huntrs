@@ -146,7 +146,7 @@ async function checkUserInChannel(userId, channelUsername) {
 const APP_CONFIG = {
     APP_NAME: "GRAM HUNTERS 🎯",
     BOT_USERNAME: "GramHunterBot",
-    MINIMUM_WITHDRAW: 10000,
+    MINIMUM_WITHDRAW: 50000,
     MAXIMUM_WITHDRAW: 100000,
     WITHDRAWAL_FEES: 0,
     REFERRAL_PERCENTAGE: 10,
