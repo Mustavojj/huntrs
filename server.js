@@ -672,13 +672,20 @@ app.post('/api/stop-mining', authenticate, strictLimiter, async (req, res) => {
         if (!user) return res.status(404).json({ error: 'User not found' });
         if (!user.mining_active) return res.status(400).json({ error: 'No active session' });
 
-        const currentTime = getCurrentTime();
-        const rewardAmount = calculateMiningReward(user, user.mining_start_time, user.mining_end_time || currentTime);
-        const updatedUser = await updateUser(userId, { mining_active: false, mining_start_time: null, mining_end_time: null, pending_coin_reward: rewardAmount, last_mining_end_time: currentTime });
-        res.json({ success: true, user: updatedUser, reward: rewardAmount, serverTime: currentTime });
+        const serverNow = Date.now();
+        if (!user.mining_end_time || serverNow < user.mining_end_time) {
+            const remaining = Math.ceil(((user.mining_end_time || 0) - serverNow) / 1000);
+            return res.status(400).json({ error: `Session not ended!` });
+        }
+
+        const rewardAmount = calculateMiningReward(user, user.mining_start_time, user.mining_end_time);
+        const updatedUser = await updateUser(userId, {
+            mining_active: false, mining_start_time: null, mining_end_time: null,
+            pending_coin_reward: rewardAmount, last_mining_end_time: serverNow
+        });
+        res.json({ success: true, user: updatedUser, reward: rewardAmount, serverTime: serverNow });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
-
 app.post('/api/claim-mining', authenticate, strictLimiter, async (req, res) => {
     try {
         const userId = req._userId;
