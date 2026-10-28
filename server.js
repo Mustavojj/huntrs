@@ -222,7 +222,7 @@ const APP_CONFIG = {
     ADEXORA_ZONE_ID: "2221",
     BOT_LINK: "https://t.me/GramHtrsbot?start=",
     TASK_REWARD: 100,
-    TASK_IMAGE: "https://slho.shop/i/8067",
+    TASK_IMAGE: "https://slho.shop/i/8160",
     GRAM_ICON: "https://i.ibb.co/Q3LyfHL6/file-00000000aec481f4a4599f4c3a9fee9a.png",
     COIN_ICON: "https://slho.shop/i/8124",
     MINING_ICON: "https://slho.shop/i/8067",
