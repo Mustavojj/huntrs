@@ -1525,10 +1525,7 @@ app.post('/api/get-withdrawals', authenticate, async (req, res) => {
 });
 
 setInterval(sendDailyBonusNotifications, 3600000);
-setTimeout(sendDailyBonusNotifications, 60000);
-
 setInterval(sendMiningEndNotifications, 300000);
-setTimeout(sendMiningEndNotifications, 30000);
 
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
