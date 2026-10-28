@@ -1638,7 +1638,7 @@ class App {
             container.innerHTML = availableTasks.map(task => `
                 <div class="task-card blue-card">
                     <div class="task-header">
-                        <div class="task-icon"><i class="fas fa-tasks" style="font-size:24px;color:var(--primary-light);"></i></div>
+                        <div class="task-icon blue-icon" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;"><i class="fas fa-clipboard-list"></i></div>
                         <div class="task-info">
                             <h4>${task.name}</h4>
                             <div class="task-reward"><span class="reward-badge"><i class="fas fa-bolt"></i> ${task.reward}</span></div>
@@ -1670,7 +1670,7 @@ class App {
                 return `
                     <div class="task-card blue-card">
                         <div class="task-header">
-                            <div class="task-icon"><i class="fas fa-tasks" style="font-size:24px;color:var(--primary-light);"></i></div>
+                            <div class="task-icon blue-icon" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;"><i class="fas fa-clipboard-list"></i></div>
                             <div class="task-info">
                                 <h4>${task.name}</h4>
                                 <div class="task-reward">
