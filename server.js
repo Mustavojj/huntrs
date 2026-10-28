@@ -413,12 +413,150 @@ async function createWithdrawal(withdrawalData) {
 }
 
 async function sendTelegramNotification(userId, title, message, inlineButton = null) {
-    if (!BOT_TOKEN || !userId) return;
+    if (!BOT_TOKEN || !userId) return { ok: false, reason: 'no_token_or_user' };
     try {
         const payload = { chat_id: userId, text: message, parse_mode: 'HTML', disable_web_page_preview: true };
         if (inlineButton) payload.reply_markup = { inline_keyboard: [[{ text: inlineButton.text, url: inlineButton.url }]] };
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    } catch (error) {}
+        const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.ok) return { ok: true };
+        const desc = data.description || 'unknown';
+        if (desc.includes('bot was blocked')) return { ok: false, reason: 'blocked' };
+        if (desc.includes('chat not found')) return { ok: false, reason: 'deleted' };
+        if (desc.includes('user is deactivated')) return { ok: false, reason: 'deactivated' };
+        if (desc.includes('Too Many Requests')) return { ok: false, reason: 'rate_limit' };
+        return { ok: false, reason: desc };
+    } catch (e) {
+        return { ok: false, reason: 'network' };
+    }
+}
+
+async function sendDailyBonusNotifications() {
+    try {
+        const today = getTodayString();
+        const startOfDay = new Date(today + 'T00:00:00Z').getTime();
+        const now = Date.now();
+
+        const { data: users, error } = await supabase
+            .from('users')
+            .select('id')
+            .eq('state', 'active')
+            .eq('bot_blocked', false)
+            .lt('last_daily_bonus_notif', startOfDay)
+            .limit(10000);
+
+        if (error || !users || users.length === 0) {
+            console.log('📭 Daily bonus: no users to notify');
+            return;
+        }
+
+        let success = 0, blocked = 0, deleted = 0, other = 0;
+
+        for (const u of users) {
+            const { data: claimed } = await supabase
+                .from('users')
+                .update({ last_daily_bonus_notif: now })
+                .eq('id', u.id)
+                .lt('last_daily_bonus_notif', startOfDay)
+                .select('id');
+
+            if (!claimed || claimed.length === 0) continue;
+
+            const result = await sendTelegramNotification(
+                u.id,
+                '🎁 Daily Bonus Ready',
+                `<b>🎁 Daily Bonus Available!</b>\n\n💰 +100 COIN waiting for you\n📺 Ads are available again — watch & earn`,
+                { text: '🎯 Claim Now', url: 'https://t.me/GramHtrsbot/app' }
+            );
+
+            if (result.ok) success++;
+            else if (result.reason === 'blocked') {
+                blocked++;
+                await updateUser(u.id, { bot_blocked: true });
+            }
+            else if (result.reason === 'deleted' || result.reason === 'deactivated') deleted++;
+            else other++;
+
+            await new Promise(r => setTimeout(r, 40));
+        }
+
+        console.log(`✅ Daily bonus sent: ${success} ok, ${blocked} blocked, ${deleted} deleted, ${other} other`);
+
+        const adminId = process.env.ADMIN_USER_ID;
+        if (adminId) {
+            await sendTelegramNotification(adminId, '🔔 Daily Broadcast',
+                `<b>🔔 Daily Bonus Broadcast Completed!</b>\n\n` +
+                `☑️ <b>Success:</b> ${success} users\n` +
+                `❎ <b>Failed:</b> ${blocked + deleted + other}\n` +
+                `📋 <b>Reasons:</b>\n` +
+                `   • ${blocked} blocked the bot\n` +
+                `   • ${deleted} deleted accounts\n` +
+                `   • ${other} other errors\n\n` +
+                `⏰ ${new Date().toISOString()}`);
+        }
+    } catch (e) {
+        logFailure('dailyBonusNotif', null, null, e);
+    }
+}
+
+async function sendMiningEndNotifications() {
+    try {
+        const now = Date.now();
+        const oneHourAgo = now - 3600000;
+
+        const { data: users, error } = await supabase
+            .from('users')
+            .select('id, mining_end_time, last_mining_notif')
+            .eq('mining_active', true)
+            .eq('bot_blocked', false)
+            .lte('mining_end_time', now)
+            .limit(500);
+
+        if (error || !users || users.length === 0) return;
+
+        let success = 0, blocked = 0, deleted = 0, other = 0, skipped = 0;
+
+        for (const u of users) {
+            if (u.last_mining_notif && (now - u.last_mining_notif) < 3600000) {
+                skipped++;
+                continue;
+            }
+
+            const { data: claimed } = await supabase
+                .from('users')
+                .update({ last_mining_notif: now })
+                .eq('id', u.id)
+                .lte('last_mining_notif', oneHourAgo)
+                .select('id');
+
+            if (!claimed || claimed.length === 0) { skipped++; continue; }
+
+            const result = await sendTelegramNotification(
+                u.id,
+                '⛏️ Mining Ended',
+                `<b>⛏️ Your Mining Session Ended!</b>\n\n💰 Your coins are ready to claim\n🎁 Don't lose them — claim now`,
+                { text: '🎯 Claim Now', url: 'https://t.me/GramHtrsbot/app' }
+            );
+
+            if (result.ok) success++;
+            else if (result.reason === 'blocked') {
+                blocked++;
+                await updateUser(u.id, { bot_blocked: true });
+            }
+            else if (result.reason === 'deleted' || result.reason === 'deactivated') deleted++;
+            else other++;
+
+            await new Promise(r => setTimeout(r, 40));
+        }
+
+        console.log(`⛏️ Mining end sent: ${success} ok, ${blocked} blocked, ${deleted} deleted, ${other} other, ${skipped} skipped`);
+    } catch (e) {
+        logFailure('miningEndNotif', null, null, e);
+    }
 }
 
 async function sendChannelNotification(channelId, message, inlineButton = null) {
@@ -676,7 +814,11 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
                 const bonusPower = APP_CONFIG.REFERRAL_BONUS_POWER || 100;
                 await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, power_balance: (referrer.power_balance || 0) + bonusPower, referral_power_earnings: (referrer.referral_power_earnings || 0) + bonusPower });
                 await updateUser(userId, { referred_by_verified: true });
-                await sendTelegramNotification(user.referred_by, '🎉 New Referral!', `You received +${bonusPower} Power!`);
+                await sendTelegramNotification(
+                    user.referred_by,'🎉 New Referral!',
+                    `<b>🎉 New Referral!</b>\n\n👤 New hunter joined your team\n💰 +${bonusPower} Power added to your earnings`,
+                    { text: '🎯 Open App', url: 'https://t.me/GramHunterBot/app' }
+                );
             }
         }
 
@@ -1374,15 +1516,23 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     chat_id: chatId, photo: APP_CONFIG.APP_LOGO,
-                    caption: `<b>🎯 Welcome to GRAM HUNTERS!</b>\n\n⛏️ Mine and earn <b>free GRAM!</b>\n\n📋 Complete tasks\n👷‍♂️ Invite friends\n🎟 Claim promo codes\n\n💰 Withdraw your funds <b>for free</b>\n⚡ Up to <b>50%</b> from referrals`,
-                    parse_mode: 'HTML',
-                    reply_markup: { inline_keyboard: [[{ text: '🚀 Start App', url: appLink }], [{ text: '📰 Get News', url: 'https://t.me/GRAM_Huntrs' }, { text: '💸 PAYOUTS', url: 'https://t.me/Hunters_Proof' }] ] }
-                })
+                    caption: `<b>🎯 Welcome to GRAM HUNTERS</b>\n\n💰 Mine free GRAM daily\n📺 Watch ads → earn instantly\n👥 Invite friends → 50% commission\n💸 Withdraw anytime\n\n<b>Start earning now 👇</b>`,
+                    reply_markup: {
+                        inline_keyboard: [
+                            [{ text: '🚀 Start App', url: appLink }],
+                            [{ text: '📰 Get News', url: 'https://t.me/GRAM_Huntrs' },{ text: '💸 PAYOUTS', url: 'https://t.me/Hunters_Proof' }]]
+                    }  })
             });
         }
         res.sendStatus(200);
     } catch (error) { res.sendStatus(500); }
 });
+
+setInterval(sendDailyBonusNotifications, 3600000);
+setTimeout(sendDailyBonusNotifications, 60000);
+
+setInterval(sendMiningEndNotifications, 300000);
+setTimeout(sendMiningEndNotifications, 30000);
 
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
