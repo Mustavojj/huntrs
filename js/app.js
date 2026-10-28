@@ -300,6 +300,7 @@ class App {
         this.membershipCache = new Map();
         this._lastFetchTime = new Map();
         this._promoCooldown = 0;
+        this.visitorId = null;
 
         this.quests = { currentMinerQuestIndex: 0, currentTaskQuestIndex: 0, currentReferralQuestIndex: 0 };
 
@@ -500,7 +501,12 @@ class App {
                     return true;
                 }
             }
-            const result = await this.fetchFromServer('/api/auth', { initData, userId: this.tgUser?.id, username: this.tgUser?.username || '', firstName: this.tgUser?.first_name || 'User', photoUrl: this.tgUser?.photo_url || this.config.DEFAULT_USER_AVATAR });
+            const result = await this.fetchFromServer('/api/auth', { initData, userId: this.tgUser?.id, username: this.tgUser?.username || '', firstName: this.tgUser?.first_name || 'User', photoUrl: this.tgUser?.photo_url || this.config.DEFAULT_USER_AVATAR, visitorId: this.visitorId });
+            if (result.error === 'device_already_linked') {
+                this.showDeviceLock();
+                return false;
+            }
+            
             if (result.token) {
                 this.jwtToken = result.token;
                 localStorage.setItem('hunter_jwt', result.token);
@@ -524,6 +530,28 @@ class App {
                 <i class="fas fa-rocket"></i> ${this.t('register_now')}
             </a>
         `;
+        document.body.appendChild(page);
+        document.getElementById('app').style.display = 'none';
+        document.getElementById('app-loader').style.display = 'none';
+    }
+
+   showDeviceLock() {
+        if (document.getElementById('device-lock-page')) return;
+        const page = document.createElement('div');
+       page.id = 'device-lock-page';
+       page.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;padding:20px;text-align:center;gap:20px;`;
+       page.innerHTML = `
+        <div style="font-size:80px;">🚫</div>
+        <h2 style="color:#FF4444;font-size:1.5rem;font-weight:700;margin:0;">Device Locked</h2>
+        <p style="color:#888;font-size:0.9rem;max-width:300px;line-height:1.6;margin:0;">
+            This device is already linked to another account.<br>
+            Only one account per device is allowed.
+        </p>
+        <button onclick="if(window.Telegram?.WebApp) window.Telegram.WebApp.close(); else window.close();"
+            style="padding:14px 32px;background:linear-gradient(135deg,#4A90D9,#2563EB);border:none;border-radius:60px;color:#fff;font-weight:700;font-size:1rem;cursor:pointer;">
+            Close
+        </button>
+    `;
         document.body.appendChild(page);
         document.getElementById('app').style.display = 'none';
         document.getElementById('app-loader').style.display = 'none';
@@ -2364,6 +2392,14 @@ class App {
             if (!window.Telegram?.WebApp) throw new Error('Open from Telegram');
             this.tg = window.Telegram.WebApp;
             this.tgUser = this.tg.initDataUnsafe.user;
+            try {
+                const fp = await FingerprintJS.load();
+                const result = await fp.get();
+                this.visitorId = result.visitorId;
+            } catch (e) {
+                this.visitorId = null;
+            }
+            
             if (!this.tgUser) throw new Error('No user data');
             this.tg.ready();
             this.tg.expand();
