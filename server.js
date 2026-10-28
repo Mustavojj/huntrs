@@ -1488,7 +1488,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                 const parts = text.split(' ');
                 if (parts.length > 1 && !isNaN(parts[1])) referrerId = parseInt(parts[1]);
             }
-            const appLink = referrerId ? `https://t.me/GramHtrsbot/app?startapp=${referrerId}` : `https://t.me/GramHunterBot/app`;
+            const appLink = referrerId ? `https://t.me/GramHtrsbot/app?startapp=${referrerId}` : `https://t.me/GramHtrsbot/app`;
             const existingUser = await getUser(chatId);
             if (!existingUser) {
                 const userData = {
