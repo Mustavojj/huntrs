@@ -2131,7 +2131,7 @@ class App {
         if (!el) return;
 
         const exchangeRate = this.config.COIN_TO_GRAM_RATE || 1000000;
-        const minWithdrawCoin = this.config.MINIMUM_WITHDRAW || 10000;
+        const minWithdrawCoin = this.config.MINIMUM_WITHDRAW || 50000;
 
         el.innerHTML = `
             <div class="live-channel-card blue-card">
