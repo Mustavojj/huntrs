@@ -1179,7 +1179,7 @@ app.post('/api/watch-ad-3', authenticate, strictLimiter, async (req, res) => {
         const userId = req._userId;
         const { requestTime } = req.body;
         const user = await getUser(userId);
-        if (!user) return res.status(404).json({ error: 'User not found' });
+        if (user) return res.status(404).json({ error: 'No ads available' });
 
         const now = getCurrentTime();
         if (!requestTime || (now - requestTime) < 10000) return res.status(400).json({ error: 'Ad not completed' });
