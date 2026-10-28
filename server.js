@@ -1517,6 +1517,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                 body: JSON.stringify({
                     chat_id: chatId, photo: APP_CONFIG.APP_LOGO,
                     caption: `<b>🎯 Welcome to GRAM HUNTERS</b>\n\n💰 Mine free GRAM daily\n📺 Watch ads → earn instantly\n👥 Invite friends → 50% commission\n💸 Withdraw anytime\n\n<b>Start earning now 👇</b>`,
+                    parse_mode: 'HTML',
                     reply_markup: {
                         inline_keyboard: [
                             [{ text: '🚀 Start App', url: appLink }],
