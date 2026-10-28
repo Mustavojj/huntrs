@@ -1060,8 +1060,8 @@ app.post('/api/complete-task', authenticate, strictLimiter, async (req, res) => 
         await supabase.from('user_completed_tasks').insert([{ user_id: userId, task_id: taskId, completed_at: getCurrentTime() }]);
 
         const isCommunity = task.category === 'community';
-        const coinReward = isCommunity ? (APP_CONFIG.COMMUNITY_COIN_REWARD || 50) : 0;
-        const powerReward = isCommunity ? (APP_CONFIG.COMMUNITY_POWER_REWARD || 50) : (task.reward || 50);
+        const coinReward = isCommunity ? (APP_CONFIG.COMMUNITY_COIN_REWARD || 100) : 0;
+        const powerReward = isCommunity ? (APP_CONFIG.COMMUNITY_POWER_REWARD || 100) : (task.reward || 100);
         
         const updatedUser = await updateUser(userId, {
             power_balance: (user.power_balance || 0) + powerReward,
