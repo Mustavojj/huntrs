@@ -375,3 +375,15 @@ body {
     .header-balance { font-size: 0.55rem; padding: 3px 6px; }
     .miner-stats-row { grid-template-columns: 1fr 1fr; }
     }
+
+.withdraw-note {
+    font-size: 0.7rem;
+    color: var(--primary-light);
+    text-align: center;
+    margin-top: 12px;
+    padding: 10px;
+    background: rgba(74, 144, 217, 0.08);
+    border-radius: 12px;
+    border: 1px solid rgba(74, 144, 217, 0.15);
+    font-weight: 600;
+} 
