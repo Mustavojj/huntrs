@@ -231,7 +231,7 @@ const APP_CONFIG = {
         { id: "silver", name: "Silver", speed_per_hour: 20, duration_days: 30, price_power: 10000, color: "#C0C0C0", gradient: "linear-gradient(135deg, #A8A8A8, #7A7A7A, #4A4A4A)", logo: "https://slho.shop/i/8097", bg_icon: "🥈" },
         { id: "gold", name: "Gold", speed_per_hour: 100, duration_days: 30, price_power: 50000, color: "#FFD700", gradient: "linear-gradient(135deg, #B8860B, #8B6508, #5C4A05)", logo: "https://slho.shop/i/8096", bg_icon: "🥇" },
         { id: "diamond", name: "Diamond", speed_per_hour: 200, duration_days: 30, price_power: 100000, color: "#00CED1", gradient: "linear-gradient(135deg, #008B8B, #005F5F, #003D3D)", logo: "https://slho.shop/i/8094", bg_icon: "💎" },
-        { id: "master", name: "Master", speed_per_hour: 1000, duration_days: 30, price_power: 500000, color: "#9400D3", gradient: "linear-gradient(135deg, #5B0087, #3D0059, #24003A)", logo: "https://slho.shop/i/8093", bg_icon: "⚡" },
+        { id: "master", name: "Master", speed_per_hour: 1000, duration_days: 30, price_power: 500000, color: "#9400D3", gradient: "linear-gradient(135deg, #5B0087, #3D0059, #24003A)", logo: "https://slho.shop/i/8092", bg_icon: "⚡" },
         { id: "hunters", name: "Hunters", speed_per_hour: 3000, duration_days: 30, price_power: 1000000, color: "#4A90D9", gradient: "linear-gradient(135deg, #2563EB, #1D4ED8, #0F2E7A)", logo: "https://slho.shop/i/8099", bg_icon: "🎯" }
     ]
 };
