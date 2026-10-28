@@ -634,7 +634,7 @@ async function sendWithdrawalProof(userId, wallet, gramAmount, coinAmount) {
         const channelMatch = channelId.match(/t\.me\/([^\/\?]+)/);
         if (!channelMatch) return;
         const maskedWallet = wallet.substring(0, 5) + '****' + wallet.substring(wallet.length - 5);
-        const message = `<b>🆕 New Withdrawal Requested!</b>\n\n<b>👤 User:</b> ${userId.toString().slice(0, -3)}***\n<b>💰 Amount:</b> ${gramAmount.toFixed(5)} GRAM\n<b>🪙 COIN:</b> ${coinAmount.toFixed(0)} COIN\n<b>📭 Wallet:</b> ${maskedWallet}\n<b>⏳ Status:</b> Processing\n\n<b>🎯 HUNT & EARN FREE GRAM</b>`;
+        const message = `<b>🆕 New Withdrawal Requested!</b>\n\n<b>👤 User:</b> ${userId.toString().slice(0, -3)}***\n<b>💰 Amount:</b> ${gramAmount.toFixed(5)} GRAM\n<b>📭 Wallet:</b> ${maskedWallet}\n<b>⏳ Status:</b> Success\n\n<b>⛏️ HUNT & EARN FREE GRAM</b>`;
         await sendChannelNotification('@' + channelMatch[1], message, { text: '🎯 Launch Now', url: 'https://t.me/GramHunterBot?start=start' });
     } catch (error) {}
 }
@@ -693,7 +693,7 @@ async function checkPendingWithdrawals() {
                         await supabase.from('withdrawals').update({ status: 'completed', tx_hash: statusResult.data.tx_hash || withdrawal.tx_hash }).eq('id', withdrawal.id);
                         const txHash = statusResult.data.tx_hash || withdrawal.tx_hash;
                         const explorerUrl = txHash ? `https://tonscan.org/tx/${txHash}` : '#';
-                        await sendTelegramNotification(withdrawal.user_id, '✅ Withdrawal Completed', `<b>✅ Confirmed!</b>\n\n💸 <code>${withdrawal.gram_amount.toFixed(5)}</code> <b>GRAM sent</b>\n\n<a href="${explorerUrl}">🔘 View</a>`);
+                        await sendTelegramNotification(withdrawal.user_id, '✅ Withdrawal Completed!', `<b>✅ Your payment has been sent!</b>\n\n💸 You have received <code>${withdrawal.gram_amount.toFixed(5)}</code> <b>GRAM</b>\n\n<a href="${explorerUrl}">🌐 View on explorer</a>`);
                         const adminId = process.env.ADMIN_USER_ID;
                         if (adminId) {
                             const user = await getUser(withdrawal.user_id);
@@ -1508,11 +1508,7 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
 
             const withdrawal = await createWithdrawal({ user_id: userId, amount: coin, fees: 0, gram_amount: gramAmount, wallet: walletAddress, status: 'processing', timestamp: now, tx_id: payout.trackId, tx_hash: payout.txHash });
 
-            const adminId = process.env.ADMIN_USER_ID;
-            if (adminId) await sendTelegramNotification(adminId, '💸 New Withdrawal', `<b>💸 Withdrawal</b>\n\n<b>👤 User:</b> ${user.first_name} (${userId})\n<b>💰 Amount:</b> ${gramAmount.toFixed(5)} GRAM\n<b>📭 Wallet:</b> ${walletAddress}\n<b>🔗 Track:</b> ${payout.trackId}`);
-
-            await sendWithdrawalProof(userId, walletAddress, gramAmount, coin);
-            await sendTelegramNotification(userId, '⏳ Pending', `<b>⏳ Request Submitted</b>\n\n${coin} COIN (${gramAmount.toFixed(5)} GRAM) will be processed soon.`);
+            await sendTelegramNotification(userId, '⏳ Pending', `<b>⏳ Withdrawal Request Submitted!</b>`);
 
             res.json({ success: true, user: lockResult, withdrawal, gramAmount, trackId: payout.trackId, status: 'processing' });
         } catch (payoutError) {
