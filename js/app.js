@@ -985,6 +985,23 @@ class App {
         await window.show_12129587();
     }
 
+    async showAdsgramAd() {
+        let retries = 0;
+        while (typeof window.Adsgram?.init !== 'function' && retries < 40) {
+            await new Promise(r => setTimeout(r, 250));
+            retries++;
+        }
+        if (typeof window.Adsgram?.init !== 'function') {
+            throw new Error('Adsgram not loaded');
+        }
+        const controller = window.Adsgram.init({ blockId: '56752' });
+        const result = await controller.show();
+        if (!result || result.done !== true) {
+            throw new Error('Ad not completed');
+        }
+        return result;
+    }
+
     async showGigahubAd() {
         let retries = 0;
         while (typeof window.showGiga !== 'function' && retries < 40) {
@@ -1428,7 +1445,7 @@ class App {
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         const requestTime = Date.now();
         try {
-            await this.showMonetagAd();
+            await this.showAdsgramAd();
             await new Promise(r => setTimeout(r, 15000));
             const result = await this.fetchFromServer('/api/watch-ad-1', { requestTime });
             if (!result.error && result.user) {
