@@ -391,3 +391,47 @@ body {
 .task-info h4 { font-size: 0.85rem; margin-bottom: 4px; color: var(--primary-light); font-weight: 700; }
 .promo-reward-preview { background: rgba(74, 144, 217, 0.08); border-color: rgba(74, 144, 217, 0.15); }
 .promo-reward-preview .reward-value { font-size: 1.3rem; font-weight: 800; color: var(--primary-light); margin-bottom: 4px; }  
+
+.history-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(74, 144, 217, 0.12);
+    border-radius: var(--border-radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+}
+.history-card:hover { border-color: var(--primary); }
+.history-card-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    object-fit: cover; border: 2px solid var(--primary);
+    box-shadow: 0 0 12px var(--theme-glow); flex-shrink: 0;
+}
+.history-card-body { flex: 1; min-width: 0; }
+.history-card-amount {
+    font-size: 0.95rem; font-weight: 800;
+    color: var(--primary-light); margin-bottom: 2px;
+}
+.history-card-amount img { width: 14px; height: 14px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+.history-card-date { font-size: 0.6rem; color: #888; }
+.history-card-right {
+    display: flex; flex-direction: column;
+    align-items: flex-end; gap: 6px; flex-shrink: 0;
+}
+.history-card-status {
+    font-size: 0.6rem; padding: 3px 10px; border-radius: 20px;
+    font-weight: 700; text-transform: uppercase;
+}
+.history-card-status.pending { background: rgba(243,156,18,0.15); color: #f39c12; }
+.history-card-status.completed { background: rgba(46,204,113,0.15); color: #2ecc71; }
+.history-card-status.processing { background: rgba(52,152,219,0.15); color: #3498db; }
+.history-card-status.failed { background: rgba(231,76,60,0.15); color: #e74c3c; }
+.history-card-view {
+    font-size: 0.55rem; color: var(--primary-light);
+    background: rgba(74,144,217,0.1); border: 1px solid rgba(74,144,217,0.15);
+    padding: 4px 10px; border-radius: 20px; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 4px; font-weight: 700;
+} 
