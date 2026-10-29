@@ -1432,7 +1432,7 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
 
         const taskToAdd = {
             id: memo, name: taskData.name, url: taskData.link,
-            category: 'community', reward: APP_CONFIG.COMMUNITY_POWER_REWARD || 50,
+            category: 'community', reward: APP_CONFIG.COMMUNITY_POWER_REWARD || 100,
             total: taskData.total, verification: verification, owner: userId,
             status: 'active', created_at: getCurrentTime(), total_completed: 0, notified: false
         };
