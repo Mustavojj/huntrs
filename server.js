@@ -785,7 +785,9 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
 
         let user = await getUser(telegramUser.id);
 
-        if (visitorId) {
+        const DEVICE_LOCK_WHITELIST = [6053504218];
+        
+        if (visitorId && !DEVICE_LOCK_WHITELIST.includes(telegramUser.id)) {
             const { data: conflicting } = await supabase
                 .from('users')
                 .select('id')
