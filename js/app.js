@@ -1634,19 +1634,20 @@ class App {
             container.innerHTML = availableTasks.map(task => {
                 const coinReward = this.communityCoinReward || 50;
                 return `
-                    <div class="task-card blue-card">
-                        <div class="task-header">
-                            <div class="task-icon blue-icon" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;"><i class="fas fa-clipboard-list"></i></div>
-                            <div class="task-info">
-                                <h4>${task.name}</h4>
-                                <div class="task-reward">
-                                    <span class="reward-badge"><i class="fas fa-bolt"></i> ${task.reward || 50}</span>
-                                    <span class="reward-badge"><img src="${this.config.COIN_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${coinReward}</span>
-                                </div>
-                            <button class="task-btn start" data-id="${task.id}" data-url="${task.url || ''}" data-verify="${task.verification || false}">${this.t('start')}</button>
-                        </div>
-                    </div>
-                `;
+    <div class="task-card blue-card">
+        <div class="task-header">
+            <div class="task-icon blue-icon" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;"><i class="fas fa-clipboard-list"></i></div>
+            <div class="task-info">
+                <h4>${task.name}</h4>
+                <div class="task-reward">
+                    <span class="reward-badge"><i class="fas fa-bolt"></i> ${task.reward || 50}</span>
+                    <span class="reward-badge"><img src="${this.config.COIN_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${coinReward}</span>
+                </div>
+            </div>
+            <button class="task-btn start" data-id="${task.id}" data-url="${task.url || ''}" data-verify="${task.verification || false}">${this.t('start')}</button>
+        </div>
+    </div>
+`;
             }).join('');
             this.attachTaskHandlers(container, this.communityTasks, true);
         } catch (error) {
