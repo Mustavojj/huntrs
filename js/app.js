@@ -2155,60 +2155,63 @@ class App {
     }
 
     renderHistoryContent() {
-        const container = document.getElementById('history-content');
-        if (!container) return;
+    const container = document.getElementById('history-content');
+    if (!container) return;
 
-        if (this._historyTab === 'my') {
-            const historyHtml = this.withdrawals && this.withdrawals.length ? this.withdrawals.slice(0, 10).map(w => {
-                const statusClass = w.status || 'pending';
-                const statusText = statusClass === 'completed' ? this.t('completed') : (statusClass === 'processing' ? this.t('processing') : (statusClass === 'failed' ? this.t('failed') : this.t('pending')));
-                const explorerLink = w.tx_hash ? `<a href="https://tonscan.org/tx/${w.tx_hash}" target="_blank" class="history-explorer-link"><i class="fas fa-arrow-up-right-from-square"></i> ${this.t('view_on_explorer')}</a>` : '';
-                return `
-                    <div class="history-item-wrapper">
-                        <div class="history-item">
-                            <div class="history-amount">
-                                <img src="${this.config.COIN_ICON}">
-                                <span style="font-weight:600;">${Math.floor(w.amount)}</span>
-                                <span style="color:#888;font-size:0.65rem;">- ${(w.gram_amount || 0).toFixed(4)} GRAM</span>
-                            </div>
-                            <div class="history-status ${statusClass}">${statusText}</div>
-                        </div>
-                        <div class="history-meta">
-                            <span class="history-time">${this.formatTimeAgo(w.timestamp)}</span>
-                            ${explorerLink}
-                        </div>
-                    </div>
-                `;
-            }).join('') : '<div class="no-data">' + this.t('no_withdrawals') + '</div>';
-            container.innerHTML = `<div class="history-list">${historyHtml}</div>`;
-        } else {
-            if (this.liveWithdrawals && this.liveWithdrawals.length) {
-                container.innerHTML = `<div class="history-list">${this.liveWithdrawals.map(w => {
-                    const statusClass = w.status || 'pending';
-                    const statusText = statusClass === 'completed' ? this.t('completed') : (statusClass === 'processing' ? this.t('processing') : (statusClass === 'failed' ? this.t('failed') : this.t('pending')));
-                    const explorerLink = w.tx_hash ? `<a href="https://tonscan.org/tx/${w.tx_hash}" target="_blank" class="history-explorer-link"><i class="fas fa-arrow-up-right-from-square"></i> ${this.t('view_on_explorer')}</a>` : '';
-                    return `
-                        <div class="history-item-wrapper">
-                            <div class="history-item">
-                                <div class="history-amount">
-                                    <img src="${this.config.COIN_ICON}">
-                                    <span style="font-weight:600;">${Math.floor(w.amount)}</span>
-                                    <span style="color:#888;font-size:0.6rem;">${w.wallet_masked || '***'}</span>
-                                </div>
-                                <div class="history-status ${statusClass}">${statusText}</div>
-                            </div>
-                            <div class="history-meta">
-                                <span class="history-time">${this.formatTimeAgo(w.timestamp)}</span>
-                                ${explorerLink}
-                            </div>
-                        </div>
-                    `;
-                }).join('')}</div>`;
-            } else {
-                container.innerHTML = `<div class="no-data"><i class="fas fa-inbox"></i><p>${this.t('no_live_payments')}</p></div>`;
-            }
+    if (this._historyTab === 'my') {
+        if (!this.withdrawals || !this.withdrawals.length) {
+            container.innerHTML = `<div class="no-data">${this.t('no_withdrawals')}</div>`;
+            return;
         }
+        container.innerHTML = this.withdrawals.slice(0, 10).map(w => {
+            const statusClass = w.status || 'pending';
+            const statusText = statusClass === 'completed' ? this.t('completed') : (statusClass === 'processing' ? this.t('processing') : (statusClass === 'failed' ? this.t('failed') : this.t('pending')));
+            const explorerLink = w.tx_hash ? `<a href="https://tonscan.org/tx/${w.tx_hash}" target="_blank" class="history-card-view"><i class="fas fa-arrow-up-right-from-square"></i> ${this.t('view_on_explorer')}</a>` : '';
+            return `
+                <div class="history-card">
+                    <div class="history-card-body">
+                        <div class="history-card-amount"><img src="${this.config.GRAM_ICON}"> ${(w.gram_amount || 0).toFixed(6)} GRAM</div>
+                        <div class="history-card-date"><i class="fas fa-clock"></i> ${this.formatTimeAgo(w.timestamp)}</div>
+                    </div>
+                    <div class="history-card-right">
+                        <span class="history-card-status ${statusClass}">${statusText}</span>
+                        ${explorerLink}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    } else {
+        if (!this.liveWithdrawals || !this.liveWithdrawals.length) {
+            container.innerHTML = `<div class="no-data"><i class="fas fa-inbox"></i><p>${this.t('no_live_payments')}</p></div>`;
+            return;
+        }
+        container.innerHTML = this.liveWithdrawals.map(w => {
+            const statusClass = w.status || 'pending';
+            const statusText = statusClass === 'completed' ? this.t('completed') : (statusClass === 'processing' ? this.t('processing') : (statusClass === 'failed' ? this.t('failed') : this.t('pending')));
+            const explorerLink = w.tx_hash ? `<a href="https://tonscan.org/tx/${w.tx_hash}" target="_blank" class="history-card-view"><i class="fas fa-arrow-up-right-from-square"></i> ${this.t('view_on_explorer')}</a>` : '';
+            const avatar = w.user_photo || w.photo_url || this.config.DEFAULT_USER_AVATAR || 'https://slho.shop/i/8067';
+            return `
+                <div class="history-card">
+                    <img src="${avatar}" class="history-card-avatar" onerror="this.src='https://slho.shop/i/8067'">
+                    <div class="history-card-body">
+                        <div class="history-card-amount"><img src="${this.config.GRAM_ICON}"> ${(w.gram_amount || 0).toFixed(6)} GRAM</div>
+                        <div class="history-card-date"><i class="fas fa-clock"></i> ${this.formatTimeAgo(w.timestamp)}</div>
+                    </div>
+                    <div class="history-card-right">
+                        <span class="history-card-status ${statusClass}">${statusText}</span>
+                        ${explorerLink}
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
+}
+
+
+
+
+
+    
 
     async loadLivePayments() {
         const container = document.getElementById('history-content');
