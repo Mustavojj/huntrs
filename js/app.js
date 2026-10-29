@@ -2170,7 +2170,7 @@ class App {
             return `
                 <div class="history-card">
                     <div class="history-card-body">
-                        <div class="history-card-amount"><img src="${this.config.GRAM_ICON}"> ${(w.gram_amount || 0).toFixed(6)} GRAM</div>
+                        <div class="history-card-amount"><img src="${this.config.GRAM_ICON}"> ${(w.gram_amount || 0).toFixed(4)} GRAM</div>
                         <div class="history-card-date"><i class="fas fa-clock"></i> ${this.formatTimeAgo(w.timestamp)}</div>
                     </div>
                     <div class="history-card-right">
