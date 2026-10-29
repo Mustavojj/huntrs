@@ -910,7 +910,7 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
                 await updateUser(userId, { referred_by_verified: true });
                 await sendTelegramNotification(
                     user.referred_by,'🎉 New Referral!',
-                    `<b>🎉 New Referral!</b>\n\n👤 New hunter joined your team\n💰 +${bonusPower} Power added to your earnings`,
+                    `<b>🎉 New Referral!</b>\n\n🥷 New hunter joined your team\n⚡ ${bonusPower} Power added to your earnings`,
                     { text: '🎯 Open App', url: 'https://t.me/GramHunterBot/app' }
                 );
             }
