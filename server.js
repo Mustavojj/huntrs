@@ -635,15 +635,39 @@ async function sendChannelNotification(channelId, message, inlineButton = null) 
     } catch (error) {}
 }
 
-async function sendWithdrawalProof(userId, wallet, gramAmount, coinAmount) {
+async function sendWithdrawalProof(userId, wallet, gramAmount, coinAmount, txHash = null) {
     try {
         const channelId = APP_CONFIG.PAYMENTS_CHANNEL;
         if (!channelId) return;
         const channelMatch = channelId.match(/t\.me\/([^\/\?]+)/);
         if (!channelMatch) return;
         const maskedWallet = wallet.substring(0, 5) + '****' + wallet.substring(wallet.length - 5);
-        const message = `<b>🆕 New Withdrawal Requested!</b>\n\n<b>👤 User:</b> ${userId.toString().slice(0, -3)}***\n<b>💰 Amount:</b> ${gramAmount.toFixed(5)} GRAM\n<b>📭 Wallet:</b> ${maskedWallet}\n<b>⏳ Status:</b> Success\n\n<b>⛏️ HUNT & EARN FREE GRAM</b>`;
-        await sendChannelNotification('@' + channelMatch[1], message, { text: '🎯 Launch Now', url: 'https://t.me/GramHunterBot?start=start' });
+        const maskedUser = userId.toString().slice(0, -3) + '***';
+
+        const message = `<b>💸 New Withdrawal!</b>\n\n` +
+            `<b>👤 User:</b> <code>${maskedUser}</code>\n` +
+            `<b>💰 Amount:</b> <code>${gramAmount.toFixed(4)}</code> GRAM\n` +
+            `<b>📭 Wallet:</b> <code>${maskedWallet}</code>\n` +
+            `<b>⏳ Status:</b> ${txHash ? '✅ Completed' : '⏳ Processing'}`;
+
+        const buttons = [];
+        if (txHash) {
+            buttons.push({ text: '🔗 View', url: `https://tonscan.org/tx/${txHash}` });
+        }
+        buttons.push({ text: '🎯 Launch App', url: 'https://t.me/GramHunterBot?start=start' });
+
+        const payload = {
+            chat_id: '@' + channelMatch[1],
+            text: message,
+            parse_mode: 'HTML',
+            disable_web_page_preview: true,
+            reply_markup: { inline_keyboard: [buttons] }
+        };
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
     } catch (error) {}
 }
 
@@ -701,13 +725,14 @@ async function checkPendingWithdrawals() {
                         await supabase.from('withdrawals').update({ status: 'completed', tx_hash: statusResult.data.tx_hash || withdrawal.tx_hash }).eq('id', withdrawal.id);
                         const txHash = statusResult.data.tx_hash || withdrawal.tx_hash;
                         const explorerUrl = txHash ? `https://tonscan.org/tx/${txHash}` : '#';
-                        await sendTelegramNotification(withdrawal.user_id, '✅ Withdrawal Completed!', `<b>✅ Your payment has been sent!</b>\n\n💸 You have received <code>${withdrawal.gram_amount.toFixed(5)}</code> <b>GRAM</b>\n\n<a href="${explorerUrl}">🌐 View on explorer</a>`);
+                        await sendTelegramNotification(withdrawal.user_id, '✅ Withdrawal Completed!', `<b>✅ Your payment has been sent!</b>\n\n💸 You have received <code>${withdrawal.gram_amount.toFixed(4)}</code> <b>GRAM</b>\n\n<a href="${explorerUrl}">🌐 View on explorer</a>`);
                         const adminId = process.env.ADMIN_USER_ID;
                         if (adminId) {
                             const user = await getUser(withdrawal.user_id);
-                            await sendTelegramNotification(adminId, '✅ Withdrawal Completed', `<b>✅ Completed!</b>\n\n<b>👤 User:</b> ${withdrawal.user_id} (@${user?.username || 'N/A'})\n<b>💰 Amount:</b> ${withdrawal.gram_amount.toFixed(5)} GRAM\n<b>📭 Wallet:</b> ${withdrawal.wallet}\n<b>🔗 TX:</b> <a href="${explorerUrl}">View</a>`);
+                            await sendTelegramNotification(adminId, '✅ Withdrawal Completed', `<b>✅ Completed!</b>\n\n<b>👤 User:</b> ${withdrawal.user_id} (@${user?.username || 'N/A'})\n<b>💰 Amount:</b> ${withdrawal.gram_amount.toFixed(4)} GRAM\n<b>📭 Wallet:</b> ${withdrawal.wallet}\n<b>🔗 TX:</b> <a href="${explorerUrl}">View</a>`);
                         }
-                        await sendWithdrawalProof(withdrawal.user_id, withdrawal.wallet, withdrawal.gram_amount, withdrawal.amount);
+                        await sendWithdrawalProof(withdrawal.user_id, withdrawal.wallet, withdrawal.gram_amount, withdrawal.amount, txHash);
+                        
                     } else if (oxaPayStatus === 'failed' || oxaPayStatus === 'rejected') {
                         const user = await getUser(withdrawal.user_id);
                         if (user) await updateUser(withdrawal.user_id, { coin_balance: (user.coin_balance || 0) + withdrawal.amount, last_withdraw_time: 0 });
