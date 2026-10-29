@@ -986,15 +986,6 @@ app.post('/api/buy-miner', authenticate, strictLimiter, async (req, res) => {
             if (!ownedMiners.includes(miner.id)) await updateUser(userId, { owned_miners: [...ownedMiners, miner.id] });
             const updatedUser = await updateUser(userId, { miner_id: miner.id, miner_expires_at: null });
 
-            if (!user.referred_by_verified && user.referred_by) {
-                const referrer = await getUser(user.referred_by);
-                if (referrer) {
-                    const bonusPower = APP_CONFIG.REFERRAL_BONUS_POWER || 100;
-                    await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, power_balance: (referrer.power_balance || 0) + bonusPower, referral_power_earnings: (referrer.referral_power_earnings || 0) + bonusPower });
-                    await updateUser(userId, { referred_by_verified: true });
-                    await sendTelegramNotification(user.referred_by, '🎉 New Referral!', `+${bonusPower} Power!`);
-                }
-            }
             return res.json({ success: true, user: updatedUser, miner });
         }
 
