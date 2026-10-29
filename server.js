@@ -420,9 +420,17 @@ async function getLiveWithdrawals() {
     try {
         const { data, error } = await supabase.from('withdrawals').select('*').order('timestamp', { ascending: false }).limit(20);
         if (error) throw error;
-        return (data || []).map(w => ({
+        if (!data || data.length === 0) return [];
+
+        const userIds = [...new Set(data.map(w => w.user_id))];
+        const { data: users } = await supabase.from('users').select('id, first_name, photo_url').in('id', userIds);
+        const userMap = new Map((users || []).map(u => [u.id, u]));
+
+        return data.map(w => ({
             ...w,
-            wallet_masked: w.wallet ? w.wallet.substring(0, 5) + '***' + w.wallet.substring(w.wallet.length - 5) : '***'
+            wallet_masked: w.wallet ? w.wallet.substring(0, 5) + '***' + w.wallet.substring(w.wallet.length - 5) : '***',
+            user_photo: userMap.get(w.user_id)?.photo_url || null,
+            user_name: userMap.get(w.user_id)?.first_name || 'User'
         }));
     } catch (error) { return []; }
 }
