@@ -339,7 +339,7 @@ async function addReferralCommission(referrerId, amount, type) {
     if (!referrerId || amount <= 0) return;
     const referrer = await getUser(referrerId);
     if (!referrer || referrer.state === 'ban') return;
-    const MAX_COIN = APP_CONFIG.REFERRAL_MAX_COMMISSION_COIN || 20;
+    const MAX_COIN = APP_CONFIG.REFERRAL_MAX_COMMISSION_COIN || 100;
     const MAX_POWER = APP_CONFIG.REFERRAL_MAX_COMMISSION_POWER || 100;
     let updates = {};
     if (type === 'coin') {
@@ -358,7 +358,7 @@ async function checkLargeTransaction(userId, amount, source) {
         const adminId = process.env.ADMIN_USER_ID;
         if (adminId) {
             await sendTelegramNotification(adminId, '💰 LARGE TRANSACTION!',
-                `<b>⚠️ Large Transaction Alert</b>\n\n<b>👤 User:</b> ${user.first_name} (${userId})\n<b>💎 Amount:</b> +${amount.toFixed(3)} ${source.includes('COIN') ? 'COIN' : 'Power'}\n<b>📌 Source:</b> ${source}`);
+                `<b>⚠️ Large Transaction Alert</b>\n\n<b>👤 User:</b> ${user.first_name} (${userId})\n<b>💎 Amount:</b> ${amount.toFixed(0)} ${source.includes('COIN') ? 'COIN' : 'Power'}\n<b>📌 Source:</b> ${source}`);
         }
     }
 }
@@ -906,7 +906,7 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
             const referrer = await getUser(user.referred_by);
             if (referrer) {
                 const bonusPower = APP_CONFIG.REFERRAL_BONUS_POWER || 100;
-                await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, power_balance: (referrer.power_balance || 0) + bonusPower, referral_power_earnings: (referrer.referral_power_earnings || 0) + bonusPower });
+                await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, referral_power_earnings: (referrer.referral_power_earnings || 0) + bonusPower });
                 await updateUser(userId, { referred_by_verified: true });
                 await sendTelegramNotification(
                     user.referred_by,'🎉 New Referral!',
@@ -942,6 +942,7 @@ app.post('/api/stop-mining', authenticate, strictLimiter, async (req, res) => {
         res.json({ success: true, user: updatedUser, reward: rewardAmount, serverTime: serverNow });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
+
 app.post('/api/claim-mining', authenticate, strictLimiter, async (req, res) => {
     try {
         const userId = req._userId;
