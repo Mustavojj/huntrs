@@ -1333,7 +1333,7 @@ class App {
             <div class="daily-bonus-info">
                 <h4>${this.t('daily_bonus')}</h4>
                 <div class="daily-bonus-reward-badge" style="background:rgba(0,0,0,0.35);">
-                    <img src="${this.config.COIN_ICON}"> "${this.config.DAILY_BONUS_COIN}"
+                    <img src="${this.config.COIN_ICON}"> ${this.config.DAILY_BONUS_COIN}
                 </div>
             </div>
             <button id="daily-bonus-btn" class="daily-bonus-btn" ${this.dailyBonusClaimed ? 'disabled' : ''}>
