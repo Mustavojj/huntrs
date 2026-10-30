@@ -85,9 +85,7 @@ const BOT_TOKEN = process.env.BOT_TOKEN;
 const JWT_SECRET = process.env.JWT_SECRET;
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
-const requestCooldown = new Map();
 const notifiedUsers = new Set();
-const getUserCache = new Map();
 const withdrawLocks = new Map();
 const taskCompletionLocks = new Map();
 const promoCodeLocks = new Map();
@@ -102,15 +100,6 @@ const strictLimiter = rateLimit({ windowMs: 60 * 1000, max: 30, keyGenerator: (r
 const veryStrictLimiter = rateLimit({ windowMs: 60 * 1000, max: 5, keyGenerator: (req) => req._userId?.toString() || req.ip, standardHeaders: true, legacyHeaders: false, message: { error: 'Please wait longer.' } });
 
 app.use('/api/', generalLimiter);
-
-function checkCooldown(userId, endpoint, cooldownMs = 1500) {
-    const now = Date.now();
-    const key = `${userId}_${endpoint}`;
-    const lastCall = requestCooldown.get(key) || 0;
-    if (now - lastCall < cooldownMs) return false;
-    requestCooldown.set(key, now);
-    return true;
-}
 
 function checkTaskCompletionCooldown(userId) {
     const now = Date.now();
@@ -381,10 +370,9 @@ async function createUser(userData) {
 
 async function updateUser(userId, updates) {
     try {
-        const { data, error } = await supabase.from('users').update(updates).eq('id', userId).select().single();
+        const { error } = await supabase.from('users').update(updates).eq('id', userId);
         if (error) throw error;
-        getUserCache.delete(`getUser_${userId}`);
-        return data;
+        return { id: userId, ...updates };
     } catch (error) { throw error; }
 }
 
@@ -392,6 +380,7 @@ async function getTasks(category, userId) {
     try {
         let query = supabase.from('tasks').select('*');
         if (category) query = query.eq('category', category);
+        query = query.limit(100);
         const { data: tasks, error } = await query;
         if (error) throw error;
         const { data: completed } = await supabase.from('user_completed_tasks').select('task_id').eq('user_id', userId);
@@ -410,7 +399,7 @@ async function getCompletedTasks(userId) {
 
 async function getWithdrawals(userId) {
     try {
-        const { data, error } = await supabase.from('withdrawals').select('*').eq('user_id', userId).order('timestamp', { ascending: false }).limit(20);
+        const { data, error } = await supabase.from('withdrawals').select('id, amount, gram_amount, wallet, status, timestamp, tx_hash').eq('user_id', userId).order('timestamp', { ascending: false }).limit(20);
         if (error) throw error;
         return data || [];
     } catch (error) { return []; }
@@ -418,7 +407,7 @@ async function getWithdrawals(userId) {
 
 async function getLiveWithdrawals() {
     try {
-        const { data, error } = await supabase.from('withdrawals').select('*').order('timestamp', { ascending: false }).limit(20);
+        const { data, error } = await supabase.from('withdrawals').select('id, user_id, amount, gram_amount, wallet, status, timestamp, tx_hash').order('timestamp', { ascending: false }).limit(20);
         if (error) throw error;
         if (!data || data.length === 0) return [];
 
@@ -445,7 +434,7 @@ async function getPromoCode(code) {
 
 async function getActivePromoCodes(userId) {
     try {
-        const { data: codes, error } = await supabase.from('promo_codes').select('*').eq('status', 'active').gt('max_uses', 0);
+        const { data: codes, error } = await supabase.from('promo_codes').select('code, reward_amount, reward_type, max_uses, total_uses, owner, required_channel').eq('status', 'active').gt('max_uses', 0).limit(50);
         if (error) throw error;
         const { data: used } = await supabase.from('used_promo_codes').select('code').eq('user_id', userId);
         const usedCodes = new Set(used?.map(u => u.code) || []);
@@ -504,16 +493,15 @@ async function sendTelegramNotification(userId, title, message, inlineButton = n
 
 async function sendDailyBonusNotifications() {
     try {
-        const today = getTodayString();
-        const startOfDay = new Date(today + 'T00:00:00Z').getTime();
         const now = Date.now();
+        const twentyFourHoursAgo = now - (24 * 3600000);
 
         const { data: users, error } = await supabase
             .from('users')
             .select('id')
             .eq('state', 'active')
             .eq('bot_blocked', false)
-            .lt('last_daily_bonus_notif', startOfDay)
+            .lt('last_daily_bonus_notif', twentyFourHoursAgo)
             .limit(10000);
 
         if (error || !users || users.length === 0) {
@@ -528,7 +516,7 @@ async function sendDailyBonusNotifications() {
                 .from('users')
                 .update({ last_daily_bonus_notif: now })
                 .eq('id', u.id)
-                .lt('last_daily_bonus_notif', startOfDay)
+                .lt('last_daily_bonus_notif', twentyFourHoursAgo)
                 .select('id');
 
             if (!claimed || claimed.length === 0) continue;
@@ -536,7 +524,7 @@ async function sendDailyBonusNotifications() {
             const result = await sendTelegramNotification(
                 u.id,
                 '🎁 Daily Bonus Ready',
-                `<b>🎁 Daily Bonus Available!</b>\n\n💰 +100 COIN waiting for you\n📺 Ads are available again — watch & earn`,
+                `<b>🎁 Daily Bonus Available!</b>\n\n💰 +250 COIN waiting for you\n📺 Ads are available again — watch & earn`,
                 { text: '🎯 Claim Now', url: 'https://t.me/GramHtrsbot/app' }
             );
 
@@ -712,7 +700,7 @@ class OxaPay {
 
 async function checkPendingWithdrawals() {
     try {
-        const { data: withdrawals, error } = await supabase.from('withdrawals').select('*').in('status', ['pending', 'processing']).limit(50);
+        const { data: withdrawals, error } = await supabase.from('withdrawals').select('id, user_id, amount, gram_amount, wallet, status, tx_id, tx_hash').in('status', ['pending', 'processing']).limit(50);
         if (error || !withdrawals || withdrawals.length === 0) return;
         const oxapay = new OxaPay({ apiKey: process.env.OXAPAY_API_KEY, sandbox: process.env.NODE_ENV !== 'production' });
         for (const withdrawal of withdrawals) {
@@ -745,8 +733,8 @@ async function checkPendingWithdrawals() {
     } catch (error) { logFailure('checkPendingWithdrawals', null, null, error); }
 }
 
-setInterval(async () => { await checkPendingWithdrawals(); }, 60000);
-setTimeout(() => { checkPendingWithdrawals(); }, 10000);
+setInterval(async () => { await checkPendingWithdrawals(); }, 300000);
+setTimeout(() => { checkPendingWithdrawals(); }, 30000);
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/health', (req, res) => res.status(200).send('OK'));
@@ -825,12 +813,17 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
             if (telegramUser.username && telegramUser.username !== user.username) updates.username = telegramUser.username;
             if (telegramUser.first_name && telegramUser.first_name !== user.first_name) updates.first_name = telegramUser.first_name;
             if (photoUrl && photoUrl !== user.photo_url) updates.photo_url = photoUrl;
-            if (Object.keys(updates).length > 0) user = await updateUser(telegramUser.id, updates);
+            if (Object.keys(updates).length > 0) {
+                await updateUser(telegramUser.id, updates);
+                Object.assign(user, updates);
+            }
         }
         if (visitorId && user) {
                 const existing = Array.isArray(user.visitor_ids) ? user.visitor_ids : [];
                 if (!existing.includes(visitorId)) {
-                    user = await updateUser(user.id, { visitor_ids: [...existing, visitorId] });
+                    const newVisitorIds = [...existing, visitorId];
+                    await updateUser(user.id, { visitor_ids: newVisitorIds });
+                    user.visitor_ids = newVisitorIds;
                 }
         }
         if (user.state === 'ban') return res.status(403).json({ error: 'Account banned' });
@@ -860,12 +853,13 @@ app.post('/api/get-user', authenticate, async (req, res) => {
 
         const activeMiner = getUserActiveMiner(user);
         if (activeMiner && activeMiner.id !== user.miner_id && user.miner_id) {
-            user = await updateUser(userId, { miner_id: activeMiner.id, miner_expires_at: null });
+            await updateUser(userId, { miner_id: activeMiner.id, miner_expires_at: null });
+            user.miner_id = activeMiner.id;
+            user.miner_expires_at = null;
         }
 
         const [completedTasks, withdrawals] = await Promise.all([getCompletedTasks(userId), getWithdrawals(userId)]);
         await updateUserLevel(userId);
-        user = await getUser(userId);
         res.json({ user, completedTasks, withdrawals, serverTime: getCurrentTime() });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -1549,7 +1543,7 @@ app.post('/api/get-withdrawals', authenticate, async (req, res) => {
 });
 
 setInterval(sendDailyBonusNotifications, 3600000);
-setInterval(sendMiningEndNotifications, 300000);
+setInterval(sendMiningEndNotifications, 900000);
 
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
