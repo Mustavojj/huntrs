@@ -985,6 +985,19 @@ class App {
         await window.show_12129587();
     }
 
+    async showAdsgramInterstitial() {
+    let retries = 0;
+    while (typeof window.Adsgram?.init !== 'function' && retries < 40) {
+        await new Promise(r => setTimeout(r, 250));
+        retries++;
+    }
+    if (typeof window.Adsgram?.init !== 'function') {
+        throw new Error('Adsgram not loaded');
+    }
+    const controller = window.Adsgram.init({ blockId: 'int-56881' });
+    await controller.show();
+    }
+
     async showAdsgramAd() {
         let retries = 0;
         while (typeof window.Adsgram?.init !== 'function' && retries < 40) {
@@ -1427,12 +1440,9 @@ class App {
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         try {
-            await this.showMonetagAd();
+            await this.showAdsgramInterstitial();
         } catch (e) {
-            this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
-            btn.disabled = false;
-            btn.innerHTML = this.t('daily_bonus_ready');
-            return;
+            await this.showMonetagAd();
         }
         const success = await this.claimDailyBonus();
         if (success) { btn.disabled = true; btn.innerHTML = this.t('daily_bonus_claimed'); }
