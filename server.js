@@ -524,7 +524,7 @@ async function sendDailyBonusNotifications() {
             const result = await sendTelegramNotification(
                 u.id,
                 '🎁 Daily Bonus Ready',
-                `<b>🎁 Daily Bonus Available!</b>\n\n💰 +250 COIN waiting for you\n📺 Ads are available again — watch & earn`,
+                `<b>🎁 Daily Bonus Available!</b>\n\n💰 250 COIN waiting for you\n📺 Ads are available again — watch & earn`,
                 { text: '🎯 Claim Now', url: 'https://t.me/GramHtrsbot/app' }
             );
 
