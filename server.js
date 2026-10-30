@@ -642,7 +642,7 @@ async function sendWithdrawalProof(userId, wallet, gramAmount, coinAmount, txHas
         if (txHash) {
             buttons.push({ text: '🔗 View', url: `https://tonscan.org/tx/${txHash}` });
         }
-        buttons.push({ text: '🎯 Launch App', url: 'https://t.me/GramHunterBot?start=start' });
+        buttons.push({ text: '🎯 Launch App', url: 'https://t.me/GramHtrsbot/app' });
 
         const payload = {
             chat_id: '@' + channelMatch[1],
