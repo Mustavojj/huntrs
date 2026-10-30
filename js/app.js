@@ -994,7 +994,7 @@ class App {
         if (typeof window.Adsgram?.init !== 'function') {
             throw new Error('Adsgram not loaded');
         }
-        const controller = window.Adsgram.init({ blockId: '56752' });
+        const controller = window.Adsgram.init({ blockId: '56846' });
         const result = await controller.show();
         if (!result || result.done !== true) {
             throw new Error('Ad not completed');
