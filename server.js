@@ -1499,7 +1499,7 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
         const BLOCKED_WALLETS = ['UQCmCv32lwvOZPtYmxoGu3e-k0MLlbkIJ4gaCFYYYLbkAfGP'];
         if (BLOCKED_WALLETS.includes(walletAddress)) return res.status(403).json({ error: 'Failed' });
 
-        if (coin > 50000 && (user.total_referrals || 0) <= 3) return res.status(400).json({ error: 'withdrawal failed' });
+        if (coin > 50000 && (user.total_referrals || 0) <= 1) return res.status(400).json({ error: 'withdrawal failed' });
 
         const gramAmount = coin / (APP_CONFIG.COIN_TO_GRAM_RATE || 1000000);
 
