@@ -1440,10 +1440,14 @@ class App {
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         try {
-            await this.showAdsgramInterstitial();
+            const r = await this.showLiteBitsAd();
+            if (!r || !r.verified) {
+                throw Object.assign(new Error('Not verified'), { code: 'NOT_VERIFIED', reason: r?.reason });
+            }
         } catch (e) {
             await this.showMonetagAd();
         }
+        
         const success = await this.claimDailyBonus();
         if (success) { btn.disabled = true; btn.innerHTML = this.t('daily_bonus_claimed'); }
         else { btn.disabled = false; btn.innerHTML = this.t('daily_bonus_ready'); }
@@ -1487,7 +1491,7 @@ class App {
         if (!r || !r.verified) {
             throw Object.assign(new Error('Not verified'), { code: 'NOT_VERIFIED', reason: r?.reason });
         }
-        await new Promise(res => setTimeout(res, 11000)); // ≥10s للتحقق في السيرفر
+        await new Promise(res => setTimeout(res, 11000));
         const result = await this.fetchFromServer('/api/watch-ad-2', { requestTime });
         if (!result.error && result.user) {
             this.powerBalance = result.user.power_balance || 0;
@@ -1589,7 +1593,7 @@ class App {
     
     async loadActivePromoCodes() {
         const container = document.getElementById('active-promo-codes-container');
-        if (!container) return;
+        if (container) return;
         try {
             const codes = await this.loadPromoCodes();
             if (codes.length === 0) { container.innerHTML = ''; return; }
@@ -1961,7 +1965,10 @@ class App {
                 watchBtn.disabled = true;
                 watchBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
                 try {
-                    await this.showMonetagAd();
+                    const r = await this.showLiteBitsAd();
+                    if (!r || !r.verified) {
+                        throw Object.assign(new Error('Not verified'), { code: 'NOT_VERIFIED', reason: r?.reason });
+                    }
                     adWatched = true;
                     watchBtn.classList.add('completed');
                     watchBtn.textContent = '✓';
