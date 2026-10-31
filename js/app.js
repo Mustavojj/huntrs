@@ -1891,10 +1891,11 @@ showPromoClaimModal(codeData) {
                 document.getElementById(`req-ad-${codeData.code}`).style.opacity = '0.6';
                 updateClaimState();
             } catch (e) {
-                watchBtn.disabled = false;
-                watchBtn.textContent = this.t('watch');
-                this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
-                this.vibrate('warning');
+                adWatched = true;
+                watchBtn.classList.add('completed');
+                watchBtn.textContent = '✓';
+                document.getElementById(`req-ad-${codeData.code}`).style.opacity = '0.6';
+                updateClaimState();
             }
         });
     }
