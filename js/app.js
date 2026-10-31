@@ -1360,8 +1360,7 @@ class App {
                 <input type="text" id="promo-input" class="form-input blue-input" placeholder="${this.t('enter_code')}" autocomplete="off">
                 <button id="promo-submit" class="promo-submit-btn" disabled>${this.t('claim')}</button>
             </div>
-            <div id="active-promo-codes-container" class="promo-codes-list"></div>
-        </div>
+            </div>
 
         <div class="section-header blue-header">
             <h3><i class="fas fa-play-circle"></i> ${this.t('watch_earn')}</h3>
@@ -1593,7 +1592,7 @@ class App {
     
     async loadActivePromoCodes() {
         const container = document.getElementById('active-promo-codes-container');
-        if (container) return;
+        if (!container) return;
         try {
             const codes = await this.loadPromoCodes();
             if (codes.length === 0) { container.innerHTML = ''; return; }
