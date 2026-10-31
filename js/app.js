@@ -1426,7 +1426,9 @@ class App {
         });
         promoSubmit.addEventListener('click', () => {
             const code = promoInput.value.trim();
-            if (code) this.applyPromoCode(code);
+            if (!code) return;
+            const codeData = { code: code.toUpperCase(), reward_type: 'coin', reward_amount: 0, required_channel: null };
+            this.showPromoClaimModal(codeData);
             promoInput.value = '';
             promoSubmit.disabled = true;
             promoSubmit.classList.remove('active');
@@ -1585,7 +1587,6 @@ class App {
     document.getElementById('add-community-task-btn')?.addEventListener('click', () => this.showAddCommunityTaskModal());
     document.getElementById('my-community-tasks-btn')?.addEventListener('click', () => this.showMyTasksModal());
 
-    this.loadActivePromoCodes();
     this.loadMainTasks();
     this.loadCommunityTasks();
     }
@@ -1987,7 +1988,23 @@ class App {
             claimBtn.addEventListener('click', async () => {
                 claimBtn.disabled = true;
                 claimBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-                const result = await this.applyPromoCode(codeData.code);
+                let result = false;
+                try {
+                    const r = await this.fetchFromServer('/api/claim-promo-code', { code: codeData.code });
+                    if (!r.error && r.user) {
+                        this.powerBalance = r.user.power_balance || 0;
+                        this.coinBalance = r.user.coin_balance || 0;
+                        this.updateHeaderBalances();
+                        this.setPromoCooldown();
+                        this.showNotification('Reward Claimed', `You received ${r.reward}`, 'success');
+                        this.vibrate('success');
+                        result = true;
+                    } else if (r.error) {
+                        this.showNotification('Error', r.error, 'error');
+                    }
+                } catch (e) {
+                    this.showNotification('Error', 'Network error', 'error');
+                }
                 if (result) { modal.style.display = 'none'; this.renderEarn(); }
                 else { claimBtn.disabled = false; claimBtn.textContent = this.t('promo_claim_final'); }
             });
