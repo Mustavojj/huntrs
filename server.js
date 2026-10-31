@@ -146,7 +146,7 @@ function validateTelegramInitData(initData, botToken) {
         const calculatedHash = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
         if (calculatedHash !== hash) return { valid: false, error: 'Invalid hash' };
         const authDate = parseInt(urlParams.get('auth_date'));
-        if (Math.floor(Date.now() / 1000) - authDate > 86400) return { valid: false, error: 'Expired' };
+        if (Math.floor(Date.now() / 1000) - authDate > 3600) return { valid: false, error: 'Expired' };
         const userJson = urlParams.get('user');
         let user = null;
         if (userJson) { try { user = JSON.parse(userJson); } catch (e) { return { valid: false, error: 'Invalid user' }; } }
@@ -410,11 +410,9 @@ async function getLiveWithdrawals() {
         const { data, error } = await supabase.from('withdrawals').select('id, user_id, amount, gram_amount, wallet, status, timestamp, tx_hash').order('timestamp', { ascending: false }).limit(20);
         if (error) throw error;
         if (!data || data.length === 0) return [];
-
         const userIds = [...new Set(data.map(w => w.user_id))];
         const { data: users } = await supabase.from('users').select('id, first_name, photo_url').in('id', userIds);
         const userMap = new Map((users || []).map(u => [u.id, u]));
-
         return data.map(w => ({
             ...w,
             wallet_masked: w.wallet ? w.wallet.substring(0, 5) + '***' + w.wallet.substring(w.wallet.length - 5) : '***',
@@ -491,11 +489,12 @@ async function sendTelegramNotification(userId, title, message, inlineButton = n
     }
 }
 
+
+
 async function sendDailyBonusNotifications() {
     try {
         const now = Date.now();
         const twentyFourHoursAgo = now - (24 * 3600000);
-
         const { data: users, error } = await supabase
             .from('users')
             .select('id')
@@ -503,14 +502,11 @@ async function sendDailyBonusNotifications() {
             .eq('bot_blocked', false)
             .lt('last_daily_bonus_notif', twentyFourHoursAgo)
             .limit(10000);
-
         if (error || !users || users.length === 0) {
             console.log('📭 Daily bonus: no users to notify');
             return;
         }
-
         let success = 0, blocked = 0, deleted = 0, other = 0;
-
         for (const u of users) {
             const { data: claimed } = await supabase
                 .from('users')
@@ -518,16 +514,13 @@ async function sendDailyBonusNotifications() {
                 .eq('id', u.id)
                 .lt('last_daily_bonus_notif', twentyFourHoursAgo)
                 .select('id');
-
             if (!claimed || claimed.length === 0) continue;
-
             const result = await sendTelegramNotification(
                 u.id,
                 '🎁 Daily Bonus Ready',
                 `<b>🎁 Daily Bonus Available!</b>\n\n💰 250 COIN waiting for you\n📺 Ads are available again — watch & earn`,
                 { text: '🎯 Claim Now', url: 'https://t.me/GramHtrsbot/app' }
             );
-
             if (result.ok) success++;
             else if (result.reason === 'blocked') {
                 blocked++;
@@ -535,12 +528,9 @@ async function sendDailyBonusNotifications() {
             }
             else if (result.reason === 'deleted' || result.reason === 'deactivated') deleted++;
             else other++;
-
             await new Promise(r => setTimeout(r, 40));
         }
-
         console.log(`✅ Daily bonus sent: ${success} ok, ${blocked} blocked, ${deleted} deleted, ${other} other`);
-
         const adminId = process.env.ADMIN_USER_ID;
         if (adminId) {
             await sendTelegramNotification(adminId, '🔔 Daily Broadcast',
@@ -562,7 +552,6 @@ async function sendMiningEndNotifications() {
     try {
         const now = Date.now();
         const oneHourAgo = now - 3600000;
-
         const { data: users, error } = await supabase
             .from('users')
             .select('id, mining_end_time, last_mining_notif')
@@ -570,33 +559,26 @@ async function sendMiningEndNotifications() {
             .eq('bot_blocked', false)
             .lte('mining_end_time', now)
             .limit(500);
-
         if (error || !users || users.length === 0) return;
-
         let success = 0, blocked = 0, deleted = 0, other = 0, skipped = 0;
-
         for (const u of users) {
             if (u.last_mining_notif && (now - u.last_mining_notif) < 28800000) {
                 skipped++;
                 continue;
             }
-
             const { data: claimed } = await supabase
                 .from('users')
                 .update({ last_mining_notif: now })
                 .eq('id', u.id)
                 .lte('last_mining_notif', oneHourAgo)
                 .select('id');
-
             if (!claimed || claimed.length === 0) { skipped++; continue; }
-
             const result = await sendTelegramNotification(
                 u.id,
                 '⛏️ Mining Ended',
                 `<b>⛏️ Your Mining Session Ended!</b>\n\n💰 Your coins are ready to claim\n🎁 Don't lose them — claim now`,
                 { text: '🎯 Claim Now', url: 'https://t.me/GramHtrsbot/app' }
             );
-
             if (result.ok) success++;
             else if (result.reason === 'blocked') {
                 blocked++;
@@ -604,10 +586,8 @@ async function sendMiningEndNotifications() {
             }
             else if (result.reason === 'deleted' || result.reason === 'deactivated') deleted++;
             else other++;
-
             await new Promise(r => setTimeout(r, 40));
         }
-
         console.log(`⛏️ Mining end sent: ${success} ok, ${blocked} blocked, ${deleted} deleted, ${other} other, ${skipped} skipped`);
     } catch (e) {
         logFailure('miningEndNotif', null, null, e);
@@ -631,19 +611,14 @@ async function sendWithdrawalProof(userId, wallet, gramAmount, coinAmount, txHas
         if (!channelMatch) return;
         const maskedWallet = wallet.substring(0, 5) + '****' + wallet.substring(wallet.length - 5);
         const maskedUser = userId.toString().slice(0, -3) + '***';
-
         const message = `<b>💸 New Withdrawal!</b>\n\n` +
             `<b>👤 User:</b> <code>${maskedUser}</code>\n` +
             `<b>💰 Amount:</b> <code>${gramAmount.toFixed(4)}</code> GRAM\n` +
             `<b>📭 Wallet:</b> <code>${maskedWallet}</code>\n` +
             `<b>⏳ Status:</b> ${txHash ? '✅ Completed' : '⏳ Processing'}`;
-
         const buttons = [];
-        if (txHash) {
-            buttons.push({ text: '🔗 View', url: `https://tonscan.org/tx/${txHash}` });
-        }
+        if (txHash) buttons.push({ text: '🔗 View', url: `https://tonscan.org/tx/${txHash}` });
         buttons.push({ text: '🎯 Launch App', url: 'https://t.me/GramHtrsbot/app' });
-
         const payload = {
             chat_id: '@' + channelMatch[1],
             text: message,
@@ -720,7 +695,6 @@ async function checkPendingWithdrawals() {
                             await sendTelegramNotification(adminId, '✅ Withdrawal Completed', `<b>✅ Completed!</b>\n\n<b>👤 User:</b> ${withdrawal.user_id} (@${user?.username || 'N/A'})\n<b>💰 Amount:</b> ${withdrawal.gram_amount.toFixed(4)} GRAM\n<b>📭 Wallet:</b> ${withdrawal.wallet}\n<b>🔗 TX:</b> <a href="${explorerUrl}">View</a>`);
                         }
                         await sendWithdrawalProof(withdrawal.user_id, withdrawal.wallet, withdrawal.gram_amount, withdrawal.amount, txHash);
-                        
                     } else if (oxaPayStatus === 'failed' || oxaPayStatus === 'rejected') {
                         const user = await getUser(withdrawal.user_id);
                         if (user) await updateUser(withdrawal.user_id, { coin_balance: (user.coin_balance || 0) + withdrawal.amount, last_withdraw_time: 0 });
@@ -771,22 +745,33 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
         const telegramUser = validation.user;
         if (!telegramUser || !telegramUser.id) return res.status(403).json({ error: 'No user' });
 
+        if (validation.queryId) {
+            const { data: usedQuery } = await supabase
+                .from('used_query_ids')
+                .select('query_id')
+                .eq('query_id', validation.queryId)
+                .maybeSingle();
+            if (usedQuery) return res.status(403).json({ error: 'Session already used' });
+            try {
+                await supabase.from('used_query_ids').insert([{ query_id: validation.queryId, used_at: getCurrentTime() }]);
+            } catch (e) {}
+        }
+
         let user = await getUser(telegramUser.id);
 
         const DEVICE_LOCK_WHITELIST = [6053504218];
-        
+
         if (visitorId && !DEVICE_LOCK_WHITELIST.includes(telegramUser.id)) {
             const { data: conflicting } = await supabase
                 .from('users')
                 .select('id')
                 .neq('id', telegramUser.id)
                 .contains('visitor_ids', JSON.stringify([visitorId]));
-            
             if (conflicting && conflicting.length > 0) {
                 return res.status(403).json({ error: 'device_already_linked' });
             }
         }
-        
+
         if (!user) {
             const userData = {
                 id: telegramUser.id, username: telegramUser.username || '', first_name: telegramUser.first_name || 'User',
@@ -819,12 +804,12 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
             }
         }
         if (visitorId && user) {
-                const existing = Array.isArray(user.visitor_ids) ? user.visitor_ids : [];
-                if (!existing.includes(visitorId)) {
-                    const newVisitorIds = [...existing, visitorId];
-                    await updateUser(user.id, { visitor_ids: newVisitorIds });
-                    user.visitor_ids = newVisitorIds;
-                }
+            const existing = Array.isArray(user.visitor_ids) ? user.visitor_ids : [];
+            if (!existing.includes(visitorId)) {
+                const newVisitorIds = [...existing, visitorId];
+                await updateUser(user.id, { visitor_ids: newVisitorIds });
+                user.visitor_ids = newVisitorIds;
+            }
         }
         if (user.state === 'ban') return res.status(403).json({ error: 'Account banned' });
         const token = generateJWT(user.id, user.id);
@@ -869,6 +854,14 @@ app.post('/api/get-live-withdrawals', authenticate, async (req, res) => {
         const withdrawals = await getLiveWithdrawals();
         res.json({ withdrawals });
     } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.post('/api/get-promo-code', authenticate, async (req, res) => {
+    try {
+        const promo = await getPromoCode(req.body.code);
+        if (!promo || promo.status !== 'active') return res.status(404).json({ error: 'Invalid code' });
+        res.json({ code: promo.code, reward_type: promo.reward_type, reward_amount: promo.reward_amount, required_channel: promo.required_channel });
+    } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
@@ -924,7 +917,6 @@ app.post('/api/stop-mining', authenticate, strictLimiter, async (req, res) => {
 
         const serverNow = Date.now();
         if (!user.mining_end_time || serverNow < user.mining_end_time) {
-            const remaining = Math.ceil(((user.mining_end_time || 0) - serverNow) / 1000);
             return res.status(400).json({ error: `Session not ended!` });
         }
 
@@ -966,13 +958,13 @@ app.post('/api/claim-mining', authenticate, strictLimiter, async (req, res) => {
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
+
 app.post('/api/buy-miner', authenticate, strictLimiter, async (req, res) => {
     try {
         const userId = req._userId;
         const { minerId } = req.body;
         const user = await getUser(userId);
         if (!user) return res.status(404).json({ error: 'User not found' });
-
         const miner = APP_CONFIG.MINERS.find(m => m.id === minerId);
         if (!miner) return res.status(400).json({ error: 'Invalid miner' });
 
@@ -980,7 +972,6 @@ app.post('/api/buy-miner', authenticate, strictLimiter, async (req, res) => {
             const ownedMiners = user.owned_miners || [];
             if (!ownedMiners.includes(miner.id)) await updateUser(userId, { owned_miners: [...ownedMiners, miner.id] });
             const updatedUser = await updateUser(userId, { miner_id: miner.id, miner_expires_at: null });
-
             return res.json({ success: true, user: updatedUser, miner });
         }
 
@@ -1083,7 +1074,7 @@ app.post('/api/complete-task', authenticate, strictLimiter, async (req, res) => 
         const isCommunity = task.category === 'community';
         const coinReward = isCommunity ? (APP_CONFIG.COMMUNITY_COIN_REWARD || 100) : 0;
         const powerReward = isCommunity ? (APP_CONFIG.COMMUNITY_POWER_REWARD || 100) : (task.reward || 100);
-        
+
         const updatedUser = await updateUser(userId, {
             power_balance: (user.power_balance || 0) + powerReward,
             coin_balance: (user.coin_balance || 0) + coinReward,
@@ -1138,7 +1129,7 @@ app.post('/api/watch-ad-1', authenticate, strictLimiter, async (req, res) => {
         });
 
         setAdCooldown(userId, 'ad1');
-        
+
         if (user.referred_by) {
             const rp = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
             const rc = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
@@ -1182,7 +1173,7 @@ app.post('/api/watch-ad-2', authenticate, strictLimiter, async (req, res) => {
         });
 
         setAdCooldown(userId, 'ad2');
-        
+
         if (user.referred_by) {
             const rp = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
             const rc = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
@@ -1200,7 +1191,7 @@ app.post('/api/watch-ad-3', authenticate, strictLimiter, async (req, res) => {
         const userId = req._userId;
         const { requestTime } = req.body;
         const user = await getUser(userId);
-        if (user) return res.status(404).json({ error: 'No ads available' });
+        if (!user) return res.status(404).json({ error: 'No ads available' });
 
         const now = getCurrentTime();
         if (!requestTime || (now - requestTime) < 10000) return res.status(400).json({ error: 'Ad not completed' });
@@ -1225,7 +1216,7 @@ app.post('/api/watch-ad-3', authenticate, strictLimiter, async (req, res) => {
         });
 
         setAdCooldown(userId, 'ad3');
-        
+
         if (user.referred_by) {
             const rp = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
             const rc = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
@@ -1243,7 +1234,7 @@ app.post('/api/watch-ad-4', authenticate, strictLimiter, async (req, res) => {
         const userId = req._userId;
         const { requestTime } = req.body;
         const user = await getUser(userId);
-        if (user) return res.status(404).json({ error: 'No ads available' });
+        if (!user) return res.status(404).json({ error: 'No ads available' });
 
         const now = getCurrentTime();
         if (!requestTime || (now - requestTime) < 10000) return res.status(400).json({ error: 'Ad not completed' });
@@ -1268,7 +1259,7 @@ app.post('/api/watch-ad-4', authenticate, strictLimiter, async (req, res) => {
         });
 
         setAdCooldown(userId, 'ad4');
-        
+
         if (user.referred_by) {
             const rp = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
             const rc = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
