@@ -775,7 +775,6 @@ class App {
             return false;
         } catch (error) { return false; }
         }
-    
     async applyPromoCode(code) {
     if (!this.tgUser) return false;
     const promoCheck = this.canUsePromo();
@@ -1160,8 +1159,7 @@ renderMining() {
 
     if (this.miningActive) this.updateMiningTimerDisplay();
 }
-
-renderQuests() {
+    renderQuests() {
     const minerQuestsContainer = document.getElementById('miner-quests-container');
     const taskQuestsContainer = document.getElementById('task-quests-container');
     const referralQuestsContainer = document.getElementById('referral-quests-container');
@@ -1508,9 +1506,8 @@ renderEarn() {
 
     this.loadMainTasks();
     this.loadCommunityTasks();
-        }
-
-async loadActivePromoCodes() {
+    }
+    async loadActivePromoCodes() {
     const container = document.getElementById('active-promo-codes-container');
     if (!container) return;
     try {
@@ -2058,7 +2055,8 @@ renderTeam() {
         await this.claimReferralEarnings('coin');
         this.renderTeam();
     });
-    renderWallet() {
+}
+        renderWallet() {
         const el = document.getElementById('wallet-page');
         if (!el) return;
 
@@ -2379,5 +2377,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.app = new App();
     window.app.initialize();
-});}
-
+});
+                           
