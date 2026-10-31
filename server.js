@@ -186,9 +186,15 @@ async function checkBotIsAdminInChannel(channelUsername) {
 async function checkUserInChannel(userId, channelUsername) {
     if (!BOT_TOKEN || !channelUsername) return true;
     try {
-        const chatMember = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=@${channelUsername}&user_id=${userId}`).then(r => r.json());
-        return chatMember.ok && ['member', 'administrator', 'creator'].includes(chatMember.result?.status);
-    } catch (error) { return false; }
+        const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=@${channelUsername}&user_id=${userId}`);
+        const data = await res.json();
+        if (!data.ok) {
+            const desc = (data.description || '').toLowerCase();
+            if (desc.includes('chat not found') || desc.includes('user not found') || desc.includes('bot is not a member') || desc.includes('not enough rights')) return true;
+            return false;
+        }
+        return ['member', 'administrator', 'creator'].includes(data.result?.status);
+    } catch (e) { return true; }
 }
 
 const APP_CONFIG = {
@@ -328,8 +334,8 @@ async function addReferralCommission(referrerId, amount, type) {
     if (!referrerId || amount <= 0) return;
     const referrer = await getUser(referrerId);
     if (!referrer || referrer.state === 'ban') return;
-    const MAX_COIN = APP_CONFIG.REFERRAL_MAX_COMMISSION_COIN || 100;
-    const MAX_POWER = APP_CONFIG.REFERRAL_MAX_COMMISSION_POWER || 100;
+    const MAX_COIN = APP_CONFIG.REFERRAL_MAX_COMMISSION_COIN || 10;
+    const MAX_POWER = APP_CONFIG.REFERRAL_MAX_COMMISSION_POWER || 10;
     let updates = {};
     if (type === 'coin') {
         const actualAmount = Math.min(amount, MAX_COIN);
@@ -729,11 +735,16 @@ app.post('/api/check-membership', authenticate, async (req, res) => {
         const userId = req._userId;
         const { channel } = req.body;
         if (!channel) return res.status(400).json({ error: 'Channel required' });
-        if (!BOT_TOKEN) return res.json({ isMember: true, error: 'bot_not_configured' });
+        if (!BOT_TOKEN) return res.json({ isMember: true });
+
         const isAdmin = await checkBotIsAdminInChannel(channel);
         if (!isAdmin) return res.json({ isMember: true, error: 'bot_not_admin' });
-        res.json({ isMember: await checkUserInChannel(userId, channel) });
-    } catch (error) { res.status(500).json({ error: error.message }); }
+
+        const isMember = await checkUserInChannel(userId, channel);
+        return res.json({ isMember });
+    } catch (error) {
+        return res.json({ isMember: true }); 
+    }
 });
 
 app.post('/api/auth', strictLimiter, async (req, res) => {
@@ -1057,8 +1068,9 @@ app.post('/api/complete-task', authenticate, strictLimiter, async (req, res) => 
         if (taskError || !task) return res.status(404).json({ error: 'Task not found' });
 
         if (task.verification && task.url) {
-            const chatId = task.url.match(/t\.me\/([^\/\?]+)/)?.[1];
-            if (chatId) {
+            const chatId = task.url.match(/t\.me\/([^\/\?\+]+)/)?.[1];
+            const isPrivate = task.url.includes('t.me/+') || task.url.includes('/joinchat/');
+            if (chatId && !isPrivate) {
                 const isMember = await checkUserInChannel(userId, chatId);
                 if (!isMember) return res.status(400).json({ error: 'Join channel first' });
             }
