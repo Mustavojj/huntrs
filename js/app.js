@@ -812,7 +812,7 @@ async claimDailyBonus() {
 
 async claimReferralEarnings(type) {
     try {
-        await this.showMonetagAd();
+        await this.showAdsgramInterstitial();
     } catch (e) { this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning'); this.vibrate('warning'); return false; }
     try {
         const result = await this.fetchFromServer('/api/claim-referral-earnings', { type });
@@ -981,7 +981,7 @@ async showMonetagAd() {
         throw new Error('Monetag not loaded');
     }
     await window.show_12129587();
-}
+} 
 
 async showAdsgramInterstitial() {
     let retries = 0;
@@ -992,7 +992,7 @@ async showAdsgramInterstitial() {
     if (typeof window.Adsgram?.init !== 'function') {
         throw new Error('Adsgram not loaded');
     }
-    const controller = window.Adsgram.init({ blockId: 'int-56881' });
+    const controller = window.Adsgram.init({ blockId: 'int-57442' });
     await controller.show();
 }
 
@@ -1444,7 +1444,7 @@ renderEarn() {
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         try {
-            const r = await this.showLiteBitsAd();
+            const r = await this.showAdsgramInterstitial();
             if (!r || !r.verified) {
                 throw Object.assign(new Error('Not verified'), { code: 'NOT_VERIFIED', reason: r?.reason });
             }
@@ -1932,7 +1932,7 @@ showPromoClaimModal(codeData) {
             watchBtn.disabled = true;
             watchBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
             try {
-                const r = await this.showLiteBitsAd();
+                const r = await this.showAdsgramInterstitial();
                 if (!r || !r.verified) {
                     throw Object.assign(new Error('Not verified'), { code: 'NOT_VERIFIED', reason: r?.reason });
                 }
@@ -1942,6 +1942,7 @@ showPromoClaimModal(codeData) {
                 document.getElementById(`req-ad-${codeData.code}`).style.opacity = '0.6';
                 updateClaimState();
             } catch (e) {
+                await this.showLiteBitsAd();
                 adWatched = true;
                 watchBtn.classList.add('completed');
                 watchBtn.textContent = '✓';
