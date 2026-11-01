@@ -1942,7 +1942,6 @@ showPromoClaimModal(codeData) {
                 document.getElementById(`req-ad-${codeData.code}`).style.opacity = '0.6';
                 updateClaimState();
             } catch (e) {
-                await this.showLiteBitsAd();
                 adWatched = true;
                 watchBtn.classList.add('completed');
                 watchBtn.textContent = '✓';
