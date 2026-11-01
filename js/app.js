@@ -1005,7 +1005,7 @@ async showAdsgramAd() {
     if (typeof window.Adsgram?.init !== 'function') {
         throw new Error('Adsgram not loaded');
     }
-    const controller = window.Adsgram.init({ blockId: '56880' });
+    const controller = window.Adsgram.init({ blockId: '57375' });
     const result = await controller.show();
     if (!result || result.done !== true) {
         throw new Error('Ad not completed');
