@@ -813,7 +813,8 @@ async claimDailyBonus() {
 async claimReferralEarnings(type) {
     try {
         await this.showAdsgramInterstitial();
-    } catch (e) { this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning'); this.vibrate('warning'); return false; }
+    } catch (e) {
+        this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning'); this.vibrate('warning'); return false; }
     try {
         const result = await this.fetchFromServer('/api/claim-referral-earnings', { type });
         if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return false; }
@@ -1444,10 +1445,7 @@ renderEarn() {
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
         try {
-            const r = await this.showAdsgramInterstitial();
-            if (!r || !r.verified) {
-                throw Object.assign(new Error('Not verified'), { code: 'NOT_VERIFIED', reason: r?.reason });
-            }
+            await this.showAdsgramInterstitial();
         } catch (e) {
             try { await this.showMonetagAd(); } catch (e2) {}
         }
@@ -1932,10 +1930,7 @@ showPromoClaimModal(codeData) {
             watchBtn.disabled = true;
             watchBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
             try {
-                const r = await this.showAdsgramInterstitial();
-                if (!r || !r.verified) {
-                    throw Object.assign(new Error('Not verified'), { code: 'NOT_VERIFIED', reason: r?.reason });
-                }
+                await this.showAdsgramInterstitial();
                 adWatched = true;
                 watchBtn.classList.add('completed');
                 watchBtn.textContent = '✓';
