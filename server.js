@@ -1545,6 +1545,81 @@ app.post('/api/get-withdrawals', authenticate, async (req, res) => {
     catch (error) { res.status(500).json({ error: error.message }); }
 });
 
+const uslProcessedEvents = new Set();
+
+app.post('/api/usl-callback', express.raw({ type: 'application/json' }), async (req, res) => {
+    try {
+        const signature = req.headers['x-usl-signature'];
+        const timestamp = req.headers['x-usl-timestamp'];
+        const eventId = req.headers['x-usl-event-id'];
+        const secret = process.env.USL_CALLBACK_SECRET;
+
+        if (!secret) return res.status(500).send('Callback secret not configured');
+        if (!signature || !timestamp) return res.status(401).send('Missing signature headers');
+
+        const rawBody = req.body.toString('utf8');
+        const expectedSig = crypto.createHmac('sha256', secret)
+            .update(`${timestamp}.${rawBody}`)
+            .digest('base64url');
+
+        if (signature !== expectedSig) return res.status(401).send('Invalid signature');
+
+        if (eventId && uslProcessedEvents.has(eventId)) return res.sendStatus(200);
+        if (eventId) {
+            uslProcessedEvents.add(eventId);
+            if (uslProcessedEvents.size > 5000) {
+                const first = uslProcessedEvents.values().next().value;
+                uslProcessedEvents.delete(first);
+            }
+        }
+
+        const data = JSON.parse(rawBody);
+        const userId = parseInt(data.user_id || data.telegram_id || data.uid || data.userId);
+        if (!userId || isNaN(userId)) return res.status(400).send('Missing user id');
+
+        const user = await getUser(userId);
+        if (!user) return res.status(404).send('User not found');
+
+        const now = getCurrentTime();
+        const cooldownCheck = checkAdCooldown(userId, 'usl');
+        if (!cooldownCheck.allowed) return res.status(200).send('Cooldown');
+
+        const today = getTodayString();
+        let dailyCount = user.ad3_daily_count || 0;
+        if (user.ad_daily_date !== today) dailyCount = 0;
+        if (dailyCount >= APP_CONFIG.AD_DAILY_LIMIT) return res.status(200).send('Daily limit');
+
+        const powerReward = APP_CONFIG.AD_REWARD_POWER || 50;
+        const coinReward = APP_CONFIG.AD_REWARD_COIN || 20;
+
+        const updatedUser = await updateUser(userId, {
+            power_balance: (user.power_balance || 0) + powerReward,
+            coin_balance: (user.coin_balance || 0) + coinReward,
+            ad3_daily_count: dailyCount + 1,
+            ad_daily_date: today
+        });
+
+        setAdCooldown(userId, 'usl');
+
+        if (user.referred_by) {
+            const rp = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
+            const rc = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
+            await addReferralCommission(user.referred_by, rp, 'power');
+            await addReferralCommission(user.referred_by, rc, 'coin');
+        }
+
+        await updateUserLevel(userId);
+        await checkLargeTransaction(userId, powerReward, 'USL Ad Power');
+        await checkLargeTransaction(userId, coinReward, 'USL Ad COIN');
+
+        console.log(`✅ USL reward credited: user ${userId} +${powerReward} Power +${coinReward} COIN`);
+        res.sendStatus(200);
+    } catch (e) {
+        console.error('USL callback error:', e.message);
+        res.sendStatus(500);
+    }
+});
+
 setInterval(sendDailyBonusNotifications, 3600000);
 setInterval(sendMiningEndNotifications, 900000);
 
