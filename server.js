@@ -903,13 +903,13 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
         if (!user.referred_by_verified && user.referred_by) {
             const referrer = await getUser(user.referred_by);
             if (referrer) {
-                const bonusPower = APP_CONFIG.REFERRAL_BONUS_POWER || 100;
-                await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, referral_power_earnings: (referrer.referral_power_earnings || 0) + bonusPower });
+                const bonusPower = 1000;
+                await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, referral_coin_earnings: (referrer.referral_coin_earnings || 0) + bonusCoin });
                 await updateUser(userId, { referred_by_verified: true });
                 await sendTelegramNotification(
                     user.referred_by,'🎉 New Referral!',
-                    `<b>🎉 New Referral!</b>\n\n🥷 New hunter joined your team\n⚡ ${bonusPower} Power added to your earnings`,
-                    { text: '🎯 Open App', url: 'https://t.me/GramHtrsbot/app' }
+                    `<b>🎉 New Referral!</b>\n\n🥷 New hunter joined your team\n🔥 ${bonusPower} COIN added to your earnings`,
+                    { text: '🥷 Check it now', url: 'https://t.me/GramHtrsbot/app' }
                 );
             }
         }
