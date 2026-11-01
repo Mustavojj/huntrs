@@ -1309,9 +1309,11 @@ renderEarn() {
     const today = new Date().toISOString().split('T')[0];
     const ad1Count = this.adDailyDate === today ? this.ad1DailyCount : 0;
     const ad2Count = this.adDailyDate === today ? this.ad2DailyCount : 0;
+    const ad3Count = this.adDailyDate === today ? this.ad3DailyCount : 0;
     const ad1ReachedLimit = ad1Count >= this.adDailyLimit;
     const ad2ReachedLimit = ad2Count >= this.adDailyLimit;
-
+    const ad3ReachedLimit = ad3Count >= this.adDailyLimit;
+    
     el.innerHTML = `
         <div class="daily-bonus-card">
             <div class="daily-bonus-icon">
