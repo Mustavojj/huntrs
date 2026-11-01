@@ -903,7 +903,7 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
         if (!user.referred_by_verified && user.referred_by) {
             const referrer = await getUser(user.referred_by);
             if (referrer) {
-                const bonusPower = 1000;
+                const bonusCoin = 1000;
                 await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, referral_coin_earnings: (referrer.referral_coin_earnings || 0) + bonusCoin });
                 await updateUser(userId, { referred_by_verified: true });
                 await sendTelegramNotification(
