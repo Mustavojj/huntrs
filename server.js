@@ -907,8 +907,8 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
                 await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, referral_coin_earnings: (referrer.referral_coin_earnings || 0) + bonusCoin });
                 await updateUser(userId, { referred_by_verified: true });
                 await sendTelegramNotification(
-                    user.referred_by,'🎉 New Referral!',
-                    `<b>🎉 New Referral!</b>\n\n🥷 New hunter joined your team\n🔥 ${bonusCoin} COIN added to your earnings`,
+                    user.referred_by,'✅ New Referral Verified!',
+                    `<b>✅ New Referral Verified!</b>\n\n🥷 New hunter joined your team\n\n💰 ${bonusCoin} COIN added to your earnings`,
                     { text: '🥷 Check it now', url: 'https://t.me/GramHtrsbot/app' }
                 );
             }
