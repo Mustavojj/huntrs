@@ -2252,7 +2252,7 @@ renderTeam() {
         const updatePreview = () => {
             const amount = parseFloat(amountInput?.value);
             const gramAmount = !isNaN(amount) && amount > 0 ? amount / exchangeRate : 0;
-            if (preview) preview.innerHTML = `<span>≈ ${gramAmount.toFixed(6)} GRAM</span>`;
+            if (preview) preview.innerHTML = `<span>≈ ${gramAmount.toFixed(4)} GRAM</span>`;
             const wallet = walletInput?.value.trim();
             const isValid = amount > 0 && wallet && wallet.startsWith('UQ') && wallet.length >= 20;
             if (withdrawBtn) withdrawBtn.disabled = !isValid;
