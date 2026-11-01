@@ -1030,6 +1030,18 @@ async showLiteBitsAd() {
     if (!r.verified) throw new Error('LiteBits view not verified: ' + (r.reason || 'unknown'));
 }
 
+    async showUSLAd() {
+    let retries = 0;
+    while (typeof window.USLAds?.show !== 'function' && retries < 40) {
+        await new Promise(r => setTimeout(r, 250));
+        retries++;
+    }
+    if (typeof window.USLAds?.show !== 'function') {
+        throw new Error('USL not loaded');
+    }
+    return await window.USLAds.show();
+    }
+
 renderMiners() {
     const el = document.getElementById('miners-page');
     if (!el) return;
@@ -1362,6 +1374,21 @@ renderEarn() {
             </div>
         </div>
 
+        <div class="ad-card blue-card">
+    <div class="ad-header">
+        <div class="ad-icon"><i class="fas fa-tv"></i></div>
+        <div class="ad-info">
+            <h4>${this.t('watch_ad_3')}</h4>
+            <div class="ad-rewards">
+                <span class="ad-reward-badge"><i class="fas fa-bolt"></i> ${this.adRewardPower}</span>
+                <span class="ad-reward-badge"><img src="${this.config.COIN_ICON}"> ${this.adRewardCoin}</span>
+                <span class="ad-counter-badge">${ad3Count}/${this.adDailyLimit}</span>
+            </div>
+        </div>
+        <button id="watch-ad-3-btn" class="ad-btn" ${ad3ReachedLimit ? 'disabled' : ''}>${ad3ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}</button>
+    </div>
+</div>
+
         <div class="section-header blue-header">
             <h3><i class="fas fa-home"></i> ${this.t('main_tasks')}</h3>
         </div>
@@ -1454,6 +1481,28 @@ renderEarn() {
         }
         this.renderEarn();
     });
+
+    document.getElementById('watch-ad-3-btn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('watch-ad-3-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+    try {
+        await this.showUSLAd();
+        const result = await this.fetchFromServer('/api/watch-ad-3', { requestTime: Date.now() - 15000 });
+        if (!result.error && result.user) {
+            this.powerBalance = result.user.power_balance || 0;
+            this.coinBalance = result.user.coin_balance || 0;
+            this.ad3DailyCount = result.user.ad3_daily_count || 0;
+            this.adDailyDate = result.user.ad_daily_date || '';
+            this.updateHeaderBalances();
+            this.showNotification('Reward', `+${result.powerReward} Power +${result.coinReward} COIN`, 'success');
+            this.vibrate('success');
+        }
+    } catch (e) {
+        this.showNotification('No Ads', 'Try again later', 'warning');
+    }
+    this.renderEarn();
+});
 
     document.getElementById('watch-ad-2-btn')?.addEventListener('click', async () => {
         const btn = document.getElementById('watch-ad-2-btn');
