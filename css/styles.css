@@ -394,3 +394,7 @@ body {
     .task-tab { font-size: 0.65rem; padding: 9px 4px; }
     .task-tab-badge { font-size: 0.55rem; padding: 1px 5px; }
 }
+
+.task-tab { position: relative; }
+.tab-add-btn { position: absolute; right: -2px; top: -2px; width: 16px; height: 16px; font-size: 0.5rem; background: var(--theme-gradient); border: none; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+.tab-list-btn { position: absolute; right: 14px; top: -2px; width: 16px; height: 16px; font-size: 0.5rem; background: rgba(74,144,217,0.4); border: none; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; } 
