@@ -1616,6 +1616,20 @@ app.post('/api/usl-callback', express.raw({ type: 'application/json' }), async (
 setInterval(sendDailyBonusNotifications, 3600000);
 setInterval(sendMiningEndNotifications, 900000);
 
+setTimeout(async () => {
+    const webhookUrl = `https://${process.env.RAILWAY_PUBLIC_DOMAIN}/webhook`;
+    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/setWebhook`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            url: webhookUrl,
+            secret_token: WEBHOOK_SECRET,
+            allowed_updates: ["message", "callback_query", "inline_query"]
+        })
+    });
+    console.log('Webhook updated:', await res.json());
+}, 5000);
+
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
 server.on('error', (error) => console.error('Server error:', error));
