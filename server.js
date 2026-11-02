@@ -15,11 +15,57 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(cors({ origin: true, credentials: true }));
 
+
+async function handleInlineShare(inlineQuery) {
+    const userId = inlineQuery.from.id;
+    const botUsername = (process.env.BOT_USERNAME || 'GramHtrsbot').replace('@', '');
+    const appShortName = process.env.APP_SHORT_NAME || 'app';
+    const promoImage = process.env.PROMO_IMAGE_URL || 'https://slho.shop/i/8067';
+
+    const miniAppUrl = `https://t.me/${botUsername}/${appShortName}?startapp=${userId}`;
+
+    const results = [{
+        type: "photo",
+        id: `gram_share_${userId}`,
+        photo_url: promoImage,
+        thumbnail_url: promoImage,
+        photo_width: 1200,
+        photo_height: 675,
+        title: "GRAM HUNTERS",
+        description: "Mine. Collect. Level Up. Withdraw!",
+        caption: "🥷 <b>Join GRAM HUNTERS!</b>\n\n🚀 Mine. Collect. Level Up. Withdraw!\n\n💰 Earn rewards and invite your friends!\n\n👇 Join me and start hunting!",
+        parse_mode: "HTML",
+        reply_markup: {
+            inline_keyboard: [[{ text: "⚔️ Start Hunting", url: miniAppUrl }]]
+        }
+    }];
+
+    try {
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerInlineQuery`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                inline_query_id: inlineQuery.id,
+                results,
+                cache_time: 0,
+                is_personal: true
+            })
+        });
+        if (!response.ok) console.error("Inline Share Error:", await response.text());
+    } catch (e) {
+        console.error("Inline Share Exception:", e.message);
+    }
+}
+
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     const secretToken = req.headers['x-telegram-bot-api-secret-token'];
     if (!WEBHOOK_SECRET || secretToken !== WEBHOOK_SECRET) return res.sendStatus(403);
     try {
         const update = JSON.parse(req.body.toString('utf8'));
+        if (update.inline_query) {
+            await handleInlineShare(update.inline_query);
+            return res.sendStatus(200);
+        }
         if (update.message && update.message.chat && update.message.chat.type === 'private') {
             const chatId = update.message.chat.id;
             const username = update.message.chat.username || '';
