@@ -395,6 +395,7 @@ body {
     .task-tab-badge { font-size: 0.55rem; padding: 1px 5px; }
 }
 
-.task-tab { position: relative; }
-.tab-add-btn { position: absolute; right: -2px; top: -2px; width: 16px; height: 16px; font-size: 0.5rem; background: var(--theme-gradient); border: none; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
-.tab-list-btn { position: absolute; right: 14px; top: -2px; width: 16px; height: 16px; font-size: 0.5rem; background: rgba(74,144,217,0.4); border: none; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; } 
+.task-action-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.task-action-btn { flex: 1; padding: 10px; background: var(--theme-gradient); border: none; border-radius: 40px; color: #fff; font-weight: 700; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 16px var(--theme-glow); }
+.task-action-btn.secondary { background: rgba(74,144,217,0.2); border: 1px solid rgba(74,144,217,0.3); box-shadow: none; }
+.task-action-btn:active { transform: scale(0.96); } 
