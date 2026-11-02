@@ -2112,6 +2112,17 @@ renderTeam() {
         this.renderTeam();
     });
 }
+
+    async shareGramHunters() {
+        if (!window.Telegram?.WebApp) return;
+        try {
+            const result = await this.fetchFromServer('/api/prepare-share', {});
+            if (result.error) throw new Error(result.error);
+            window.Telegram.WebApp.shareMessage(result.msg_id);
+        } catch (e) {
+            this.showNotification('Error', 'Could not share. Try again.', 'error'); 
+        }
+    }
         renderWallet() {
         const el = document.getElementById('wallet-page');
         if (!el) return;
