@@ -68,7 +68,7 @@ const translations = {
         auto_poster_removed: "Channel removed",
         auto_poster_not_admin: "Bot is not admin in this channel",
         auto_poster_reward_info: "Earn 10 COIN per referral each post",
-        hot: "HOT"
+        hot: "HOT", available_tasks: "AVAILABLE TASKS"
     },
     ar: {
         power: "قوة", coin: "عملة", gram: "جرام", claim: "استلام", watch: "مشاهدة",
@@ -139,7 +139,7 @@ const translations = {
         auto_poster_removed: "تمت إزالة القناة",
         auto_poster_not_admin: "البوت ليس مشرفاً في هذه القناة",
         auto_poster_reward_info: "اربح 10 عملات لكل إحالة مع كل منشور",
-        hot: "ساخن"
+        hot: "ساخن", available_tasks: "المهام المتاحة"
     },
     ru: {
         power: "Мощность", coin: "МОНЕТА", gram: "GRAM", claim: "Забрать", watch: "Смотреть",
@@ -210,7 +210,7 @@ const translations = {
         auto_poster_removed: "Канал удалён",
         auto_poster_not_admin: "Бот не админ в этом канале",
         auto_poster_reward_info: "10 монет за реферала с каждого поста",
-        hot: "ХОТ"
+        hot: "ХОТ", available_tasks: "ДОСТУПНЫЕ ЗАДАНИЯ"
     },
     fa: {
         power: "قدرت", coin: "سکه", gram: "گرم", claim: "دریافت", watch: "تماشا",
@@ -281,7 +281,7 @@ const translations = {
         auto_poster_removed: "کانال حذف شد",
         auto_poster_not_admin: "ربات در این کانال ادمین نیست",
         auto_poster_reward_info: "۱۰ سکه برای هر معرفی با هر پست",
-        hot: "داغ"
+        hot: "داغ", available_tasks: "وظایف موجود",
     }
 };
 
@@ -1446,6 +1446,10 @@ class App {
                     </div>
                     <button id="watch-ad-3-btn" class="ad-btn" ${ad3ReachedLimit ? 'disabled' : ''}>${ad3ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}</button>
                 </div>
+            </div>
+
+            <div class="section-header blue-header">
+            <h3><i class="fas fa-scroll"></i> ${this.t('available_tasks')}</h3>
             </div>
 
             <div class="task-tabs" id="task-tabs">
