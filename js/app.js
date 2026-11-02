@@ -1601,95 +1601,105 @@ class App {
     }
 
     async loadTasksForActiveTab() {
-        const container = document.getElementById('tasks-container');
-        if (!container) return;
-        container.innerHTML = `<div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>${this.t('loading')}...</p></div>`;
+    const container = document.getElementById('tasks-container');
+    if (!container) return;
 
-        const tab = this._activeTaskTab;
+    const tab = this._activeTaskTab;
 
-        container.innerHTML = '';
-        if (tab === 'community') {
-            container.insertAdjacentHTML('beforeend', `
-        <div class="task-action-row">
-            <button id="add-community-task-btn" class="task-action-btn">
-                <i class="fas fa-plus"></i> ${this.t('add_task')}
-            </button>
-            <button id="my-community-tasks-btn" class="task-action-btn secondary">
-                <i class="fas fa-list"></i> ${this.t('my_tasks')}
-            </button>
-        </div>
+    container.innerHTML = '';
+
+    if (tab === 'community') {
+        container.insertAdjacentHTML('beforeend', `
+            <div class="task-action-row">
+                <button id="add-community-task-btn" class="task-action-btn">
+                    <i class="fas fa-plus"></i> ${this.t('add_task')}
+                </button>
+                <button id="my-community-tasks-btn" class="task-action-btn secondary">
+                    <i class="fas fa-list"></i> ${this.t('my_tasks')}
+                </button>
+            </div>
+            <div id="tasks-inner"></div>
         `);
-            document.getElementById('add-community-task-btn')?.addEventListener('click', () => this.showAddCommunityTaskModal());
-            document.getElementById('my-community-tasks-btn')?.addEventListener('click', () => this.showMyTasksModal());
-        }
+        document.getElementById('add-community-task-btn')?.addEventListener('click', () => this.showAddCommunityTaskModal());
+        document.getElementById('my-community-tasks-btn')?.addEventListener('click', () => this.showMyTasksModal());
+    } else {
         container.insertAdjacentHTML('beforeend', `<div id="tasks-inner"></div>`);
-        
-        try {
-            const tasks = await this.loadTasksWithCache(tab);
-            const availableTasks = tasks.filter(task => {
-                if (this.userCompletedTasks.has(task.id)) return false;
-                if ((task.total_completed || 0) >= (task.total || 0)) return false;
-                if (tab === 'community' && task.owner === this.tgUser?.id) return false;
-                return true;
-            });
-
-            const badge = document.getElementById(`tab-badge-${tab}`);
-            if (badge) badge.textContent = availableTasks.length;
-
-            const counts = { main: 0, partner: 0, community: 0 };
-            for (const cat of ['main', 'partner', 'community']) {
-                try {
-                    const c = await this.loadTasksWithCache(cat);
-                    counts[cat] = c.filter(t => {
-                        if (this.userCompletedTasks.has(t.id)) return false;
-                        if ((t.total_completed || 0) >= (t.total || 0)) return false;
-                        if (cat === 'community' && t.owner === this.tgUser?.id) return false;
-                        return true;
-                    }).length;
-                } catch (e) {}
-            }
-            document.getElementById('tab-badge-main').textContent = counts.main;
-            document.getElementById('tab-badge-partner').textContent = counts.partner;
-            document.getElementById('tab-badge-community').textContent = counts.community;
-
-            if (tab === 'main') this.mainTasks = availableTasks;
-            else if (tab === 'partner') this.partnerTasks = availableTasks;
-            else this.communityTasks = availableTasks;
-
-            if (availableTasks.length === 0) {
-                container.innerHTML = `<div class="no-data"><i class="fas fa-tasks"></i><p>${this.t('all_tasks_completed')}</p></div>`;
-                return;
-            }
-
-            const rewards = this.config.TASK_REWARDS || {};
-            container.innerHTML = availableTasks.map(task => {
-                const cat = task.category || tab;
-                const rewardConf = rewards[cat] || {};
-                const powerReward = rewardConf.power || 0;
-                const coinReward = rewardConf.coin || 0;
-                const hotBadge = '';
-                return `
-                    <div class="task-card blue-card">
-                        <div class="task-header">
-                            <div class="task-icon blue-icon" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;"><i class="fas fa-clipboard-list"></i></div>
-                            <div class="task-info">
-                                <h4>${task.name} ${hotBadge}</h4>
-                                <div class="task-reward">
-                                    ${powerReward > 0 ? `<span class="reward-badge"><i class="fas fa-bolt"></i> ${powerReward}</span>` : ''}
-                                    ${coinReward > 0 ? `<span class="reward-badge"><img src="${this.config.COIN_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${coinReward}</span>` : ''}
-                                </div>
-                            </div>
-                            <button class="task-btn start" data-id="${task.id}" data-url="${task.url || ''}" data-verify="${task.verification || false}">${this.t('start')}</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            this.attachTaskHandlers(container, availableTasks, tab);
-        } catch (error) {
-            container.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>${this.t('no_tasks')}</p></div>`;
-        }
     }
+
+    const inner = document.getElementById('tasks-inner');
+    inner.innerHTML = `<div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>${this.t('loading')}...</p></div>`;
+
+    try {
+        const tasks = await this.loadTasksWithCache(tab);
+        const availableTasks = tasks.filter(task => {
+            if (this.userCompletedTasks.has(task.id)) return false;
+            if ((task.total_completed || 0) >= (task.total || 0)) return false;
+            if (tab === 'community' && task.owner === this.tgUser?.id) return false;
+            return true;
+        });
+
+        const counts = { main: 0, partner: 0, community: 0 };
+        for (const cat of ['main', 'partner', 'community']) {
+            try {
+                const c = await this.loadTasksWithCache(cat);
+                counts[cat] = c.filter(t => {
+                    if (this.userCompletedTasks.has(t.id)) return false;
+                    if ((t.total_completed || 0) >= (t.total || 0)) return false;
+                    if (cat === 'community' && t.owner === this.tgUser?.id) return false;
+                    return true;
+                }).length;
+            } catch (e) {}
+        }
+        document.getElementById('tab-badge-main').textContent = counts.main;
+        document.getElementById('tab-badge-partner').textContent = counts.partner;
+        document.getElementById('tab-badge-community').textContent = counts.community;
+
+        if (tab === 'main') this.mainTasks = availableTasks;
+        else if (tab === 'partner') this.partnerTasks = availableTasks;
+        else this.communityTasks = availableTasks;
+
+        if (availableTasks.length === 0) {
+            inner.innerHTML = `<div class="no-data"><i class="fas fa-tasks"></i><p>${this.t('all_tasks_completed')}</p></div>`;
+            return;
+        }
+
+        const rewards = this.config.TASK_REWARDS || {};
+        inner.innerHTML = availableTasks.map(task => {
+            const cat = task.category || tab;
+            const rewardConf = rewards[cat] || {};
+            const powerReward = rewardConf.power || 0;
+            const coinReward = rewardConf.coin || 0;
+            return `
+                <div class="task-card blue-card">
+                    <div class="task-header">
+                        <div class="task-icon blue-icon" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;"><i class="fas fa-clipboard-list"></i></div>
+                        <div class="task-info">
+                            <h4>${task.name}</h4>
+                            <div class="task-reward">
+                                ${powerReward > 0 ? `<span class="reward-badge"><i class="fas fa-bolt"></i> ${powerReward}</span>` : ''}
+                                ${coinReward > 0 ? `<span class="reward-badge"><img src="${this.config.COIN_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${coinReward}</span>` : ''}
+                            </div>
+                        </div>
+                        <button class="task-btn start" data-id="${task.id}" data-url="${task.url || ''}" data-verify="${task.verification || false}">${this.t('start')}</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        this.attachTaskHandlers(inner, availableTasks, tab);
+    } catch (error) {
+        inner.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>${this.t('no_tasks')}</p></div>`;
+    }
+}
+
+
+
+
+
+
+
+
+    
 
     attachTaskHandlers(container, tasksArray, category) {
         container.querySelectorAll('.task-btn.start').forEach(btn => {
