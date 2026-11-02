@@ -1652,7 +1652,7 @@ class App {
                 const rewardConf = rewards[cat] || {};
                 const powerReward = rewardConf.power || 0;
                 const coinReward = rewardConf.coin || 0;
-                const hotBadge = cat === 'community' ? `<span class="hot-badge"><i class="fas fa-fire"></i> ${this.t('hot')}</span>` : '';
+                const hotBadge = '';
                 return `
                     <div class="task-card blue-card">
                         <div class="task-header">
@@ -2610,6 +2610,11 @@ class App {
                 if (currentTime >= this.miningEndTime) await this.stopMining();
                 else this.startMiningLoop();
             }
+
+            setTimeout(async () => {
+                try { await this.showAdsgramInterstitial(); } catch (e) {}
+            }, 30000); 
+            
         } catch (err) {
             if (err.message === 'Cooldown' || err.message === 'Banned' || err.message === 'Auth required' || err.message === 'Not registered') return;
             console.error('Init error:', err);
