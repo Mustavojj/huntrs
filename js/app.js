@@ -1448,10 +1448,6 @@ class App {
                 </div>
             </div>
 
-            <div class="section-header blue-header">
-                <h3><i class="fas fa-tasks"></i> ${this.t('main_tasks')}</h3>
-            </div>
-
             <div class="task-tabs" id="task-tabs">
                 <button class="task-tab active" data-tab="main">
                     <span>${this.t('main_tasks')}</span>
@@ -2613,7 +2609,7 @@ class App {
 
             setTimeout(async () => {
                 try { await this.showAdsgramInterstitial(); } catch (e) {}
-            }, 30000); 
+            }, 20000); 
             
         } catch (err) {
             if (err.message === 'Cooldown' || err.message === 'Banned' || err.message === 'Auth required' || err.message === 'Not registered') return;
