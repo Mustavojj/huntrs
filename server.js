@@ -15,47 +15,46 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(cors({ origin: true, credentials: true }));
 
-
-async function handleInlineShare(inlineQuery) {
-    const userId = inlineQuery.from.id;
-    const botUsername = (process.env.BOT_USERNAME || 'GramHtrsbot').replace('@', '');
-    const appShortName = process.env.APP_SHORT_NAME || 'app';
-    const promoImage = process.env.PROMO_IMAGE_URL || 'https://slho.shop/i/8067';
-
-    const miniAppUrl = `https://t.me/${botUsername}/${appShortName}?startapp=${userId}`;
-
-    const results = [{
-        type: "photo",
-        id: `gram_share_${userId}`,
-        photo_url: promoImage,
-        thumbnail_url: promoImage,
-        photo_width: 1200,
-        photo_height: 675,
-        title: "GRAM HUNTERS",
-        description: "Mine. Collect. Level Up. Withdraw!",
-        caption: "🥷 <b>Join GRAM HUNTERS!</b>\n\n🚀 Mine. Collect. Level Up. Withdraw!\n\n💰 Earn rewards and invite your friends!\n\n👇 Join me and start hunting!",
-        parse_mode: "HTML",
-        reply_markup: {
-            inline_keyboard: [[{ text: "⚔️ Start Hunting", url: miniAppUrl }]]
-        }
-    }];
-
+app.post('/api/prepare-share', authenticate, async (req, res) => {
     try {
-        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerInlineQuery`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+        const userId = req._userId;
+        const botUsername = (process.env.BOT_USERNAME || 'GramHtrsbot').replace('@', '');
+        const appShortName = process.env.APP_SHORT_NAME || 'app';
+        const promoImage = process.env.PROMO_IMAGE_URL || 'https://slho.shop/i/8067';
+        const miniAppUrl = `https://t.me/${botUsername}/${appShortName}?startapp=${userId}`;
+
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/savePreparedInlineMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                inline_query_id: inlineQuery.id,
-                results,
-                cache_time: 0,
-                is_personal: true
+                user_id: userId,
+                allow_user_chats: true,
+                allow_group_chats: true,
+                allow_channel_chats: true,
+                result: {
+                    type: "photo",
+                    id: `share_${userId}_${Date.now()}`,
+                    photo_url: promoImage,
+                    thumbnail_url: promoImage,
+                    photo_width: 1200,
+                    photo_height: 675,
+                    title: "GRAM HUNTERS",
+                    description: "Mine. Collect. Level Up. Withdraw!",
+                    caption: "🥷 <b>Join GRAM HUNTERS!</b>\n\n🚀 Mine. Collect. Level Up. Withdraw!\n\n💰 Earn rewards and invite your friends!\n\n👇 Join me and start hunting!",
+                    parse_mode: "HTML",
+                    reply_markup: {
+                        inline_keyboard: [[{ text: "⚔️ Start Hunting", url: miniAppUrl }]]
+                    }
+                }
             })
         });
-        if (!response.ok) console.error("Inline Share Error:", await response.text());
-    } catch (e) {
-        console.error("Inline Share Exception:", e.message);
-    }
-}
+
+        const data = await response.json();
+        if (!data.ok) throw new Error(data.description || 'Failed to prepare');
+        
+        res.json({ success: true, msg_id: data.result.id });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     const secretToken = req.headers['x-telegram-bot-api-secret-token'];
