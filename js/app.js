@@ -1032,15 +1032,21 @@ async showLiteBitsAd() {
 }
 
     async showUSLAd() {
-    let retries = 0;
-    while (typeof window.USLAds?.show !== 'function' && retries < 40) {
-        await new Promise(r => setTimeout(r, 250));
-        retries++;
+        let retries = 0;
+        while (typeof window.USLAds?.show !== 'function' && retries < 40) {
+            await new Promise(r => setTimeout(r, 250));
+            retries++;
+        }
+        if (typeof window.USLAds?.show !== 'function') {
+            throw new Error('USL not loaded');
+        }
+        return await window.USLAds.show();
     }
-    if (typeof window.USLAds?.show !== 'function') {
-        throw new Error('USL not loaded');
-    }
-    return await window.USLAds.show();
+
+    shareGramHunters() {
+        if (!window.Telegram?.WebApp) return;
+        if (!this.tgUser) return;
+        window.Telegram.WebApp.switchInlineQuery("share", ["users", "groups", "channels"]);
     }
 
 renderMiners() {
@@ -2053,6 +2059,8 @@ renderTeam() {
                 <div class="referral-link-title"><i class="fas fa-link"></i> ${this.t('referral_link_title')}</div>
                 <div class="team-link-box">${link}</div>
                 <button id="copyLink" class="copy-btn"><i class="fas fa-copy"></i> ${this.t('copy_link')}</button>
+                <button id="share-btn" class="copy-btn" style="margin-top:10px;background:linear-gradient(135deg,#2ecc71,#27ae60);">
+                <i class="fas fa-share-alt"></i> Share with Friends</button>
             </div>
         </div>
 
@@ -2094,6 +2102,7 @@ renderTeam() {
         this.showNotification(this.t('copy_success'), this.t('link_copied'), 'success');
         this.vibrate('success');
     });
+    document.getElementById('share-btn')?.addEventListener('click', () => this.shareGramHunters());
     document.getElementById('claim-power-earnings')?.addEventListener('click', async () => {
         await this.claimReferralEarnings('power');
         this.renderTeam();
