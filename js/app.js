@@ -1092,10 +1092,15 @@ class App {
         return await window.USLAds.show();
     }
 
-    shareGramHunters() {
+    async shareGramHunters() {
         if (!window.Telegram?.WebApp) return;
-        if (!this.tgUser) return;
-        window.Telegram.WebApp.switchInlineQuery("share", ["users", "groups", "channels"]);
+        try {
+            const result = await this.fetchFromServer('/api/prepare-share', {});
+            if (result.error) throw new Error(result.error);
+            window.Telegram.WebApp.shareMessage(result.msg_id);
+        } catch (e) {
+            this.showNotification('Error', 'Could not share. Try again.', 'error');
+        }
     }
 
     renderMiners() {
