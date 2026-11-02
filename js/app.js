@@ -68,7 +68,7 @@ const translations = {
         auto_poster_removed: "Channel removed",
         auto_poster_not_admin: "Bot is not admin in this channel",
         auto_poster_reward_info: "Earn 10 COIN per referral each post",
-        hot: "HOT", available_tasks: "AVAILABLE TASKS"
+        hot: "HOT", available_tasks: "AVAILABLE TASKS", add_task: "Add Task"
     },
     ar: {
         power: "قوة", coin: "عملة", gram: "جرام", claim: "استلام", watch: "مشاهدة",
@@ -139,7 +139,7 @@ const translations = {
         auto_poster_removed: "تمت إزالة القناة",
         auto_poster_not_admin: "البوت ليس مشرفاً في هذه القناة",
         auto_poster_reward_info: "اربح 10 عملات لكل إحالة مع كل منشور",
-        hot: "ساخن", available_tasks: "المهام المتاحة"
+        hot: "ساخن", available_tasks: "المهام المتاحة", add_task: "إضافة مهمة"
     },
     ru: {
         power: "Мощность", coin: "МОНЕТА", gram: "GRAM", claim: "Забрать", watch: "Смотреть",
@@ -210,7 +210,7 @@ const translations = {
         auto_poster_removed: "Канал удалён",
         auto_poster_not_admin: "Бот не админ в этом канале",
         auto_poster_reward_info: "10 монет за реферала с каждого поста",
-        hot: "ХОТ", available_tasks: "ДОСТУПНЫЕ ЗАДАНИЯ"
+        hot: "ХОТ", available_tasks: "ДОСТУПНЫЕ ЗАДАНИЯ", add_task: "Добавить"
     },
     fa: {
         power: "قدرت", coin: "سکه", gram: "گرم", claim: "دریافت", watch: "تماشا",
@@ -281,7 +281,7 @@ const translations = {
         auto_poster_removed: "کانال حذف شد",
         auto_poster_not_admin: "ربات در این کانال ادمین نیست",
         auto_poster_reward_info: "۱۰ سکه برای هر معرفی با هر پست",
-        hot: "داغ", available_tasks: "وظایف موجود",
+        hot: "داغ", available_tasks: "وظایف موجود", add_task: "افزودن"
     }
 };
 
@@ -1449,7 +1449,7 @@ class App {
             </div>
 
             <div class="section-header blue-header">
-            <h3><i class="fas fa-scroll"></i> ${this.t('available_tasks')}</h3>
+            <h3><i class="fas fa-clipboard-list"></i> ${this.t('available_tasks')}</h3>
             </div>
 
             <div class="task-tabs" id="task-tabs">
@@ -1464,9 +1464,6 @@ class App {
                 <button class="task-tab" data-tab="community">
                     <span>${this.t('community_tasks')}</span>
                     <span class="task-tab-badge" id="tab-badge-community">0</span>
-                    <button id="add-community-task-btn" class="tab-add-btn" title="Add Task"><i class="fas fa-plus"></i></button>
-                    <button id="my-community-tasks-btn" class="tab-list-btn" title="My Tasks"><i class="fas fa-list"></i></button>
-                </button>
             </div>
 
             <div id="tasks-container" class="tasks-list">
@@ -1609,6 +1606,24 @@ class App {
         container.innerHTML = `<div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>${this.t('loading')}...</p></div>`;
 
         const tab = this._activeTaskTab;
+
+        container.innerHTML = '';
+        if (tab === 'community') {
+            container.insertAdjacentHTML('beforeend', `
+        <div class="task-action-row">
+            <button id="add-community-task-btn" class="task-action-btn">
+                <i class="fas fa-plus"></i> ${this.t('add_task')}
+            </button>
+            <button id="my-community-tasks-btn" class="task-action-btn secondary">
+                <i class="fas fa-list"></i> ${this.t('my_tasks')}
+            </button>
+        </div>
+        `);
+            document.getElementById('add-community-task-btn')?.addEventListener('click', () => this.showAddCommunityTaskModal());
+            document.getElementById('my-community-tasks-btn')?.addEventListener('click', () => this.showMyTasksModal());
+        }
+        container.insertAdjacentHTML('beforeend', `<div id="tasks-inner"></div>`);
+        
         try {
             const tasks = await this.loadTasksWithCache(tab);
             const availableTasks = tasks.filter(task => {
