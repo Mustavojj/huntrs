@@ -687,7 +687,7 @@ async function createAutoPosterPromoCode() {
             max_uses: 1000,
             total_uses: 0,
             owner: null,
-            required_channel:'@GRAM_Huntrs',
+            required_channel: null,
             status: 'active',
             created_at: getCurrentTime()
         };
@@ -1105,9 +1105,6 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
         const today = getTodayString();
         const dailyStarts = (user.last_mining_date === today) ? (user.daily_mining_starts || 0) : 0;
         if (dailyStarts >= APP_CONFIG.DAILY_MINING_LIMIT) return res.status(400).json({ error: 'Daily limit reached' });
-        if (user.last_mining_end_time && (now - user.last_mining_end_time) < (APP_CONFIG.MINING_COOLDOWN_SECONDS * 1000)) {
-            return res.status(400).json({ error: `Wait ${Math.ceil((APP_CONFIG.MINING_COOLDOWN_SECONDS * 1000 - (now - user.last_mining_end_time)) / 1000)}s` });
-        }
 
         const miningEndTime = now + (APP_CONFIG.MINING_SESSION_HOURS * 3600000);
         notifiedUsers.delete(userId);
