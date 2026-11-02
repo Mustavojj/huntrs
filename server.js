@@ -19,7 +19,7 @@ app.use(cors({ origin: true, credentials: true }));
 async function handleInlineShare(inlineQuery) {
     const userId = inlineQuery.from.id;
     const botUsername = (process.env.BOT_USERNAME || 'GramHtrsbot').replace('@', '');
-    const appShortName = process.env.APP_SHORT_NAME || 'app';
+    const appShortName = process.env.APP_SHORT_NAME || 'GRAM Hunters';
     const promoImage = process.env.PROMO_IMAGE_URL || 'https://slho.shop/i/8067';
 
     const miniAppUrl = `https://t.me/${botUsername}/${appShortName}?startapp=${userId}`;
