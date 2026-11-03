@@ -750,9 +750,10 @@ async function runAutoPosterCycle() {
                         });
                         await checkLargeTransaction(u.id, reward, 'AutoPoster COIN');
                         await sendTelegramNotification(u.id, '✅ Auto Poster Reward!',
-                                                       `<b>🌐 Channel: @${channel.replace('@', '')}</b>\n\n` +
+                                                       `<b>🥷 AUTO POSTER REWARD</b>\n\n`
+                                                       `<b>🌐 Channel: @${channel.replace('@', '')}</b>\n` +
                                                        `🎟 <b>Promo Code:</b> <code>${promo.code}</code>\n` +
-                                                       `🎁 <b>Reward:</b> +${reward} COIN\n\n` +
+                                                       `🎁 <b>Reward:</b> ${reward} COIN\n\n` +
                                                        `💸 <b>Added to your COIN Earnings</b> — claim it from the Team page!`,
                                                        { text: '🥷 Check it now', url: 'https://t.me/GramHtrsbot/app' }
                                                       );
@@ -1793,20 +1794,6 @@ setTimeout(() => { checkPendingWithdrawals(); }, 30000);
 setInterval(sendDailyBonusNotifications, 3600000);
 setInterval(sendMiningEndNotifications, 900000);
 scheduleAutoPoster();
-
-setTimeout(async () => {
-    const webhookUrl = `https://${process.env.RAILWAY_PUBLIC_DOMAIN}/webhook`;
-    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/setWebhook`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            url: webhookUrl,
-            secret_token: WEBHOOK_SECRET,
-            allowed_updates: ["message", "callback_query", "inline_query"]
-        })
-    });
-    console.log('Webhook updated:', await res.json());
-}, 5000);
 
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
