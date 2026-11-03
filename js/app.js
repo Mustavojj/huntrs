@@ -1497,7 +1497,6 @@ class App {
                         <span>${this.t('auto_poster_active')}</span>
                     </div>
                     <div class="auto-poster-channel">@${this.autoPosterChannel.replace('@', '')}</div>
-                    <div class="auto-poster-reward"><i class="fas fa-coins"></i> ${this.t('auto_poster_reward_info')}</div>
                     <button id="auto-poster-remove-btn" class="auto-poster-remove-btn">
                         <i class="fas fa-trash"></i> ${this.t('auto_poster_remove')}
                     </button>
