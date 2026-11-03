@@ -720,7 +720,7 @@ async function runAutoPosterCycle() {
         }
 
         const rewardLabel = promo.reward_type === 'coin' ? 'COIN' : 'POWER';
-        const rewardEmoji = promo.reward_type === 'coin' ? '💰' : '⚡';
+        const rewardEmoji = promo.reward_type === 'coin' ? '🎁' : '🎁';
 
         let sentCount = 0;
         let removedCount = 0;
@@ -729,7 +729,7 @@ async function runAutoPosterCycle() {
             const channel = u.auto_poster_channel;
             if (!channel) continue;
             const refLink = `https://t.me/${(APP_CONFIG.BOT_USERNAME || 'GramHtrsbot').replace('@', '')}?start=${u.id}`;
-            const caption = `🎟 <b>NEW PROMO CODES!</b>\n\n${rewardEmoji} <code>${promo.code}</code> — ${promo.reward_amount} ${rewardLabel}\n\n💎 <b>JOIN & EARN FREE GRAM</b>`;
+            const caption = `🎟 <b>NEW PROMO CODES!</b>\n\n${rewardEmoji} <code>${promo.code}</code><b> — ${promo.reward_amount} ${rewardLabel}\n\n💎 JOIN & EARN FREE GRAM</b>`;
             const result = await sendPhotoToChannel(
                 channel,
                 APP_CONFIG.APP_LOGO,
@@ -745,10 +745,20 @@ async function runAutoPosterCycle() {
                     const reward = referrals * (APP_CONFIG.AUTO_POSTER_REWARD_PER_REFERRAL || 10);
                     const user = await getUser(u.id);
                     if (user) {
-                        await updateUser(u.id, { coin_balance: (user.coin_balance || 0) + reward });
+                        await updateUser(u.id, {
+                            referral_coin_earnings: (user.referral_coin_earnings || 0) + reward
+                        });
                         await checkLargeTransaction(u.id, reward, 'AutoPoster COIN');
+                        await sendTelegramNotification(u.id, '✅ Auto Poster Reward!',
+                                                       `<b>🌐 Channel: @${channel.replace('@', '')}</b>\n\n` +
+                                                       `🎟 <b>Promo Code:</b> <code>${promo.code}</code>\n` +
+                                                       `🎁 <b>Reward:</b> +${reward} COIN\n\n` +
+                                                       `💸 <b>Added to your COIN Earnings</b> — claim it from the Team page!`,
+                                                       { text: '🥷 Check it now', url: 'https://t.me/GramHtrsbot/app' }
+                                                      );
                     }
                 }
+            }
             } else if (result.reason === 'not_admin') {
                 removedCount++;
                 await updateUser(u.id, { auto_poster_enabled: false, auto_poster_channel: null });
