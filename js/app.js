@@ -1931,12 +1931,32 @@ class App {
                     </div>
                 `;
             }).join('');
-            container.querySelectorAll('.promo-code-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const codeData = this.promoCodes.find(c => c.code === btn.dataset.code);
-                    if (codeData) this.showPromoClaimModal(codeData);
-                });
-            });
+    container.querySelectorAll('.promo-code-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+        await this.showAdsgramInterstitial(); 
+        try {
+            const r = await this.fetchFromServer('/api/claim-promo-code', { code: btn.dataset.code });
+            if (!r.error && r.user) {
+                this.powerBalance = r.user.power_balance || 0;
+                this.coinBalance = r.user.coin_balance || 0;
+                this.updateHeaderBalances();
+                this.setPromoCooldown();
+                this.showNotification('Reward Claimed', r.reward, 'success');
+                this.vibrate('success');
+                this.loadActivePromoCodes();
+            } else {
+                this.showNotification('Error', r.error || 'Failed', 'error');
+                btn.disabled = false;
+                btn.innerHTML = this.t('claim');
+            }
+        } catch (e) {
+            btn.disabled = false;
+            btn.innerHTML = this.t('claim');
+        }
+    });
+});
         } catch (error) {}
     }
 
