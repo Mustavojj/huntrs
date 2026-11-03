@@ -1904,55 +1904,6 @@ if (!r.error && r.user) {
         });
     }
 
-    async loadActivePromoCodes() {
-        const container = document.getElementById('active-promo-codes-container');
-        if (!container) return;
-        try {
-            const codes = await this.loadPromoCodes();
-            if (codes.length === 0) { container.innerHTML = ''; return; }
-            container.innerHTML = codes.map(code => {
-                const rewardDisplay = code.reward_type === 'power'
-                    ? `<i class="fas fa-bolt"></i> ${code.reward_amount}`
-                    : `<img src="${this.config.COIN_ICON}" style="width:12px;height:12px;border-radius:50%;"> ${code.reward_amount}`;
-                return `
-                    <div class="promo-code-card">
-                        <div class="promo-code-info">
-                            <div class="promo-code-value">${code.code}</div>
-                            <div class="promo-code-rewards">${rewardDisplay} · ${code.total_uses || 0}/${code.max_uses}</div>
-                        </div>
-                        <button class="promo-code-btn" data-code="${code.code}">${this.t('claim')}</button>
-                    </div>
-                `;
-            }).join('');
-    container.querySelectorAll('.promo-code-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-        await this.showAdsgramInterstitial(); 
-        try {
-            const r = await this.fetchFromServer('/api/claim-promo-code', { code: btn.dataset.code });
-            if (!r.error && r.user) {
-                this.powerBalance = r.user.power_balance || 0;
-                this.coinBalance = r.user.coin_balance || 0;
-                this.updateHeaderBalances();
-                this.setPromoCooldown();
-                this.showNotification('Reward Claimed', r.reward, 'success');
-                this.vibrate('success');
-                this.loadActivePromoCodes();
-            } else {
-                this.showNotification('Error', r.error || 'Failed', 'error');
-                btn.disabled = false;
-                btn.innerHTML = this.t('claim');
-            }
-        } catch (e) {
-            btn.disabled = false;
-            btn.innerHTML = this.t('claim');
-        }
-    });
-});
-        } catch (error) {}
-    }
-
     async loadMainTasks() { return this.loadTasksForActiveTab(); }
     async loadPartnerTasks() { return this.loadTasksForActiveTab(); }
     async loadCommunityTasks() { return this.loadTasksForActiveTab(); }
