@@ -758,7 +758,6 @@ async function runAutoPosterCycle() {
                                                       );
                     }
                 }
-            }
             } else if (result.reason === 'not_admin') {
                 removedCount++;
                 await updateUser(u.id, { auto_poster_enabled: false, auto_poster_channel: null });
@@ -770,7 +769,7 @@ async function runAutoPosterCycle() {
                 );
             }
             await new Promise(r => setTimeout(r, 100));
-
+            } 
         console.log(`📢 Auto poster cycle: sent=${sentCount} removed=${removedCount} promo=${promo.code}`);
     } catch (error) {
         logFailure('runAutoPosterCycle', null, null, error);
