@@ -774,7 +774,7 @@ function scheduleAutoPoster() {
         const hour = now.getUTCHours();
         const minute = now.getUTCMinutes();
         const hours = APP_CONFIG.AUTO_POSTER_POST_HOURS_UTC || [10, 22];
-        if (minutes !== 0) return;
+        if (minute !== 0) return;
         if (!hours.includes(hour)) return;
         const key = String(hour);
         const todayKey = `${now.getUTCFullYear()}-${now.getUTCMonth()}-${now.getUTCDate()}-${hour}`;
