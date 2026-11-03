@@ -770,7 +770,6 @@ async function runAutoPosterCycle() {
                 );
             }
             await new Promise(r => setTimeout(r, 100));
-        }
 
         console.log(`📢 Auto poster cycle: sent=${sentCount} removed=${removedCount} promo=${promo.code}`);
     } catch (error) {
