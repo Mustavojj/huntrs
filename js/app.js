@@ -1695,15 +1695,6 @@ class App {
     }
 }
 
-
-
-
-
-
-
-
-    
-
     attachTaskHandlers(container, tasksArray, category) {
         container.querySelectorAll('.task-btn.start').forEach(btn => {
             btn.addEventListener('click', async () => {
@@ -1787,18 +1778,20 @@ class App {
                 if (!code) return;
                 promoSubmit.disabled = true;
                 promoSubmit.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-                try {
-                    const r = await this.fetchFromServer('/api/get-promo-code', { code: code.toUpperCase() });
-                    if (r.error) {
-                        this.showNotification('Error', r.error, 'error');
-                        this.vibrate('error');
-                    } else {
-                        this.showPromoClaimModal(r);
-                        promoInput.value = '';
-                    }
-                } catch (e) {
-                    this.showNotification('Error', 'Network error', 'error');
-                }
+                try { await this.showAdsgramInterstitial(); } catch (e) {}
+const r = await this.fetchFromServer('/api/claim-promo-code', { code: code.toUpperCase() });
+if (!r.error && r.user) {
+    this.powerBalance = r.user.power_balance || 0;
+    this.coinBalance = r.user.coin_balance || 0;
+    this.updateHeaderBalances();
+    this.setPromoCooldown();
+    this.showNotification('Reward Claimed', r.reward, 'success');
+    this.vibrate('success');
+    promoInput.value = '';
+} else {
+    this.showNotification('Error', r.error || 'Failed', 'error');
+    this.vibrate('error');
+}
                 promoSubmit.disabled = true;
                 promoSubmit.classList.remove('active');
                 promoSubmit.innerHTML = this.t('claim');
