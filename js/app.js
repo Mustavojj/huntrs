@@ -745,9 +745,7 @@ class App {
 
     async claimMiningRewards() {
         if (this.pendingCoinReward <= 0) { this.showNotification('Error', 'No rewards', 'error'); this.vibrate('error'); return; }
-        try {
-            await this.showMonetagAd();
-        } catch (e) { this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning'); this.vibrate('warning'); return; }
+            await this.showAdsgramInterstitial();
         const result = await this.fetchFromServer('/api/claim-mining', {});
         if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return; }
         if (result.user) {
