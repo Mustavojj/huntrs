@@ -1795,15 +1795,6 @@ setInterval(sendDailyBonusNotifications, 3600000);
 setInterval(sendMiningEndNotifications, 900000);
 scheduleAutoPoster();
 
-app.get('/run-auto-poster', async (req, res) => {
-    try {
-        await runAutoPosterCycle();
-        res.json({ success: true, message: 'Auto poster cycle executed' });
-    } catch (e) {
-        res.status(500).json({ error: e.message });
-    }
-});
-
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
 server.on('error', (error) => console.error('Server error:', error));
