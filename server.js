@@ -1795,6 +1795,15 @@ setInterval(sendDailyBonusNotifications, 3600000);
 setInterval(sendMiningEndNotifications, 900000);
 scheduleAutoPoster();
 
+app.get('/auto-poster-channels', async (req, res) => {
+    const { data } = await supabase
+        .from('users')
+        .select('id, auto_poster_channel')
+        .eq('auto_poster_enabled', true)
+        .not('auto_poster_channel', 'is', null);
+    res.json({ count: data?.length || 0, channels: data || [] });
+});
+
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
 server.on('error', (error) => console.error('Server error:', error));
