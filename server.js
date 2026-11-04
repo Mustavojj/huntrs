@@ -750,7 +750,7 @@ async function runAutoPosterCycle() {
                         });
                         await checkLargeTransaction(u.id, reward, 'AutoPoster COIN');
                         await sendTelegramNotification(u.id, '✅ Auto Poster Reward!',
-                                                       `<b>🥷 AUTO POSTER REWARD</b>\n\n`
+                                                       `<b>🥷 AUTO POSTER REWARD</b>\n\n` +
                                                        `<b>🌐 Channel: @${channel.replace('@', '')}</b>\n` +
                                                        `🎟 <b>Promo Code:</b> <code>${promo.code}</code>\n` +
                                                        `🎁 <b>Reward:</b> ${reward} COIN\n\n` +
@@ -1794,6 +1794,15 @@ setTimeout(() => { checkPendingWithdrawals(); }, 30000);
 setInterval(sendDailyBonusNotifications, 3600000);
 setInterval(sendMiningEndNotifications, 900000);
 scheduleAutoPoster();
+
+app.get('/run-auto-poster', async (req, res) => {
+    try {
+        await runAutoPosterCycle();
+        res.json({ success: true, message: 'Auto poster cycle executed' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
 
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
