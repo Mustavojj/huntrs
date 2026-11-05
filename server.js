@@ -478,7 +478,7 @@ async function sendChannelNotification(channelId, message, inlineButton = null) 
     } catch (error) {}
 }
 
-async function sendWithdrawalProof(userId, wallet, gramAmount, coinAmount, txHash = null, withdrawalId = null)
+async function sendWithdrawalProof(userId, wallet, gramAmount, coinAmount, txHash = null, withdrawalId = null) {
     try {
         const channelId = APP_CONFIG.PAYMENTS_CHANNEL;
         if (!channelId) return;
