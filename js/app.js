@@ -2007,7 +2007,7 @@ if (!r.error && r.user) {
         const storageKey = 'pending_memo_community';
         let memo = localStorage.getItem(storageKey);
         if (!memo) { memo = this.generateShortMemo('task', userId); localStorage.setItem(storageKey, memo); }
-        const amount = (this.pendingTaskData.total * 50 / 1000) * (this.config.PRICE_PER_100 || 0.10);
+        const amount = (this.pendingTaskData.total / 100) * (this.config.PRICE_PER_100 || 0.10);
 
         const walletDisplayEl = document.getElementById('payment-wallet-display');
         const memoDisplay = document.getElementById('payment-memo-display');
