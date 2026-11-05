@@ -178,7 +178,7 @@ const APP_CONFIG = {
     COMMUNITY_COIN_REWARD: 100,
     COMMUNITY_POWER_REWARD: 100,
     DAILY_BONUS_COIN: 250,
-    LARGE_TRANSACTION_THRESHOLD: 50000,
+    LARGE_TRANSACTION_THRESHOLD: 100000,
     AD_REWARD_POWER: 50,
     AD_REWARD_COIN: 25,
     AD_DAILY_LIMIT: 10,
@@ -1127,7 +1127,7 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
         if (!user.referred_by_verified && user.referred_by) {
             const referrer = await getUser(user.referred_by);
             if (referrer) {
-                const bonusCoin = 1000;
+                const bonusCoin = 5000;
                 await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, referral_coin_earnings: (referrer.referral_coin_earnings || 0) + bonusCoin });
                 await updateUser(userId, { referred_by_verified: true });
                 await sendTelegramNotification(
