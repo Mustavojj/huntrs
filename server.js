@@ -1658,7 +1658,7 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
         const totalNum = parseInt(taskData.total);
         if (totalNum < 100 || totalNum > 5000) return res.json({ success: false, error: 'Invalid' });
 
-        const requiredAmount = (taskData.total * 50 / 1000) * (APP_CONFIG.PRICE_PER_100 || 0.10);
+        const requiredAmount = (taskData.total / 100) * (APP_CONFIG.PRICE_PER_100 || 0.10);
         if (txAmount < requiredAmount * 0.98) return res.json({ success: false, error: 'Insufficient' });
 
         let verification = taskData.verification || false;
@@ -1687,14 +1687,18 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
         await supabase.from('confirmed_memos').insert([{ memo, user_id: userId, used_at: getCurrentTime() }]);
 
         const rewards = APP_CONFIG.TASK_REWARDS.community;
-        const taskChannelMsg = `🆕 <b>NEW COMMUNITY TASK!</b>\n\n` +
-            `📝 <b>${taskData.name}</b>\n` +
-            `⚡ <b>Reward:</b> ${rewards.power || 0} Power + ${rewards.coin || 0} COIN\n` +
-            `👥 <b>Slots:</b> ${taskData.total}\n` +
-            `🔗 <b>Link:</b> ${taskData.link}\n\n` +
-            `🔥 <b>Be one of the first hunters!</b>`;
-        await sendChannelNotification(APP_CONFIG.TASKS_CHANNEL, taskChannelMsg, { text: '🎯 Open App', url: 'https://t.me/GramHtrsbot/app' });
-
+        let rewardText = '';
+        if (rewards.power > 0 && rewards.coin > 0) rewardText = `${rewards.power} POWER + ${rewards.coin} COIN`;
+        else if (rewards.coin > 0) rewardText = `${rewards.coin} COIN`;
+        else if (rewards.power > 0) rewardText = `${rewards.power} POWER`;
+        
+        const taskChannelMsg = `⚡ <b>NEW TASK AVAILABLE</b>\n\n` +
+            `📋 <b>Name: ${taskData.name}</b>\n` +
+            `🎁 <b>Reward: ${rewardText}</b>\n` +
+            `ℹ️ <b>Category: Community</b>\n` +
+            `✅ <b>Available for ${taskData.total} completion</b>`;
+        await sendChannelNotification(APP_CONFIG.TASKS_CHANNEL, taskChannelMsg, { text: '⚡ Complete Now', url: 'https://t.me/GramHtrsbot/app' });
+        
         res.json({ success: true, task: taskResult, message: 'Task added' });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -1794,15 +1798,6 @@ setTimeout(() => { checkPendingWithdrawals(); }, 30000);
 setInterval(sendDailyBonusNotifications, 3600000);
 setInterval(sendMiningEndNotifications, 900000);
 scheduleAutoPoster();
-
-app.get('/auto-poster-channels', async (req, res) => {
-    const { data } = await supabase
-        .from('users')
-        .select('id, auto_poster_channel')
-        .eq('auto_poster_enabled', true)
-        .not('auto_poster_channel', 'is', null);
-    res.json({ count: data?.length || 0, channels: data || [] });
-});
 
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
