@@ -1923,7 +1923,7 @@ if (!r.error && r.user) {
 
         const updateTotalCost = () => {
             const pricePer100 = this.config.PRICE_PER_100 || 0.10;
-            const cost = (selectedTotal * 50 / 1000) * pricePer100;
+            const cost = (selectedTotal / 100) * pricePer100;
             if (totalCostDisplay) totalCostDisplay.textContent = cost.toFixed(2) + ' GRAM';
         };
 
