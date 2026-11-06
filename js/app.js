@@ -1181,69 +1181,74 @@ class App {
     }
 
     renderMining() {
-        const el = document.getElementById('mining-page');
-        if (!el) return;
+    const el = document.getElementById('mining-page');
+    if (!el) return;
 
-        const activeMiner = this.getActiveMiner();
-        const hasMiner = activeMiner !== null;
-        const speedPerHour = this.getSpeedPerHour();
-        const progressPercent = this.getMiningProgressPercent();
+    const activeMiner = this.getActiveMiner();
+    const hasMiner = activeMiner !== null;
+    const speedPerHour = this.getSpeedPerHour();
+    const progressPercent = this.getMiningProgressPercent();
+    const dailySpeed = (speedPerHour * 24).toFixed(0);
 
-        let statusHtml = '';
-        let actionHtml = '';
+    let statusHtml = '';
+    let actionHtml = '';
 
-        if (!hasMiner) {
-            statusHtml = `<div class="mining-status not-active">${this.t('no_miner')}</div>`;
-            actionHtml = `<button id="buy-miner-btn" class="mining-action-btn buy-miner"><i class="fas fa-shopping-cart"></i> ${this.t('buy_miner')}</button>`;
-        } else if (this.miningActive) {
-            const minedAmount = this.getMinedAmount();
-            statusHtml = `<div class="mining-status active"><span class="amount">${this.formatMining(minedAmount)}</span></div>`;
-            actionHtml = `
-                <div class="mining-progress-container">
-                    <div class="mining-progress-bar"><div class="mining-progress-fill" style="width: ${progressPercent}%"></div></div>
-                    <div class="mining-progress-text"><span>${this.t('mining_active')}</span><span class="percent">${Math.floor(progressPercent)}%</span></div>
-                </div>
-                <div class="mining-timer">${this.t('time_left')} 00:00:00</div>
-            `;
-        } else if (this.pendingCoinReward > 0) {
-            statusHtml = `<div class="mining-status active"><span class="amount">${this.formatMining(this.pendingCoinReward)}</span><span class="label">${this.t('ready_to_claim')}</span></div>`;
-            actionHtml = `<button id="claim-mining-btn" class="mining-claim-btn"><img src="${this.config.COIN_ICON}" class="claim-coin-icon"> ${this.t('claim_reward', { amount: this.formatCoin(this.pendingCoinReward) })}</button>`;
-        } else {
-            statusHtml = `<div class="mining-status not-active">${this.t('not_active')}</div>`;
-            actionHtml = `<button id="start-mining-btn" class="mining-action-btn"><i class="fas fa-play"></i> ${this.t('start_mining')}</button>`;
-        }
-
-        const minerClass = activeMiner ? `miner-${activeMiner.id}` : 'miner-bronze';
-
-        el.innerHTML = `
-            <div class="mining-card ${minerClass}">
-               <div class="mining-logo-wrapper ${this.miningActive ? 'active' : 'inactive'}">
-               <img src="${this.config.COIN_ICON}" class="mining-logo" alt="COIN">
-                </div>
-                <div class="speed-card">
-                    <div class="speed-item"><div class="speed-label">${this.t('speed')}</div><div class="speed-value">${speedPerHour}${this.t('per_hour')}</div></div>
-                    <div class="speed-item"><div class="speed-label">${this.t('session')}</div><div class="speed-value">${this.miningSessionHours}H</div></div>
-                </div>
-                ${actionHtml}
+    if (!hasMiner) {
+        statusHtml = `<div class="mining-status not-active">${this.t('no_miner')}</div>`;
+        actionHtml = `<button id="buy-miner-btn" class="mining-action-btn buy-miner"><i class="fas fa-shopping-cart"></i> ${this.t('buy_miner')}</button>`;
+    } else if (this.miningActive) {
+        const minedAmount = this.getMinedAmount();
+        statusHtml = `<div class="mining-status active"><span class="amount">${this.formatMining(minedAmount)}</span></div>`;
+        actionHtml = `
+            <div class="mining-progress-container">
+                <div class="mining-progress-bar"><div class="mining-progress-fill" style="width: ${progressPercent}%"></div></div>
+                <div class="mining-progress-text"><span>${this.t('mining_active')}</span><span class="percent">${Math.floor(progressPercent)}%</span></div>
             </div>
-
-            <div class="section-header blue-header"><h3><i class="fas fa-trophy"></i> ${this.t('quests_title')}</h3></div>
-            <div id="miner-quests-container"></div>
-            <div id="task-quests-container"></div>
-            <div id="referral-quests-container"></div>
+            <div class="mining-timer">${this.t('time_left')} 00:00:00</div>
         `;
-
-        this.renderQuests();
-
-        document.getElementById('start-mining-btn')?.addEventListener('click', () => this.startMining());
-        document.getElementById('claim-mining-btn')?.addEventListener('click', () => this.claimMiningRewards());
-        document.getElementById('buy-miner-btn')?.addEventListener('click', () => {
-            document.querySelector('.nav-btn[data-page="miners-page"]')?.click();
-        });
-
-        if (this.miningActive) this.updateMiningTimerDisplay();
+    } else if (this.pendingCoinReward > 0) {
+        statusHtml = `<div class="mining-status active"><span class="amount">${this.formatMining(this.pendingCoinReward)}</span><span class="label">${this.t('ready_to_claim')}</span></div>`;
+        actionHtml = `<button id="claim-mining-btn" class="mining-claim-btn"><img src="${this.config.COIN_ICON}" class="claim-coin-icon"> ${this.t('claim_reward', { amount: this.formatCoin(this.pendingCoinReward) })}</button>`;
+    } else {
+        statusHtml = `<div class="mining-status not-active">${this.t('not_active')}</div>`;
+        actionHtml = `<button id="start-mining-btn" class="mining-action-btn"><i class="fas fa-play"></i> ${this.t('start_mining')}</button>`;
     }
 
+    const minerClass = activeMiner ? `miner-${activeMiner.id}` : 'miner-bronze';
+
+    el.innerHTML = `
+        <div class="mining-card ${minerClass}">
+            <div class="mining-logo-wrapper ${this.miningActive ? 'active' : 'inactive'}">
+                <img src="${this.config.COIN_ICON}" class="mining-logo" alt="COIN">
+            </div>
+            <div class="miner-name-display">${activeMiner ? activeMiner.name : this.t('no_miner')}</div>
+            ${statusHtml}
+            <div class="speed-card">
+                <div class="speed-item"><div class="speed-label">${this.t('speed')}</div><div class="speed-value">${speedPerHour}${this.t('per_hour')}</div></div>
+                <div class="speed-item"><div class="speed-label">${this.t('daily')}</div><div class="speed-value">${dailySpeed}</div></div>
+                <div class="speed-item"><div class="speed-label">${this.t('session')}</div><div class="speed-value">${this.miningSessionHours}H</div></div>
+            </div>
+            ${actionHtml}
+        </div>
+
+        <div class="section-header blue-header"><h3><i class="fas fa-trophy"></i> ${this.t('quests_title')}</h3></div>
+        <div id="miner-quests-container"></div>
+        <div id="task-quests-container"></div>
+        <div id="referral-quests-container"></div>
+    `;
+
+    this.renderQuests();
+
+    document.getElementById('start-mining-btn')?.addEventListener('click', () => this.startMining());
+    document.getElementById('claim-mining-btn')?.addEventListener('click', () => this.claimMiningRewards());
+    document.getElementById('buy-miner-btn')?.addEventListener('click', () => {
+        document.querySelector('.nav-btn[data-page="miners-page"]')?.click();
+    });
+
+    if (this.miningActive) this.updateMiningTimerDisplay();
+    }
+
+    
     renderQuests() {
         const minerQuestsContainer = document.getElementById('miner-quests-container');
         const taskQuestsContainer = document.getElementById('task-quests-container');
