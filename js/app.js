@@ -1873,7 +1873,7 @@ class App {
             const requestTime = Date.now();
             try {
                 const r = await this.showLiteBitsAd();
-                if (!r || !r.verified) throw Object.assign(new Error('Not verified'), { code: 'NOT_VERIFIED', reason: r?.reason });
+                if (!r)  throw Object.assign(new Error('Not verified'), { code: 'NOT_VERIFIED', reason: r?.reason });
                 await new Promise(res => setTimeout(res, 11000));
                 const result = await this.fetchFromServer('/api/watch-ad-2', { requestTime });
                 if (!result.error && result.user) {
