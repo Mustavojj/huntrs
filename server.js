@@ -169,7 +169,7 @@ const APP_CONFIG = {
     BOT_USERNAME: "GramHtrsbot",
     BOT_LINK: "https://t.me/GramHtrsbot?start=",
     APP_LOGO: "https://slho.shop/i/8067",
-    COIN_ICON: "https://slho.shop/i/8220",
+    COIN_ICON: "https://slho.shop/i/8124",
     COIN_TO_GRAM_RATE: 1000000,
     MINIMUM_WITHDRAW: 50000,
     MAXIMUM_WITHDRAW: 500000,
