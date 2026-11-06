@@ -68,7 +68,7 @@ const translations = {
         auto_poster_removed: "Channel removed",
         auto_poster_not_admin: "Bot is not admin in this channel",
         auto_poster_reward_info: "Earn 10 COIN per referral each post",
-        hot: "HOT", available_tasks: "AVAILABLE TASKS", add_task: "Add Task"
+        hot: "HOT", available_tasks: "AVAILABLE TASKS", add_task: "Add Task", daily: "Daily"
     },
     ar: {
         power: "قوة", coin: "عملة", gram: "جرام", claim: "استلام", watch: "مشاهدة",
@@ -139,7 +139,7 @@ const translations = {
         auto_poster_removed: "تمت إزالة القناة",
         auto_poster_not_admin: "البوت ليس مشرفاً في هذه القناة",
         auto_poster_reward_info: "اربح 10 عملات لكل إحالة مع كل منشور",
-        hot: "ساخن", available_tasks: "المهام المتاحة", add_task: "إضافة مهمة"
+        hot: "ساخن", available_tasks: "المهام المتاحة", add_task: "إضافة مهمة", daily: "يومي"
     },
     ru: {
         power: "Мощность", coin: "МОНЕТА", gram: "GRAM", claim: "Забрать", watch: "Смотреть",
@@ -210,7 +210,7 @@ const translations = {
         auto_poster_removed: "Канал удалён",
         auto_poster_not_admin: "Бот не админ в этом канале",
         auto_poster_reward_info: "10 монет за реферала с каждого поста",
-        hot: "ХОТ", available_tasks: "ДОСТУПНЫЕ ЗАДАНИЯ", add_task: "Добавить"
+        hot: "ХОТ", available_tasks: "ДОСТУПНЫЕ ЗАДАНИЯ", add_task: "Добавить", daily: "День"
     },
     fa: {
         power: "قدرت", coin: "سکه", gram: "گرم", claim: "دریافت", watch: "تماشا",
@@ -281,7 +281,7 @@ const translations = {
         auto_poster_removed: "کانال حذف شد",
         auto_poster_not_admin: "ربات در این کانال ادمین نیست",
         auto_poster_reward_info: "۱۰ سکه برای هر معرفی با هر پست",
-        hot: "داغ", available_tasks: "وظایف موجود", add_task: "افزودن"
+        hot: "داغ", available_tasks: "وظایف موجود", add_task: "افزودن", daily: "روزانه"
     }
 };
 
