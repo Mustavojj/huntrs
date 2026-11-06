@@ -399,3 +399,42 @@ body {
 .task-action-btn { flex: 1; padding: 10px; background: var(--theme-gradient); border: none; border-radius: 40px; color: #fff; font-weight: 700; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 16px var(--theme-glow); }
 .task-action-btn.secondary { background: rgba(74,144,217,0.2); border: 1px solid rgba(74,144,217,0.3); box-shadow: none; }
 .task-action-btn:active { transform: scale(0.96); } 
+
+.mining-logo-wrapper {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.mining-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.mining-logo-wrapper.active .mining-logo {
+    filter: drop-shadow(0 0 20px var(--theme-glow)) brightness(1.2);
+    animation: coinPulse 1.8s ease-in-out infinite;
+}
+
+.mining-logo-wrapper.inactive .mining-logo {
+    filter: grayscale(80%) brightness(0.5);
+    opacity: 0.5;
+}
+
+@keyframes coinPulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 15px var(--theme-glow)) brightness(1.2);
+    }
+    50% {
+        transform: scale(1.08);
+        filter: drop-shadow(0 0 30px var(--theme-glow)) brightness(1.4);
+    }
+} 
