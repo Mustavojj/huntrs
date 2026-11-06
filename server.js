@@ -491,10 +491,10 @@ async function sendWithdrawalProof(userId, wallet, gramAmount, coinAmount, txHas
             `<b>✦ Hunter ID:</b> <code>${userId}</code>\n` +
             `<b>✦ Amount:</b> <code>${gramAmount.toFixed(4)}</code> GRAM\n` +
             `<b>✦ Status:</b> ${txHash ? 'Completed' : 'Processing'}\n` +
-            `<b>✦ Request:</b> <code>#${withdrawalId}</code>`;
+            `<b>✦ Request NO:</b> <code>#${withdrawalId}</code>`;
         const buttons = [];
         if (txHash) buttons.push({ text: '🔗 View', url: `https://tonscan.org/tx/${txHash}` });
-        buttons.push({ text: '🎯 Launch App', url: 'https://t.me/GramHtrsbot/app' });
+        buttons.push({ text: '🥷 Launch', url: 'https://t.me/GramHtrsbot/app' });
         const payload = {
             chat_id: '@' + channelMatch[1],
             text: message,
