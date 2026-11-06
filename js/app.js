@@ -27,7 +27,7 @@ const translations = {
         referral_earnings: "Referral Rewards",
         power_earnings: "Power Earnings", coin_earnings: "COIN Earnings",
         total_referrals: "Total Referrals",
-        earn_referral_each_label: "Unlimited COINS", earn_referral_each: "Earn، 5000 COIN per referral",
+        earn_referral_each_label: "Unlimited COINS", earn_referral_each: "Earn {amount} COIN per referral",
         earn_referral_tasks_label: "Tasks & Ads commission", earn_referral_tasks: "Earn 20% from referrals earnings",
         earn_referral_mining_label: "Mining Commission", earn_referral_mining: "Earn 10% from mining earnings",
         withdraw_gram: "Withdraw GRAM", withdrawal_amount: "Withdrawal Amount", gram_wallet: "GRAM Wallet",
@@ -98,7 +98,7 @@ const translations = {
         referral_earnings: "مكافآت الإحالة",
         power_earnings: "أرباح القوة", coin_earnings: "أرباح العملات",
         total_referrals: "إجمالي الإحالات",
-        earn_referral_each_label: "عملات غير محدودة", earn_referral_each: "اربح 5000 عملة لكل إحالة",
+        earn_referral_each_label: "عملات غير محدودة", earn_referral_each: "اربح {amount} عملة لكل إحالة",
         earn_referral_tasks_label: "عمولة المهام والإعلانات", earn_referral_tasks: "اربح 20% من أرباح الإحالات",
         earn_referral_mining_label: "عمولة التعدين", earn_referral_mining: "اربح 10% من أرباح التعدين",
         withdraw_gram: "سحب جرام", withdrawal_amount: "مبلغ السحب", gram_wallet: "محفظة جرام",
@@ -169,7 +169,7 @@ const translations = {
         referral_earnings: "Реферальные награды",
         power_earnings: "Мощность", coin_earnings: "Монеты",
         total_referrals: "Всего рефералов",
-        earn_referral_each_label: "Неограниченные монеты", earn_referral_each: "5000 монет за реферала", 
+        earn_referral_each_label: "Неограниченные монеты", earn_referral_each: "{amount} монет за реферала",
         earn_referral_tasks_label: "Комиссия с задач", earn_referral_tasks: "20% от рефералов",
         earn_referral_mining_label: "Комиссия с майнинга", earn_referral_mining: "10% от майнинга",
         withdraw_gram: "Вывод GRAM", withdrawal_amount: "Сумма вывода", gram_wallet: "GRAM Кошелёк",
@@ -240,7 +240,7 @@ const translations = {
         referral_earnings: "پاداش‌های معرفی",
         power_earnings: "قدرت", coin_earnings: "سکه",
         total_referrals: "کل معرفی‌ها",
-        earn_referral_each_label: "سکه‌های نامحدود", earn_referral_each: "٥۰۰۰ سکه برای هر معرفی",
+        earn_referral_each_label: "سکه‌های نامحدود", earn_referral_each: "{amount} سکه برای هر معرفی",
         earn_referral_tasks_label: "کمیسیون وظایف", earn_referral_tasks: "۲۰٪ از معرفی‌ها",
         earn_referral_mining_label: "کمیسیون استخراج", earn_referral_mining: "۱۰٪ از استخراج",
         withdraw_gram: "برداشت GRAM", withdrawal_amount: "مبلغ برداشت", gram_wallet: "کیف GRAM",
@@ -470,12 +470,21 @@ class App {
     setPromoCooldown() { this._promoCooldown = Date.now(); }
 
     async fetchFromServer(endpoint, data = {}) {
-        if (!this.checkCooldown(endpoint)) throw new Error('Cooldown');
+        const now = Date.now();
+        const key = `${endpoint}_${this.tgUser?.id || 'user'}`;
+        const lastCall = this._lastFetchTime.get(key) || 0;
+        if (now - lastCall < 1000) {
+            await new Promise(r => setTimeout(r, 1000 - (now - lastCall)));
+        }
+        this._lastFetchTime.set(key, Date.now());
         try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
             const headers = { 'Content-Type': 'application/json' };
             if (this.jwtToken) headers['Authorization'] = `Bearer ${this.jwtToken}`;
             const payload = { ...data, userId: this.tgUser?.id, username: this.tgUser?.username || '', firstName: this.tgUser?.first_name || 'User', photoUrl: this.tgUser?.photo_url || this.config.DEFAULT_USER_AVATAR };
-            const response = await fetch(`${this.serverUrl}${endpoint}`, { method: 'POST', headers, body: JSON.stringify(payload) });
+            const response = await fetch(`${this.serverUrl}${endpoint}`, { method: 'POST', headers, body: JSON.stringify(payload), signal: controller.signal });
+            clearTimeout(timeoutId);
             const result = await response.json();
             if (result.error === 'Invalid token' || result.error === 'Token expired' || result.error === 'No token provided') {
                 const refreshed = await this.refreshToken();
@@ -493,7 +502,10 @@ class App {
 
     async getFromServer(endpoint) {
         try {
-            const response = await fetch(`${this.serverUrl}${endpoint}`);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
+            const response = await fetch(`${this.serverUrl}${endpoint}`, { signal: controller.signal });
+            clearTimeout(timeoutId);
             return await response.json();
         } catch (error) { throw error; }
     }
@@ -745,7 +757,7 @@ class App {
 
     async claimMiningRewards() {
         if (this.pendingCoinReward <= 0) { this.showNotification('Error', 'No rewards', 'error'); this.vibrate('error'); return; }
-            await this.showAdsgramInterstitial();
+        try { await this.showAdsgramInterstitial(); } catch (e) {}
         const result = await this.fetchFromServer('/api/claim-mining', {});
         if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return; }
         if (result.user) {
@@ -1043,7 +1055,7 @@ class App {
 
     async showAdsgramInterstitial() {
         let retries = 0;
-        while (typeof window.Adsgram?.init !== 'function' && retries < 40) {
+        while (typeof window.Adsgram?.init !== 'function' && retries < 20) {
             await new Promise(r => setTimeout(r, 250));
             retries++;
         }
@@ -1054,7 +1066,7 @@ class App {
 
     async showAdsgramAd() {
         let retries = 0;
-        while (typeof window.Adsgram?.init !== 'function' && retries < 40) {
+        while (typeof window.Adsgram?.init !== 'function' && retries < 20) {
             await new Promise(r => setTimeout(r, 250));
             retries++;
         }
@@ -1067,7 +1079,7 @@ class App {
 
     async showLiteBitsAd() {
         let retries = 0;
-        while (typeof window.LiteBitsAds !== 'function' && retries < 40) {
+        while (typeof window.LiteBitsAds !== 'function' && retries < 20) {
             await new Promise(r => setTimeout(r, 250));
             retries++;
         }
@@ -1082,7 +1094,7 @@ class App {
 
     async showUSLAd() {
         let retries = 0;
-        while (typeof window.USLAds?.show !== 'function' && retries < 40) {
+        while (typeof window.USLAds?.show !== 'function' && retries < 20) {
             await new Promise(r => setTimeout(r, 250));
             retries++;
         }
@@ -1205,6 +1217,9 @@ class App {
 
         el.innerHTML = `
             <div class="mining-card ${minerClass}">
+               <div class="mining-logo-wrapper ${this.miningActive ? 'active' : 'inactive'}">
+               <img src="${this.config.COIN_ICON}" class="mining-logo" alt="COIN">
+                </div>
                 <div class="miner-name-display">${activeMiner ? activeMiner.name : this.t('no_miner')}</div>
                 ${statusHtml}
                 <div class="speed-card">
@@ -1497,6 +1512,7 @@ class App {
                         <span>${this.t('auto_poster_active')}</span>
                     </div>
                     <div class="auto-poster-channel">@${this.autoPosterChannel.replace('@', '')}</div>
+                    <div class="auto-poster-reward"><i class="fas fa-coins"></i> ${this.t('auto_poster_reward_info')}</div>
                     <button id="auto-poster-remove-btn" class="auto-poster-remove-btn">
                         <i class="fas fa-trash"></i> ${this.t('auto_poster_remove')}
                     </button>
@@ -1778,19 +1794,23 @@ class App {
                 promoSubmit.disabled = true;
                 promoSubmit.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
                 try { await this.showAdsgramInterstitial(); } catch (e) {}
-const r = await this.fetchFromServer('/api/claim-promo-code', { code: code.toUpperCase() });
-if (!r.error && r.user) {
-    this.powerBalance = r.user.power_balance || 0;
-    this.coinBalance = r.user.coin_balance || 0;
-    this.updateHeaderBalances();
-    this.setPromoCooldown();
-    this.showNotification('Reward Claimed', r.reward, 'success');
-    this.vibrate('success');
-    promoInput.value = '';
-} else {
-    this.showNotification('Error', r.error || 'Failed', 'error');
-    this.vibrate('error');
-}
+                try {
+                    const r = await this.fetchFromServer('/api/claim-promo-code', { code: code.toUpperCase() });
+                    if (!r.error && r.user) {
+                        this.powerBalance = r.user.power_balance || 0;
+                        this.coinBalance = r.user.coin_balance || 0;
+                        this.updateHeaderBalances();
+                        this.setPromoCooldown();
+                        this.showNotification('Reward Claimed', r.reward, 'success');
+                        this.vibrate('success');
+                        promoInput.value = '';
+                    } else {
+                        this.showNotification('Error', r.error || 'Failed', 'error');
+                        this.vibrate('error');
+                    }
+                } catch (e) {
+                    this.showNotification('Error', 'Network error', 'error');
+                }
                 promoSubmit.disabled = true;
                 promoSubmit.classList.remove('active');
                 promoSubmit.innerHTML = this.t('claim');
@@ -2205,6 +2225,8 @@ if (!r.error && r.user) {
         const el = document.getElementById('team-page');
         if (!el) return;
         const link = (this.config.BOT_LINK || 'https://t.me/GramHunterBot?start=') + this.tgUser.id;
+        const referralAmount = this.config.REFERRAL_REWARD_COIN || 1000;
+        const referralAmountFormatted = this.formatNumber(referralAmount);
 
         el.innerHTML = `
             <div class="page-title">
@@ -2218,7 +2240,7 @@ if (!r.error && r.user) {
                         <div class="referral-row-icon"><i class="fas fa-infinity"></i></div>
                         <div class="referral-row-info">
                             <div class="referral-row-label">${this.t('earn_referral_each_label')}</div>
-                            <div class="referral-row-value">${this.t('earn_referral_each')}</div>
+                            <div class="referral-row-value">${this.t('earn_referral_each', { amount: referralAmountFormatted })}</div>
                         </div>
                     </div>
                     <div class="referral-row">
@@ -2583,18 +2605,18 @@ if (!r.error && r.user) {
             const startParam = this.tg.initDataUnsafe?.start_param;
             if (startParam && !isNaN(startParam) && parseInt(startParam) !== this.tgUser.id) this.referredBy = parseInt(startParam);
 
-            await this.getConfig();
-            await this.getServerTime();
-            await this.loadUserData();
+            try { await this.getConfig(); } catch (e) { console.error('Config error:', e); }
+            try { await this.getServerTime(); } catch (e) { console.error('ServerTime error:', e); }
+            try { await this.loadUserData(); } catch (e) { console.error('UserData error:', e); }
             this.startServerTimeSync();
 
             if (this.userState === 'ban') { this.showBanModal(); return; }
             if (!this.isAuthenticated) return;
 
-            this.setupEventListeners();
-            this.renderMining();
-            this.setupNavigation();
-            this.updateHeaderMiner();
+            try { this.setupEventListeners(); } catch (e) { console.error('EventListeners error:', e); }
+            try { this.renderMining(); } catch (e) { console.error('RenderMining error:', e); }
+            try { this.setupNavigation(); } catch (e) { console.error('Navigation error:', e); }
+            try { this.updateHeaderMiner(); } catch (e) { console.error('HeaderMiner error:', e); }
 
             if (this.miningActive && this.miningEndTime) {
                 const currentTime = this.getCurrentTime();
@@ -2603,12 +2625,17 @@ if (!r.error && r.user) {
             }
 
             setTimeout(async () => {
+                if (typeof window.Adsgram?.init !== 'function') return;
                 try { await this.showAdsgramInterstitial(); } catch (e) {}
-            }, 20000); 
+            }, 20000);
             
         } catch (err) {
-            if (err.message === 'Cooldown' || err.message === 'Banned' || err.message === 'Auth required' || err.message === 'Not registered') return;
             console.error('Init error:', err);
+            try { this.setupEventListeners(); } catch (e) {}
+            try { this.setupNavigation(); } catch (e) {}
+            try { this.renderMining(); } catch (e) {}
+            document.getElementById('app-loader').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
         }
     }
 }
