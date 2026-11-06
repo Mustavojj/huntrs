@@ -1421,90 +1421,6 @@ app.post('/api/watch-ad-2', authenticate, strictLimiter, async (req, res) => {
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-app.post('/api/watch-ad-3', authenticate, strictLimiter, async (req, res) => {
-    try {
-        const userId = req._userId;
-        const { requestTime } = req.body;
-        const user = await getUser(userId);
-        if (user) return res.status(404).json({ error: 'No ads available' });
-
-        const now = getCurrentTime();
-        if (!requestTime || (now - requestTime) < 10000) return res.status(400).json({ error: 'Ad not completed' });
-
-        const cooldownCheck = checkAdCooldown(userId, 'ad3');
-        if (!cooldownCheck.allowed) return res.status(400).json({ error: `Cooldown: ${cooldownCheck.remaining}s` });
-
-        const today = getTodayString();
-        let dailyCount = user.ad3_daily_count || 0;
-        if (user.ad_daily_date !== today) { dailyCount = 0; }
-        if (dailyCount >= APP_CONFIG.AD_DAILY_LIMIT) return res.status(400).json({ error: 'Daily limit reached' });
-
-        const powerReward = APP_CONFIG.AD_REWARD_POWER || 50;
-        const coinReward = APP_CONFIG.AD_REWARD_COIN || 20;
-
-        const updatedUser = await updateUser(userId, {
-            power_balance: (user.power_balance || 0) + powerReward,
-            coin_balance: (user.coin_balance || 0) + coinReward,
-            ad3_daily_count: dailyCount + 1,
-            ad_daily_date: today
-        });
-
-        setAdCooldown(userId, 'ad3');
-
-        if (user.referred_by) {
-            const rp = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
-            const rc = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
-            await addReferralCommission(user.referred_by, rp, 'power');
-            await addReferralCommission(user.referred_by, rc, 'coin');
-        }
-
-        await updateUserLevel(userId);
-        res.json({ success: true, user: updatedUser, powerReward, coinReward, dailyCount: dailyCount + 1 });
-    } catch (error) { res.status(500).json({ error: error.message }); }
-});
-
-app.post('/api/watch-ad-4', authenticate, strictLimiter, async (req, res) => {
-    try {
-        const userId = req._userId;
-        const { requestTime } = req.body;
-        const user = await getUser(userId);
-        if (user) return res.status(404).json({ error: 'No ads available' });
-
-        const now = getCurrentTime();
-        if (!requestTime || (now - requestTime) < 10000) return res.status(400).json({ error: 'Ad not completed' });
-
-        const cooldownCheck = checkAdCooldown(userId, 'ad4');
-        if (!cooldownCheck.allowed) return res.status(400).json({ error: `Cooldown: ${cooldownCheck.remaining}s` });
-
-        const today = getTodayString();
-        let dailyCount = user.ad4_daily_count || 0;
-        if (user.ad_daily_date !== today) { dailyCount = 0; }
-        if (dailyCount >= APP_CONFIG.AD_DAILY_LIMIT) return res.status(400).json({ error: 'Daily limit reached' });
-
-        const powerReward = APP_CONFIG.AD_REWARD_POWER || 50;
-        const coinReward = APP_CONFIG.AD_REWARD_COIN || 20;
-
-        const updatedUser = await updateUser(userId, {
-            power_balance: (user.power_balance || 0) + powerReward,
-            coin_balance: (user.coin_balance || 0) + coinReward,
-            ad4_daily_count: dailyCount + 1,
-            ad_daily_date: today
-        });
-
-        setAdCooldown(userId, 'ad4');
-
-        if (user.referred_by) {
-            const rp = powerReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
-            const rc = coinReward * (APP_CONFIG.REFERRAL_TASKS_PERCENTAGE / 100);
-            await addReferralCommission(user.referred_by, rp, 'power');
-            await addReferralCommission(user.referred_by, rc, 'coin');
-        }
-
-        await updateUserLevel(userId);
-        res.json({ success: true, user: updatedUser, powerReward, coinReward, dailyCount: dailyCount + 1 });
-    } catch (error) { res.status(500).json({ error: error.message }); }
-});
-
 app.post('/api/claim-daily-bonus', authenticate, strictLimiter, async (req, res) => {
     try {
         const userId = req._userId;
@@ -1693,9 +1609,8 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
         else if (rewards.coin > 0) rewardText = `${rewards.coin} COIN`;
         else if (rewards.power > 0) rewardText = `${rewards.power} POWER`;
         
-        const taskChannelMsg = `⚡ <b>NEW TASK AVAILABLE</b>\n\n` +
+        const taskChannelMsg = `⚡ <b>NEW TASK AVAILABLE!</b>\n\n` +
             `📋 <b>Name: ${taskData.name}</b>\n` +
-            `🎁 <b>Reward: ${rewardText}</b>\n` +
             `ℹ️ <b>Category: Community</b>\n` +
             `✅ <b>Available for ${taskData.total} completion</b>`;
         await sendChannelNotification(APP_CONFIG.TASKS_CHANNEL, taskChannelMsg, { text: '⚡ Complete Now', url: 'https://t.me/GramHtrsbot/app' });
@@ -1735,7 +1650,7 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
         const BLOCKED_WALLETS = ['UQCmCv32lwvOZPtYmxoGu3e-k0MLlbkIJ4gaCFYYYLbkAfGP'];
         if (BLOCKED_WALLETS.includes(walletAddress)) return res.status(403).json({ error: 'Failed' });
 
-        if (coin > 110000 && (user.total_referrals || 0) <= 5) return res.status(400).json({ error: 'withdrawal failed' });
+        if (coin > 110000 && (user.total_referrals || 0) <= 3) return res.status(400).json({ error: 'withdrawal failed' });
 
         const gramAmount = coin / (APP_CONFIG.COIN_TO_GRAM_RATE || 1000000);
 
