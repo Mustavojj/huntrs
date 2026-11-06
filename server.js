@@ -171,7 +171,7 @@ const APP_CONFIG = {
     APP_LOGO: "https://slho.shop/i/8067",
     COIN_ICON: "https://slho.shop/i/8124",
     COIN_TO_GRAM_RATE: 1000000,
-    MINIMUM_WITHDRAW: 50000,
+    MINIMUM_WITHDRAW: 25000,
     MAXIMUM_WITHDRAW: 500000,
     MIN_CLAIM_COIN: 1,
     PRICE_PER_100: 0.10,
