@@ -1442,12 +1442,11 @@ class App {
                 <div class="prediction-user-pick ${isFinished ? (won ? 'won' : 'lost') : ''}">
                     <div class="pick-label">${this.t('your_prediction')}</div>
                     <div class="pick-teams">
-                        <img src="${m.team_a_logo}" class="pick-mini-logo" onerror="this.src='${this.config.COIN_ICON}'">
-                        <span class="pick-sep">~</span>
-                        <img src="${m.team_b_logo}" class="pick-mini-logo" onerror="this.src='${this.config.COIN_ICON}'">
-                    </div>
-                    <div class="pick-score">${userPick.a} - ${userPick.b}</div>
-                    ${isFinished ? `<div class="pick-result">${won ? `🎉 ${this.t('prediction_won')} +${this.formatNumber(m.reward_coin)} COIN +${this.formatNumber(m.reward_power)} Power` : `❌ ${this.t('prediction_lost')}`}</div>` : ''}
+                      <img src="${m.team_a_logo}" class="pick-mini-logo" onerror="this.src='${this.config.COIN_ICON}'">
+                      <span class="pick-score">${userPick.a} - ${userPick.b}</span>
+                    <img src="${m.team_b_logo}" class="pick-mini-logo" onerror="this.src='${this.config.COIN_ICON}'">
+                  </div>
+                  ${isFinished ? `<div class="pick-result">${won ? `🎉 ${this.t('prediction_won')} +${this.formatNumber(m.reward_coin)} COIN +${this.formatNumber(m.reward_power)} Power` : `❌ ${this.t('prediction_lost')}`}</div>` : ''}
                 </div>
             `;
         }
