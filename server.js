@@ -1983,11 +1983,45 @@ app.post('/api/get-withdrawals', authenticate, async (req, res) => {
     catch (error) { res.status(500).json({ error: error.message }); }
 });
 
+app.get('/api/admin/matches/predictions', async (req, res) => {
+    try {
+        if (!process.env.ADMIN_PASSWORD || req.query.key !== process.env.ADMIN_PASSWORD)
+            return res.status(403).json({ error: 'Forbidden' });
+        const { matchId } = req.query;
+        if (!matchId) return res.status(400).json({ error: 'matchId required' });
+
+        const { data, error } = await supabase
+            .from('predictions')
+            .select('user_id, prediction_a, prediction_b, is_correct, reward_amount, created_at')
+            .eq('match_id', matchId)
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+
+        const userIds = [...new Set((data || []).map(p => p.user_id))];
+        const { data: users } = await supabase
+            .from('users')
+            .select('id, first_name, username, photo_url')
+            .in('id', userIds);
+        const userMap = new Map((users || []).map(u => [u.id, u]));
+
+        res.json({
+            match_id: matchId,
+            total: data?.length || 0,
+            predictions: (data || []).map(p => ({
+                ...p,
+                first_name: userMap.get(p.user_id)?.first_name || 'User',
+                username: userMap.get(p.user_id)?.username || null,
+                photo_url: userMap.get(p.user_id)?.photo_url || null
+            }))
+        });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 setInterval(async () => { await checkPendingWithdrawals(); }, 300000);
 setTimeout(() => { checkPendingWithdrawals(); }, 30000);
 setInterval(sendDailyBonusNotifications, 3600000);
 setInterval(sendMiningEndNotifications, 900000);
-scheduleAutoPoster();
+scheduleAutoPoster(); 
 
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
