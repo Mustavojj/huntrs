@@ -1078,6 +1078,176 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', time: getCurrentTi
 app.get('/api/config', (req, res) => res.json(APP_CONFIG));
 app.get('/api/current-time', (req, res) => res.json({ serverTime: getCurrentTime() }));
 
+app.post('/api/auth', strictLimiter, async (req, res) => {
+    try {
+        const { initData, userId, username, firstName, photoUrl, visitorId } = req.body;
+        if (!initData) return res.status(400).json({ error: 'Missing initData' });
+        const validation = validateTelegramInitData(initData, BOT_TOKEN);
+        if (!validation.valid) return res.status(403).json({ error: 'Invalid data' });
+        const telegramUser = validation.user;
+        if (!telegramUser || !telegramUser.id) return res.status(403).json({ error: 'No user' });
+
+        if (validation.queryId) {
+            const { data: usedQuery } = await supabase.from('used_query_ids').select('query_id').eq('query_id', validation.queryId).maybeSingle();
+            if (usedQuery) return res.status(403).json({ error: 'Session already used' });
+            try { await supabase.from('used_query_ids').insert([{ query_id: validation.queryId, used_at: getCurrentTime() }]); } catch (e) {}
+        }
+
+        let user = await getUser(telegramUser.id);
+
+        if (visitorId && !DEVICE_LOCK_WHITELIST.includes(telegramUser.id)) {
+            const { data: conflicting } = await supabase
+                .from('users')
+                .select('id')
+                .neq('id', telegramUser.id)
+                .contains('visitor_ids', JSON.stringify([visitorId]));
+            if (conflicting && conflicting.length > 0) {
+                return res.status(403).json({ error: 'device_already_linked' });
+            }
+        }
+
+        if (!user) {
+            const userData = {
+                id: telegramUser.id, username: telegramUser.username || '', first_name: telegramUser.first_name || 'User',
+                photo_url: photoUrl || telegramUser.photo_url || APP_CONFIG.DEFAULT_USER_AVATAR,
+                created_at: getCurrentTime(),
+                power_balance: 0, coin_balance: 0, gram_balance: 0,
+                referral_power_earnings: 0, referral_coin_earnings: 0,
+                level: 1, total_tasks_completed: 0, total_mining_starts: 0,
+                daily_mining_starts: 0, last_mining_date: '', last_mining_end_time: 0,
+                referral_reward_given: false, state: 'active', verified: true,
+                miner_id: null, miner_expires_at: null, owned_miners: [],
+                quests: { current_miner_quest_index: 0, current_task_quest_index: 0, current_referral_quest_index: 0 },
+                mining_active: false, mining_start_time: null, mining_end_time: null, pending_coin_reward: 0,
+                total_referrals: 0, referral_power: 0,
+                ad_watch_count: 0, ad_last_watch: 0, adexium_ad_last_watch: 0,
+                ad1_daily_count: 0, ad2_daily_count: 0, ad3_daily_count: 0, ad4_daily_count: 0, ad_daily_date: '',
+                last_withdraw_time: 0, referred_by_verified: false, wallet: null,
+                task_count: 0, promo_codes_created: 0, daily_bonus_last_claim: 0,
+                visitor_ids: visitorId ? [visitorId] : [],
+                auto_poster_channel: null, auto_poster_enabled: false, auto_poster_added_at: null,
+            };
+            try { user = await createUser(userData); } catch (e) { user = await getUser(telegramUser.id); if (!user) return res.status(500).json({ error: 'Failed' }); }
+        } else {
+            const updates = {};
+            if (telegramUser.username && telegramUser.username !== user.username) updates.username = telegramUser.username;
+            if (telegramUser.first_name && telegramUser.first_name !== user.first_name) updates.first_name = telegramUser.first_name;
+            if (photoUrl && photoUrl !== user.photo_url) updates.photo_url = photoUrl;
+            if (Object.keys(updates).length > 0) {
+                await updateUser(telegramUser.id, updates);
+                Object.assign(user, updates);
+            }
+        }
+        if (visitorId && user) {
+            const existing = Array.isArray(user.visitor_ids) ? user.visitor_ids : [];
+            if (!existing.includes(visitorId)) {
+                const newVisitorIds = [...existing, visitorId];
+                await updateUser(user.id, { visitor_ids: newVisitorIds });
+                user.visitor_ids = newVisitorIds;
+            }
+        }
+        if (user.state === 'ban') return res.status(403).json({ error: 'Account banned' });
+        const token = generateJWT(user.id, user.id);
+        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
+        res.json({ success: true, user, token, authenticated: true });
+    } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.post('/api/refresh', authenticate, async (req, res) => {
+    try {
+        const user = await getUser(req._userId);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        if (user.state === 'ban') return res.status(403).json({ error: 'Banned' });
+        const token = generateJWT(req._userId, req._userId);
+        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
+        res.json({ success: true, token });
+    } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.post('/api/get-user', authenticate, async (req, res) => {
+    try {
+        const userId = req._userId;
+        let user = await getUser(userId);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        if (user.state === 'ban') return res.status(403).json({ error: 'Account banned', banned: true });
+
+        const activeMiner = getUserActiveMiner(user);
+        if (activeMiner && activeMiner.id !== user.miner_id && user.miner_id) {
+            await updateUser(userId, { miner_id: activeMiner.id, miner_expires_at: null });
+            user.miner_id = activeMiner.id;
+            user.miner_expires_at = null;
+        }
+
+        const [completedTasks, withdrawals, userPredictions] = await Promise.all([
+            getCompletedTasks(userId),
+            getWithdrawals(userId),
+            getUserPredictions(userId)
+        ]);
+        await updateUserLevel(userId);
+        res.json({ user, completedTasks, withdrawals, userPredictions, serverTime: getCurrentTime() });
+    } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.post('/api/check-bot-admin', authenticate, async (req, res) => {
+    try {
+        const { channel } = req.body;
+        if (!channel) return res.status(400).json({ error: 'Channel required' });
+        res.json({ isAdmin: await checkBotIsAdminInChannel(channel) });
+    } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.post('/api/check-membership', authenticate, async (req, res) => {
+    try {
+        const userId = req._userId;
+        const { channel } = req.body;
+        if (!channel) return res.status(400).json({ error: 'Channel required' });
+        if (!BOT_TOKEN) return res.json({ isMember: true });
+        const isAdmin = await checkBotIsAdminInChannel(channel);
+        if (!isAdmin) return res.json({ isMember: true, error: 'bot_not_admin' });
+        const isMember = await checkUserInChannel(userId, channel);
+        return res.json({ isMember });
+    } catch (error) {
+        return res.json({ isMember: true });
+    }
+});
+
+app.post('/api/auto-poster/verify', authenticate, strictLimiter, async (req, res) => {
+    try {
+        const userId = req._userId;
+        let { channel } = req.body;
+        if (!channel) return res.status(400).json({ error: 'Channel required' });
+        channel = channel.trim().replace(/^https?:\/\/t\.me\//, '').replace(/^@/, '').replace(/\/$/, '');
+        if (!channel) return res.status(400).json({ error: 'Invalid channel' });
+        const user = await getUser(userId);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        if (user.state === 'ban') return res.status(403).json({ error: 'Account banned' });
+
+        const canPost = await checkBotCanPostInChannel(channel);
+        if (!canPost) return res.status(400).json({ error: 'Bot is not admin with post permission in this channel' });
+
+        await updateUser(userId, {
+            auto_poster_channel: channel,
+            auto_poster_enabled: true,
+            auto_poster_added_at: getCurrentTime()
+        });
+        res.json({ success: true, channel, enabled: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/auto-poster/remove', authenticate, strictLimiter, async (req, res) => {
+    try {
+        const userId = req._userId;
+        const user = await getUser(userId);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        await updateUser(userId, { auto_poster_channel: null, auto_poster_enabled: false });
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 app.get('/api/matches', authenticate, async (req, res) => {
     try {
         if (!APP_CONFIG.PREDICTIONS_ENABLED) return res.json({ matches: [], predictions_enabled: false, userPredictions: {} });
