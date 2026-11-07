@@ -214,11 +214,14 @@ const APP_CONFIG = {
             team_b_name: 'Valencia',
             team_a_logo: 'https://slho.shop/i/8224',
             team_b_logo: 'https://slho.shop/i/8223',
-            status: 'wait',              
+            status: 'wait',
+            betting: true,
             match_date: '2026-11-08T20:00:00Z',
-            betting_ends_hour_utc: 20, 
-            result: null,                
-            reward_coin: 50000
+            betting_ends_hour_utc: 20,
+            a_score: 0,
+            b_score: 0,
+            reward_coin: 50000,
+            reward_power: 5000
         }
     ],
     QUESTS: {
@@ -401,10 +404,17 @@ async function getCompletedTasks(userId) {
 
 async function getUserPredictions(userId) {
     try {
-        const { data, error } = await supabase.from('predictions').select('match_id, prediction, is_correct, reward_claimed, reward_amount').eq('user_id', userId);
+        const { data, error } = await supabase.from('predictions').select('match_id, prediction_a, prediction_b, is_correct, reward_amount').eq('user_id', userId);
         if (error) throw error;
         const map = {};
-        (data || []).forEach(p => { map[p.match_id] = p.prediction; });
+        (data || []).forEach(p => {
+            map[p.match_id] = {
+                a: p.prediction_a,
+                b: p.prediction_b,
+                is_correct: p.is_correct,
+                reward_amount: p.reward_amount || 0
+            };
+        });
         return map;
     } catch (error) { return {}; }
 }
@@ -856,6 +866,98 @@ function scheduleAutoPoster() {
     console.log('⏰ Auto poster scheduler started (10:00 & 22:00 UTC)');
 }
 
+async function processMatchesSettlement() {
+    try {
+        const finishedMatches = (APP_CONFIG.MATCHES || []).filter(m => m.status === 'finished');
+        let won = 0, lost = 0, processed = 0, skipped = 0;
+
+        for (const m of finishedMatches) {
+            const { data: alreadySettled } = await supabase
+                .from('settled_matches')
+                .select('match_id')
+                .eq('match_id', m.id)
+                .maybeSingle();
+
+            if (alreadySettled) {
+                skipped++;
+                continue;
+            }
+
+            const { data: preds } = await supabase
+                .from('predictions')
+                .select('id, user_id, prediction_a, prediction_b')
+                .eq('match_id', m.id)
+                .is('is_correct', null);
+
+            let matchWinners = 0;
+            let matchTotalReward = 0;
+            let matchTotalPower = 0;
+
+            for (const p of preds || []) {
+                const isCorrect = p.prediction_a === m.a_score && p.prediction_b === m.b_score;
+                const rewardCoin = isCorrect ? (m.reward_coin || 0) : 0;
+                const rewardPower = isCorrect ? (m.reward_power || 0) : 0;
+
+                await supabase.from('predictions').update({
+                    is_correct: isCorrect,
+                    reward_claimed: isCorrect,
+                    reward_amount: rewardCoin
+                }).eq('id', p.id);
+
+                if (isCorrect) {
+                    const user = await getUser(p.user_id);
+                    if (user) {
+                        await updateUser(p.user_id, {
+                            coin_balance: (user.coin_balance || 0) + rewardCoin,
+                            power_balance: (user.power_balance || 0) + rewardPower
+                        });
+                    }
+                    await sendTelegramNotification(p.user_id, '🎉 Correct Prediction!',
+                        `<b>🎉 You won!</b>\n\n${m.team_a_name} ${m.a_score} - ${m.b_score} ${m.team_b_name}\n💰 +${rewardCoin.toLocaleString()} COIN\n⚡ +${rewardPower.toLocaleString()} Power`,
+                        { text: '🎯 Open App', url: 'https://t.me/GramHtrsbot/app' });
+                    won++; matchWinners++; matchTotalReward += rewardCoin; matchTotalPower += rewardPower;
+                } else {
+                    await sendTelegramNotification(p.user_id, '❌ Prediction Lost',
+                        `<b>❌ Wrong prediction</b>\n\n${m.team_a_name} ${m.a_score} - ${m.b_score} ${m.team_b_name}`,
+                        { text: '🎯 Try again', url: 'https://t.me/GramHtrsbot/app' });
+                    lost++;
+                }
+                processed++;
+            }
+
+            await supabase.from('settled_matches').insert([{
+                match_id: m.id,
+                settled_at: Date.now(),
+                winners_count: matchWinners,
+                total_reward: matchTotalReward
+            }]);
+
+            if (process.env.ADMIN_USER_ID) {
+                await sendTelegramNotification(process.env.ADMIN_USER_ID, '🏆 Match Settled',
+                    `<b>🏆 ${m.team_a_name} ${m.a_score} - ${m.b_score} ${m.team_b_name}</b>\n\n` +
+                    `👥 Winners: ${matchWinners}\n` +
+                    `💰 Total COIN: ${matchTotalReward.toLocaleString()}\n` +
+                    `⚡ Total Power: ${matchTotalPower.toLocaleString()}\n` +
+                    `🎁 Per Winner: ${(m.reward_coin || 0).toLocaleString()} COIN + ${(m.reward_power || 0).toLocaleString()} Power`);
+            }
+        }
+
+        return { success: true, processed, won, lost, skipped };
+    } catch (e) {
+        logFailure('processMatchesSettlement', null, null, e);
+        return { success: false, error: e.message };
+    }
+}
+
+app.get('/api/admin/matches/process', async (req, res) => {
+    try {
+        if (!process.env.ADMIN_PASSWORD || req.query.key !== process.env.ADMIN_PASSWORD)
+            return res.status(403).json({ error: 'Forbidden' });
+        const result = await processMatchesSettlement();
+        res.json(result);
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     const secretToken = req.headers['x-telegram-bot-api-secret-token'];
     if (!WEBHOOK_SECRET || secretToken !== WEBHOOK_SECRET) return res.sendStatus(403);
@@ -925,6 +1027,11 @@ app.use(express.json({ limit: '2mb' }));
 app.use(cookieParser());
 app.use(express.static(__dirname));
 
+app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store');
+    next();
+});
+
 app.post('/api/prepare-share', authenticate, async (req, res) => {
     try {
         const userId = req._userId;
@@ -971,183 +1078,17 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', time: getCurrentTi
 app.get('/api/config', (req, res) => res.json(APP_CONFIG));
 app.get('/api/current-time', (req, res) => res.json({ serverTime: getCurrentTime() }));
 
-app.post('/api/check-bot-admin', authenticate, async (req, res) => {
+app.get('/api/matches', authenticate, async (req, res) => {
     try {
-        const { channel } = req.body;
-        if (!channel) return res.status(400).json({ error: 'Channel required' });
-        res.json({ isAdmin: await checkBotIsAdminInChannel(channel) });
-    } catch (error) { res.status(500).json({ error: error.message }); }
-});
-
-app.post('/api/check-membership', authenticate, async (req, res) => {
-    try {
+        if (!APP_CONFIG.PREDICTIONS_ENABLED) return res.json({ matches: [], predictions_enabled: false, userPredictions: {} });
         const userId = req._userId;
-        const { channel } = req.body;
-        if (!channel) return res.status(400).json({ error: 'Channel required' });
-        if (!BOT_TOKEN) return res.json({ isMember: true });
-        const isAdmin = await checkBotIsAdminInChannel(channel);
-        if (!isAdmin) return res.json({ isMember: true, error: 'bot_not_admin' });
-        const isMember = await checkUserInChannel(userId, channel);
-        return res.json({ isMember });
-    } catch (error) {
-        return res.json({ isMember: true });
-    }
-});
-
-app.post('/api/auto-poster/verify', authenticate, strictLimiter, async (req, res) => {
-    try {
-        const userId = req._userId;
-        let { channel } = req.body;
-        if (!channel) return res.status(400).json({ error: 'Channel required' });
-        channel = channel.trim().replace(/^https?:\/\/t\.me\//, '').replace(/^@/, '').replace(/\/$/, '');
-        if (!channel) return res.status(400).json({ error: 'Invalid channel' });
-        const user = await getUser(userId);
-        if (!user) return res.status(404).json({ error: 'User not found' });
-        if (user.state === 'ban') return res.status(403).json({ error: 'Account banned' });
-
-        const canPost = await checkBotCanPostInChannel(channel);
-        if (!canPost) return res.status(400).json({ error: 'Bot is not admin with post permission in this channel' });
-
-        await updateUser(userId, {
-            auto_poster_channel: channel,
-            auto_poster_enabled: true,
-            auto_poster_added_at: getCurrentTime()
-        });
-        res.json({ success: true, channel, enabled: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.post('/api/auto-poster/remove', authenticate, strictLimiter, async (req, res) => {
-    try {
-        const userId = req._userId;
-        const user = await getUser(userId);
-        if (!user) return res.status(404).json({ error: 'User not found' });
-        await updateUser(userId, { auto_poster_channel: null, auto_poster_enabled: false });
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.post('/api/auth', strictLimiter, async (req, res) => {
-    try {
-        const { initData, userId, username, firstName, photoUrl, visitorId } = req.body;
-        if (!initData) return res.status(400).json({ error: 'Missing initData' });
-        const validation = validateTelegramInitData(initData, BOT_TOKEN);
-        if (!validation.valid) return res.status(403).json({ error: 'Invalid data' });
-        const telegramUser = validation.user;
-        if (!telegramUser || !telegramUser.id) return res.status(403).json({ error: 'No user' });
-
-        if (validation.queryId) {
-            const { data: usedQuery } = await supabase.from('used_query_ids').select('query_id').eq('query_id', validation.queryId).maybeSingle();
-            if (usedQuery) return res.status(403).json({ error: 'Session already used' });
-            try { await supabase.from('used_query_ids').insert([{ query_id: validation.queryId, used_at: getCurrentTime() }]); } catch (e) {}
-        }
-
-        let user = await getUser(telegramUser.id);
-
-        if (visitorId && !DEVICE_LOCK_WHITELIST.includes(telegramUser.id)) {
-            const { data: conflicting } = await supabase
-                .from('users')
-                .select('id')
-                .neq('id', telegramUser.id)
-                .contains('visitor_ids', JSON.stringify([visitorId]));
-            if (conflicting && conflicting.length > 0) {
-                return res.status(403).json({ error: 'device_already_linked' });
-            }
-        }
-
-        if (!user) {
-            const userData = {
-                id: telegramUser.id, username: telegramUser.username || '', first_name: telegramUser.first_name || 'User',
-                photo_url: photoUrl || telegramUser.photo_url || APP_CONFIG.DEFAULT_USER_AVATAR,
-                created_at: getCurrentTime(),
-                power_balance: 0, coin_balance: 0, gram_balance: 0,
-                referral_power_earnings: 0, referral_coin_earnings: 0,
-                level: 1, total_tasks_completed: 0, total_mining_starts: 0,
-                daily_mining_starts: 0, last_mining_date: '', last_mining_end_time: 0,
-                referral_reward_given: false, state: 'active', verified: true,
-                miner_id: null, miner_expires_at: null, owned_miners: [],
-                quests: { current_miner_quest_index: 0, current_task_quest_index: 0, current_referral_quest_index: 0 },
-                mining_active: false, mining_start_time: null, mining_end_time: null, pending_coin_reward: 0,
-                total_referrals: 0, referral_power: 0,
-                ad_watch_count: 0, ad_last_watch: 0, adexium_ad_last_watch: 0,
-                ad1_daily_count: 0, ad2_daily_count: 0, ad3_daily_count: 0, ad4_daily_count: 0, ad_daily_date: '',
-                last_withdraw_time: 0, referred_by_verified: false, wallet: null,
-                task_count: 0, promo_codes_created: 0, daily_bonus_last_claim: 0,
-                visitor_ids: visitorId ? [visitorId] : [],
-                auto_poster_channel: null, auto_poster_enabled: false, auto_poster_added_at: null,
-            };
-            try { user = await createUser(userData); } catch (e) { user = await getUser(telegramUser.id); if (!user) return res.status(500).json({ error: 'Failed' }); }
-        } else {
-            const updates = {};
-            if (telegramUser.username && telegramUser.username !== user.username) updates.username = telegramUser.username;
-            if (telegramUser.first_name && telegramUser.first_name !== user.first_name) updates.first_name = telegramUser.first_name;
-            if (photoUrl && photoUrl !== user.photo_url) updates.photo_url = photoUrl;
-            if (Object.keys(updates).length > 0) {
-                await updateUser(telegramUser.id, updates);
-                Object.assign(user, updates);
-            }
-        }
-        if (visitorId && user) {
-            const existing = Array.isArray(user.visitor_ids) ? user.visitor_ids : [];
-            if (!existing.includes(visitorId)) {
-                const newVisitorIds = [...existing, visitorId];
-                await updateUser(user.id, { visitor_ids: newVisitorIds });
-                user.visitor_ids = newVisitorIds;
-            }
-        }
-        if (user.state === 'ban') return res.status(403).json({ error: 'Account banned' });
-        const token = generateJWT(user.id, user.id);
-        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
-        res.json({ success: true, user, token, authenticated: true });
-    } catch (error) { res.status(500).json({ error: error.message }); }
-});
-
-app.post('/api/refresh', authenticate, async (req, res) => {
-    try {
-        const user = await getUser(req._userId);
-        if (!user) return res.status(404).json({ error: 'User not found' });
-        if (user.state === 'ban') return res.status(403).json({ error: 'Banned' });
-        const token = generateJWT(req._userId, req._userId);
-        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
-        res.json({ success: true, token });
-    } catch (error) { res.status(500).json({ error: error.message }); }
-});
-
-app.post('/api/get-user', authenticate, async (req, res) => {
-    try {
-        const userId = req._userId;
-        let user = await getUser(userId);
-        if (!user) return res.status(404).json({ error: 'User not found' });
-        if (user.state === 'ban') return res.status(403).json({ error: 'Account banned', banned: true });
-
-        const activeMiner = getUserActiveMiner(user);
-        if (activeMiner && activeMiner.id !== user.miner_id && user.miner_id) {
-            await updateUser(userId, { miner_id: activeMiner.id, miner_expires_at: null });
-            user.miner_id = activeMiner.id;
-            user.miner_expires_at = null;
-        }
-
-        const [completedTasks, withdrawals, userPredictions] = await Promise.all([
-            getCompletedTasks(userId),
-            getWithdrawals(userId),
-            getUserPredictions(userId)
-        ]);
-        await updateUserLevel(userId);
-        res.json({ user, completedTasks, withdrawals, userPredictions, serverTime: getCurrentTime() });
-    } catch (error) { res.status(500).json({ error: error.message }); }
-});
-
-app.get('/api/matches', async (req, res) => {
-    try {
-        if (!APP_CONFIG.PREDICTIONS_ENABLED) return res.json({ matches: [], predictions_enabled: false });
         const now = Date.now();
+        const userPredictions = await getUserPredictions(userId);
+
         const matches = (APP_CONFIG.MATCHES || []).map(m => {
             let displayStatus = m.status;
             let bettingEndsAt = null;
+            let bettingOpen = false;
 
             if (m.status === 'wait' || m.status === 'live') {
                 bettingEndsAt = getBettingEndsAt(m);
@@ -1155,7 +1096,10 @@ app.get('/api/matches', async (req, res) => {
                     const matchStart = new Date(m.match_date).getTime();
                     displayStatus = now < matchStart ? 'wait' : 'live';
                 }
+                bettingOpen = m.betting === true && (!bettingEndsAt || now < bettingEndsAt);
             }
+
+            const userPred = userPredictions[m.id];
 
             return {
                 id: m.id,
@@ -1164,13 +1108,17 @@ app.get('/api/matches', async (req, res) => {
                 team_a_logo: m.team_a_logo,
                 team_b_logo: m.team_b_logo,
                 status: displayStatus,
+                betting_open: bettingOpen,
                 match_date: m.match_date || null,
                 betting_ends_at: bettingEndsAt,
+                a_score: m.a_score ?? 0,
+                b_score: m.b_score ?? 0,
                 reward_coin: m.reward_coin || 0,
-                result: m.status === 'finished' ? m.result : null
+                reward_power: m.reward_power || 0,
+                user_pick: userPred ? { a: userPred.a, b: userPred.b, is_correct: userPred.is_correct, reward_amount: userPred.reward_amount } : null
             };
         });
-        res.json({ matches, predictions_enabled: true });
+        res.json({ matches, predictions_enabled: true, userPredictions });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
@@ -1179,21 +1127,24 @@ app.post('/api/predict', authenticate, strictLimiter, async (req, res) => {
         if (!APP_CONFIG.PREDICTIONS_ENABLED) return res.status(400).json({ error: 'Predictions disabled' });
 
         const userId = req._userId;
-        const { matchId, prediction } = req.body;
-        if (!['A', 'B'].includes(prediction)) return res.status(400).json({ error: 'Invalid pick' });
+        const { matchId, prediction_a, prediction_b } = req.body;
+        const a = parseInt(prediction_a);
+        const b = parseInt(prediction_b);
+        if (isNaN(a) || isNaN(b) || a < 0 || b < 0 || a > 10 || b > 10) return res.status(400).json({ error: 'Invalid score (0-10)' });
 
         const match = (APP_CONFIG.MATCHES || []).find(m => m.id === matchId);
         if (!match) return res.status(404).json({ error: 'Match not found' });
         if (match.status === 'finished') return res.status(400).json({ error: 'Match finished' });
+        if (match.betting !== true) return res.status(400).json({ error: 'Betting disabled' });
 
         const bettingEndsAt = getBettingEndsAt(match);
-        if (!bettingEndsAt) return res.status(400).json({ error: 'Betting not available' });
-        if (Date.now() >= bettingEndsAt) return res.status(400).json({ error: 'Betting closed' });
+        if (bettingEndsAt && Date.now() >= bettingEndsAt) return res.status(400).json({ error: 'Betting closed' });
 
         const { error } = await supabase.from('predictions').insert([{
             user_id: userId,
             match_id: matchId,
-            prediction,
+            prediction_a: a,
+            prediction_b: b,
             created_at: Date.now()
         }]);
 
@@ -1203,53 +1154,6 @@ app.post('/api/predict', authenticate, strictLimiter, async (req, res) => {
         }
 
         res.json({ success: true });
-    } catch (e) { res.status(500).json({ error: e.message }); }
-});
-
-app.post('/api/admin/matches/process', async (req, res) => {
-    try {
-        if (!process.env.ADMIN_PASSWORD || req.headers['x-admin-password'] !== process.env.ADMIN_PASSWORD)
-            return res.status(403).json({ error: 'Forbidden' });
-
-        const finishedMatches = (APP_CONFIG.MATCHES || []).filter(m => m.status === 'finished' && m.result);
-        let won = 0, lost = 0, processed = 0;
-
-        for (const m of finishedMatches) {
-            const { data: preds } = await supabase
-                .from('predictions')
-                .select('id, user_id, prediction')
-                .eq('match_id', m.id)
-                .is('is_correct', null);
-
-            for (const p of preds || []) {
-                const isCorrect = p.prediction === m.result;
-                const rewardAmount = isCorrect ? (m.reward_coin || 0) : 0;
-
-                await supabase.from('predictions').update({
-                    is_correct: isCorrect,
-                    reward_claimed: isCorrect,
-                    reward_amount: rewardAmount
-                }).eq('id', p.id);
-
-                if (isCorrect) {
-                    const user = await getUser(p.user_id);
-                    if (user) {
-                        await updateUser(p.user_id, { coin_balance: (user.coin_balance || 0) + rewardAmount });
-                    }
-                    await sendTelegramNotification(p.user_id, '🎉 Correct Prediction!',
-                        `<b>🎉 You won!</b>\n\n${m.team_a_name} vs ${m.team_b_name}\n💰 +${rewardAmount.toLocaleString()} COIN`,
-                        { text: '🎯 Open App', url: 'https://t.me/GramHtrsbot/app' });
-                    won++;
-                } else {
-                    await sendTelegramNotification(p.user_id, '❌ Prediction Lost',
-                        `<b>❌ Wrong prediction</b>\n\n${m.team_a_name} vs ${m.team_b_name}\nResult: ${m.result === 'A' ? m.team_a_name : m.team_b_name}`,
-                        { text: '🎯 Try again', url: 'https://t.me/GramHtrsbot/app' });
-                    lost++;
-                }
-                processed++;
-            }
-        }
-        res.json({ success: true, processed, won, lost });
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -1860,11 +1764,6 @@ setTimeout(() => { checkPendingWithdrawals(); }, 30000);
 setInterval(sendDailyBonusNotifications, 3600000);
 setInterval(sendMiningEndNotifications, 900000);
 scheduleAutoPoster();
-
-app.use((req, res, next) => {
-    res.setHeader('Cache-Control', 'no-store');
-    next();
-});
 
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
