@@ -33,6 +33,13 @@ const promoCodeLocks = new Map();
 const adCooldowns = new Map();
 let autoPosterLastRun = { '10': 0, '22': 0 };
 
+const tasksCache = {
+    main: { data: null, loadedAt: 0 },
+    partner: { data: null, loadedAt: 0 },
+    community: { data: null, loadedAt: 0 }
+};
+const TASKS_CACHE_TTL = 15 * 60 * 1000;
+
 function logFailure(endpoint, userId, ip, error, extra = {}) {
     console.error(`❌ [${endpoint}] FAILED`, JSON.stringify({ userId: userId || 'unknown', ip: ip || 'unknown', error: error?.message || error, ...extra }));
 }
@@ -192,49 +199,96 @@ const APP_CONFIG = {
     PAYMENTS_CHANNEL: "https://t.me/Hunters_Proof",
     LIVE_PAYMENTS_CHANNEL: "https://t.me/Hunters_Proof",
     TASK_REWARDS: {
-        main:      { coin: 200, power: 0 },
-        partner:   { coin: 100, power: 0 },
+        main:      { coin: 200, power: 100 },
+        partner:   { coin: 100, power: 50 },
         community: { coin: 200, power: 100 }
     },
     AUTO_POSTER_REWARD_PER_REFERRAL: 10,
     AUTO_POSTER_PROMO_REWARD: 200,
     AUTO_POSTER_POST_HOURS_UTC: [10, 22],
+    PREDICTIONS_ENABLED: true,
+    MATCHES: [
+        {
+            id: 'match_001',
+            team_a_name: 'Real Madrid',
+            team_b_name: 'Valencia',
+            team_a_logo: 'https://slho.shop/i/8224',
+            team_b_logo: 'https://slho.shop/i/8223',
+            status: 'wait',              
+            match_date: '2026-11-08T20:00:00Z',
+            betting_ends_hour_utc: 20, 
+            result: null,                
+            reward_coin: 50000
+        }
+    ],
     QUESTS: {
         miner_quests: [
-            { miner_id: "bronze", reward: 100 },
-            { miner_id: "silver", reward: 500 },
-            { miner_id: "gold", reward: 1000 },
-            { miner_id: "diamond", reward: 3000 },
-            { miner_id: "master", reward: 5000 },
-            { miner_id: "hunters", reward: 10000 }
+            { miner_id: "bronze", reward: 200 },
+            { miner_id: "silver", reward: 1000 },
+            { miner_id: "gold", reward: 2000 },
+            { miner_id: "diamond", reward: 6000 },
+            { miner_id: "master", reward: 10000 },
+            { miner_id: "hunters", reward: 20000 }
         ],
         task_quests: [
-            { target_tasks: 10, reward: 500 },
-            { target_tasks: 50, reward: 1000 },
-            { target_tasks: 100, reward: 2000 },
-            { target_tasks: 500, reward: 3000 },
-            { target_tasks: 1000, reward: 5000 }
+            { target_tasks: 10, reward: 1000 },
+            { target_tasks: 50, reward: 2000 },
+            { target_tasks: 100, reward: 4000 },
+            { target_tasks: 500, reward: 6000 },
+            { target_tasks: 1000, reward: 10000 }
         ],
         referral_quests: [
-            { target_referrals: 5, reward: 1000 },
-            { target_referrals: 10, reward: 2000 },
-            { target_referrals: 25, reward: 4000 },
-            { target_referrals: 50, reward: 7000 },
-            { target_referrals: 100, reward: 10000 },
-            { target_referrals: 250, reward: 15000 },
-            { target_referrals: 500, reward: 20000 },
-            { target_referrals: 1000, reward: 30000 }
+            { target_referrals: 5, reward: 2000 },
+            { target_referrals: 10, reward: 4000 },
+            { target_referrals: 25, reward: 8000 },
+            { target_referrals: 50, reward: 14000 },
+            { target_referrals: 100, reward: 20000 },
+            { target_referrals: 250, reward: 30000 },
+            { target_referrals: 500, reward: 40000 },
+            { target_referrals: 1000, reward: 60000 }
         ]
     },
     MINERS: [
-        { id: "bronze", name: "Bronze", speed_per_hour: 25, duration_days: 0, price_power: 0, color: "#CD7F32", gradient: "linear-gradient(135deg, #B87333, #8B4513, #6B3A1F)", logo: "https://slho.shop/i/8098", bg_icon: "🥉" },
-        { id: "silver", name: "Silver", speed_per_hour: 50, duration_days: 30, price_power: 10000, color: "#C0C0C0", gradient: "linear-gradient(135deg, #A8A8A8, #7A7A7A, #4A4A4A)", logo: "https://slho.shop/i/8097", bg_icon: "🥈" },
-        { id: "gold", name: "Gold", speed_per_hour: 250, duration_days: 30, price_power: 50000, color: "#FFD700", gradient: "linear-gradient(135deg, #B8860B, #8B6508, #5C4A05)", logo: "https://slho.shop/i/8096", bg_icon: "🥇" },
-        { id: "diamond", name: "Diamond", speed_per_hour: 500, duration_days: 30, price_power: 100000, color: "#00CED1", gradient: "linear-gradient(135deg, #008B8B, #005F5F, #003D3D)", logo: "https://slho.shop/i/8094", bg_icon: "💎" },
-        { id: "master", name: "Master", speed_per_hour: 2500, duration_days: 30, price_power: 500000, color: "#9400D3", gradient: "linear-gradient(135deg, #5B0087, #3D0059, #24003A)", logo: "https://slho.shop/i/8092", bg_icon: "⚡" },
-        { id: "hunters", name: "Hunters", speed_per_hour: 5000, duration_days: 30, price_power: 1000000, color: "#4A90D9", gradient: "linear-gradient(135deg, #2563EB, #1D4ED8, #0F2E7A)", logo: "https://slho.shop/i/8099", bg_icon: "🎯" }
+        { id: "bronze", name: "Bronze", speed_per_hour: 50, duration_days: 0, price_power: 0, color: "#CD7F32", gradient: "linear-gradient(135deg, #B87333, #8B4513, #6B3A1F)", logo: "https://slho.shop/i/8098", bg_icon: "🥉" },
+        { id: "silver", name: "Silver", speed_per_hour: 100, duration_days: 30, price_power: 10000, color: "#C0C0C0", gradient: "linear-gradient(135deg, #A8A8A8, #7A7A7A, #4A4A4A)", logo: "https://slho.shop/i/8097", bg_icon: "🥈" },
+        { id: "gold", name: "Gold", speed_per_hour: 500, duration_days: 30, price_power: 50000, color: "#FFD700", gradient: "linear-gradient(135deg, #B8860B, #8B6508, #5C4A05)", logo: "https://slho.shop/i/8096", bg_icon: "🥇" },
+        { id: "diamond", name: "Diamond", speed_per_hour: 1000, duration_days: 30, price_power: 100000, color: "#00CED1", gradient: "linear-gradient(135deg, #008B8B, #005F5F, #003D3D)", logo: "https://slho.shop/i/8094", bg_icon: "💎" },
+        { id: "master", name: "Master", speed_per_hour: 5000, duration_days: 30, price_power: 500000, color: "#9400D3", gradient: "linear-gradient(135deg, #5B0087, #3D0059, #24003A)", logo: "https://slho.shop/i/8092", bg_icon: "⚡" },
+        { id: "hunters", name: "Hunters", speed_per_hour: 10000, duration_days: 30, price_power: 1000000, color: "#4A90D9", gradient: "linear-gradient(135deg, #2563EB, #1D4ED8, #0F2E7A)", logo: "https://slho.shop/i/8099", bg_icon: "🎯" }
     ]
 };
+
+function getBettingEndsAt(match) {
+    if (!match.match_date || match.betting_ends_hour_utc === undefined || match.betting_ends_hour_utc === null) return null;
+    const md = new Date(match.match_date);
+    return Date.UTC(md.getUTCFullYear(), md.getUTCMonth(), md.getUTCDate(), match.betting_ends_hour_utc, 0, 0);
+}
+
+async function getTasksFromCache(category) {
+    const cache = tasksCache[category];
+    const now = Date.now();
+    if (cache.data && (now - cache.loadedAt) < TASKS_CACHE_TTL) return cache.data;
+    try {
+        const { data, error } = await supabase
+            .from('tasks')
+            .select('id, name, url, category, total, total_completed, verification, created_at, owner')
+            .eq('category', category)
+            .eq('status', 'active')
+            .limit(500);
+        if (error) throw error;
+        const filtered = (data || []).filter(t => (t.total_completed || 0) < t.total);
+        tasksCache[category] = { data: filtered, loadedAt: now };
+        return filtered;
+    } catch (e) {
+        if (cache.data) return cache.data;
+        return [];
+    }
+}
+
+function invalidateTasksCache(category = null) {
+    if (category) tasksCache[category] = { data: null, loadedAt: 0 };
+    else Object.keys(tasksCache).forEach(k => tasksCache[k] = { data: null, loadedAt: 0 });
+}
 
 function getUserActiveMiner(user) {
     if (!user.miner_id) return APP_CONFIG.MINERS.find(m => m.id === 'bronze');
@@ -330,14 +384,10 @@ async function updateUser(userId, updates) {
 
 async function getTasks(category, userId) {
     try {
-        let query = supabase.from('tasks').select('*');
-        if (category) query = query.eq('category', category);
-        query = query.limit(100);
-        const { data: tasks, error } = await query;
-        if (error) throw error;
+        const allTasks = await getTasksFromCache(category);
         const { data: completed } = await supabase.from('user_completed_tasks').select('task_id').eq('user_id', userId);
         const completedIds = new Set(completed?.map(t => t.task_id) || []);
-        return tasks.filter(task => !completedIds.has(task.id) && (task.total_completed || 0) < task.total) || [];
+        return allTasks.filter(task => !completedIds.has(task.id));
     } catch (error) { return []; }
 }
 
@@ -347,6 +397,16 @@ async function getCompletedTasks(userId) {
         if (error) throw error;
         return data ? data.map(t => t.task_id) : [];
     } catch (error) { return []; }
+}
+
+async function getUserPredictions(userId) {
+    try {
+        const { data, error } = await supabase.from('predictions').select('match_id, prediction, is_correct, reward_claimed, reward_amount').eq('user_id', userId);
+        if (error) throw error;
+        const map = {};
+        (data || []).forEach(p => { map[p.match_id] = p.prediction; });
+        return map;
+    } catch (error) { return {}; }
 }
 
 async function getWithdrawals(userId) {
@@ -771,7 +831,7 @@ async function runAutoPosterCycle() {
                 );
             }
             await new Promise(r => setTimeout(r, 100));
-            } 
+        }
         console.log(`📢 Auto poster cycle: sent=${sentCount} removed=${removedCount} promo=${promo.code}`);
     } catch (error) {
         logFailure('runAutoPosterCycle', null, null, error);
@@ -802,17 +862,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     try {
         const update = JSON.parse(req.body.toString('utf8'));
         if (update.my_chat_member) {
-            const member = update.my_chat_member;
-            const chat = member.chat;
-            const newStatus = member.new_chat_member?.status;
-            if (chat && (chat.type === 'channel' || chat.type === 'supergroup')) {
-                if (newStatus === 'administrator' || newStatus === 'member') {
-                    const { data: foundUsers } = await supabase
-                        .from('users')
-                        .select('id')
-                        .eq('auto_poster_pending_channel', chat.username || '');
-                }
-            }
             return res.sendStatus(200);
         }
         if (update.inline_query) {
@@ -1082,10 +1131,126 @@ app.post('/api/get-user', authenticate, async (req, res) => {
             user.miner_expires_at = null;
         }
 
-        const [completedTasks, withdrawals] = await Promise.all([getCompletedTasks(userId), getWithdrawals(userId)]);
+        const [completedTasks, withdrawals, userPredictions] = await Promise.all([
+            getCompletedTasks(userId),
+            getWithdrawals(userId),
+            getUserPredictions(userId)
+        ]);
         await updateUserLevel(userId);
-        res.json({ user, completedTasks, withdrawals, serverTime: getCurrentTime() });
+        res.json({ user, completedTasks, withdrawals, userPredictions, serverTime: getCurrentTime() });
     } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.get('/api/matches', async (req, res) => {
+    try {
+        if (!APP_CONFIG.PREDICTIONS_ENABLED) return res.json({ matches: [], predictions_enabled: false });
+        const now = Date.now();
+        const matches = (APP_CONFIG.MATCHES || []).map(m => {
+            let displayStatus = m.status;
+            let bettingEndsAt = null;
+
+            if (m.status === 'wait' || m.status === 'live') {
+                bettingEndsAt = getBettingEndsAt(m);
+                if (m.match_date) {
+                    const matchStart = new Date(m.match_date).getTime();
+                    displayStatus = now < matchStart ? 'wait' : 'live';
+                }
+            }
+
+            return {
+                id: m.id,
+                team_a_name: m.team_a_name,
+                team_b_name: m.team_b_name,
+                team_a_logo: m.team_a_logo,
+                team_b_logo: m.team_b_logo,
+                status: displayStatus,
+                match_date: m.match_date || null,
+                betting_ends_at: bettingEndsAt,
+                reward_coin: m.reward_coin || 0,
+                result: m.status === 'finished' ? m.result : null
+            };
+        });
+        res.json({ matches, predictions_enabled: true });
+    } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.post('/api/predict', authenticate, strictLimiter, async (req, res) => {
+    try {
+        if (!APP_CONFIG.PREDICTIONS_ENABLED) return res.status(400).json({ error: 'Predictions disabled' });
+
+        const userId = req._userId;
+        const { matchId, prediction } = req.body;
+        if (!['A', 'B'].includes(prediction)) return res.status(400).json({ error: 'Invalid pick' });
+
+        const match = (APP_CONFIG.MATCHES || []).find(m => m.id === matchId);
+        if (!match) return res.status(404).json({ error: 'Match not found' });
+        if (match.status === 'finished') return res.status(400).json({ error: 'Match finished' });
+
+        const bettingEndsAt = getBettingEndsAt(match);
+        if (!bettingEndsAt) return res.status(400).json({ error: 'Betting not available' });
+        if (Date.now() >= bettingEndsAt) return res.status(400).json({ error: 'Betting closed' });
+
+        const { error } = await supabase.from('predictions').insert([{
+            user_id: userId,
+            match_id: matchId,
+            prediction,
+            created_at: Date.now()
+        }]);
+
+        if (error) {
+            if (error.code === '23505') return res.status(400).json({ error: 'Already predicted' });
+            throw error;
+        }
+
+        res.json({ success: true });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/admin/matches/process', async (req, res) => {
+    try {
+        if (!process.env.ADMIN_PASSWORD || req.headers['x-admin-password'] !== process.env.ADMIN_PASSWORD)
+            return res.status(403).json({ error: 'Forbidden' });
+
+        const finishedMatches = (APP_CONFIG.MATCHES || []).filter(m => m.status === 'finished' && m.result);
+        let won = 0, lost = 0, processed = 0;
+
+        for (const m of finishedMatches) {
+            const { data: preds } = await supabase
+                .from('predictions')
+                .select('id, user_id, prediction')
+                .eq('match_id', m.id)
+                .is('is_correct', null);
+
+            for (const p of preds || []) {
+                const isCorrect = p.prediction === m.result;
+                const rewardAmount = isCorrect ? (m.reward_coin || 0) : 0;
+
+                await supabase.from('predictions').update({
+                    is_correct: isCorrect,
+                    reward_claimed: isCorrect,
+                    reward_amount: rewardAmount
+                }).eq('id', p.id);
+
+                if (isCorrect) {
+                    const user = await getUser(p.user_id);
+                    if (user) {
+                        await updateUser(p.user_id, { coin_balance: (user.coin_balance || 0) + rewardAmount });
+                    }
+                    await sendTelegramNotification(p.user_id, '🎉 Correct Prediction!',
+                        `<b>🎉 You won!</b>\n\n${m.team_a_name} vs ${m.team_b_name}\n💰 +${rewardAmount.toLocaleString()} COIN`,
+                        { text: '🎯 Open App', url: 'https://t.me/GramHtrsbot/app' });
+                    won++;
+                } else {
+                    await sendTelegramNotification(p.user_id, '❌ Prediction Lost',
+                        `<b>❌ Wrong prediction</b>\n\n${m.team_a_name} vs ${m.team_b_name}\nResult: ${m.result === 'A' ? m.team_a_name : m.team_b_name}`,
+                        { text: '🎯 Try again', url: 'https://t.me/GramHtrsbot/app' });
+                    lost++;
+                }
+                processed++;
+            }
+        }
+        res.json({ success: true, processed, won, lost });
+    } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.post('/api/get-live-withdrawals', authenticate, async (req, res) => {
@@ -1128,7 +1293,7 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
         if (!user.referred_by_verified && user.referred_by) {
             const referrer = await getUser(user.referred_by);
             if (referrer) {
-                const bonusCoin = 5000;
+                const bonusCoin = APP_CONFIG.REFERRAL_REWARD_COIN || 5000;
                 await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, referral_coin_earnings: (referrer.referral_coin_earnings || 0) + bonusCoin });
                 await updateUser(userId, { referred_by_verified: true });
                 await sendTelegramNotification(
@@ -1271,9 +1436,9 @@ app.post('/api/claim-quest', authenticate, strictLimiter, async (req, res) => {
             reward = quest.reward; newIndex = index + 1; quests.current_referral_quest_index = newIndex;
         } else return res.status(400).json({ error: 'Invalid type' });
 
-        const updatedUser = await updateUser(userId, { power_balance: (user.power_balance || 0) + reward, quests });
+        const updatedUser = await updateUser(userId, { coin_balance: (user.coin_balance || 0) + reward, quests });
         await updateUserLevel(userId);
-        await checkLargeTransaction(userId, reward, 'Quest Power');
+        await checkLargeTransaction(userId, reward, 'Quest COIN');
         res.json({ success: true, user: updatedUser, reward, questType, questIndex: newIndex });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -1306,6 +1471,7 @@ app.post('/api/complete-task', authenticate, strictLimiter, async (req, res) => 
         setTaskCompletionCooldown(userId);
         await supabase.from('tasks').update({ total_completed: (task.total_completed || 0) + 1 }).eq('id', taskId);
         await supabase.from('user_completed_tasks').insert([{ user_id: userId, task_id: taskId, completed_at: getCurrentTime() }]);
+        invalidateTasksCache(task.category);
 
         const category = task.category || 'main';
         const rewardConf = APP_CONFIG.TASK_REWARDS[category] || { coin: 0, power: 0 };
@@ -1353,7 +1519,7 @@ app.post('/api/watch-ad-1', authenticate, strictLimiter, async (req, res) => {
         if (dailyCount >= APP_CONFIG.AD_DAILY_LIMIT) return res.status(400).json({ error: 'Daily limit reached' });
 
         const powerReward = APP_CONFIG.AD_REWARD_POWER || 50;
-        const coinReward = APP_CONFIG.AD_REWARD_COIN || 20;
+        const coinReward = APP_CONFIG.AD_REWARD_COIN || 50;
 
         const updatedUser = await updateUser(userId, {
             power_balance: (user.power_balance || 0) + powerReward,
@@ -1397,7 +1563,7 @@ app.post('/api/watch-ad-2', authenticate, strictLimiter, async (req, res) => {
         if (dailyCount >= APP_CONFIG.AD_DAILY_LIMIT) return res.status(400).json({ error: 'Daily limit reached' });
 
         const powerReward = APP_CONFIG.AD_REWARD_POWER || 50;
-        const coinReward = APP_CONFIG.AD_REWARD_COIN || 20;
+        const coinReward = APP_CONFIG.AD_REWARD_COIN || 50;
 
         const updatedUser = await updateUser(userId, {
             power_balance: (user.power_balance || 0) + powerReward,
@@ -1432,7 +1598,7 @@ app.post('/api/claim-daily-bonus', authenticate, strictLimiter, async (req, res)
         const lastClaimDate = lastClaim ? new Date(lastClaim).toISOString().split('T')[0] : '';
         if (lastClaimDate === today) return res.status(400).json({ error: 'Already claimed today' });
 
-        const coinReward = APP_CONFIG.DAILY_BONUS_COIN || 100;
+        const coinReward = APP_CONFIG.DAILY_BONUS_COIN || 250;
         const updatedUser = await updateUser(userId, { coin_balance: (user.coin_balance || 0) + coinReward, daily_bonus_last_claim: now });
         await checkLargeTransaction(userId, coinReward, 'Daily Bonus COIN');
         res.json({ success: true, user: updatedUser, coinReward });
@@ -1538,12 +1704,13 @@ app.post('/api/delete-task', authenticate, async (req, res) => {
     try {
         const userId = req._userId;
         const { taskId } = req.body;
-        const { data: task } = await supabase.from('tasks').select('owner, total, total_completed').eq('id', taskId).single();
+        const { data: task } = await supabase.from('tasks').select('owner, total, total_completed, category').eq('id', taskId).single();
         if (!task) return res.status(404).json({ error: 'Not found' });
         if (task.owner !== userId) return res.status(403).json({ error: 'Not authorized' });
         if ((task.total_completed || 0) < task.total) return res.status(400).json({ error: 'Not completed' });
         await supabase.from('tasks').delete().eq('id', taskId);
         await supabase.from('user_completed_tasks').delete().eq('task_id', taskId);
+        invalidateTasksCache(task.category);
         res.json({ success: true });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -1600,21 +1767,16 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
         const { data: taskResult, error: taskError } = await supabase.from('tasks').insert([taskToAdd]).select().single();
         if (taskError) return res.status(500).json({ error: 'Failed' });
 
+        invalidateTasksCache('community');
         await updateUser(userId, { task_count: (user.task_count || 0) + 1 });
         await supabase.from('confirmed_memos').insert([{ memo, user_id: userId, used_at: getCurrentTime() }]);
 
-        const rewards = APP_CONFIG.TASK_REWARDS.community;
-        let rewardText = '';
-        if (rewards.power > 0 && rewards.coin > 0) rewardText = `${rewards.power} POWER + ${rewards.coin} COIN`;
-        else if (rewards.coin > 0) rewardText = `${rewards.coin} COIN`;
-        else if (rewards.power > 0) rewardText = `${rewards.power} POWER`;
-        
-        const taskChannelMsg = `⚡ <b>NEW TASK AVAILABLE!</b>\n\n` +
+        const taskChannelMsg = `⚡ <b>NEW TASK AVAILABLE</b>\n\n` +
             `📋 <b>Name: ${taskData.name}</b>\n` +
             `ℹ️ <b>Category: Community</b>\n` +
             `✅ <b>Available for ${taskData.total} completion</b>`;
         await sendChannelNotification(APP_CONFIG.TASKS_CHANNEL, taskChannelMsg, { text: '⚡ Complete Now', url: 'https://t.me/GramHtrsbot/app' });
-        
+
         res.json({ success: true, task: taskResult, message: 'Task added' });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -1691,22 +1853,6 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
 app.post('/api/get-withdrawals', authenticate, async (req, res) => {
     try { res.json({ withdrawals: await getWithdrawals(req._userId) }); }
     catch (error) { res.status(500).json({ error: error.message }); }
-});
-
-app.post('/api/usl-callback', express.raw({ type: 'application/json' }), async (req, res) => {
-    try {
-        const signature = req.headers['x-usl-signature'];
-        const timestamp = req.headers['x-usl-timestamp'];
-        const secret = process.env.USL_CALLBACK_SECRET;
-        if (!secret) return res.status(500).send('Not configured');
-        if (!signature || !timestamp) return res.status(401).send('Missing signature');
-        const rawBody = req.body.toString('utf8');
-        const expectedSig = crypto.createHmac('sha256', secret).update(`${timestamp}.${rawBody}`).digest('base64url');
-        if (signature !== expectedSig) return res.status(401).send('Invalid signature');
-        const data = JSON.parse(rawBody);
-        console.log('✅ USL reward confirmed (audit only):', data);
-        res.sendStatus(200);
-    } catch (e) { res.sendStatus(500); }
 });
 
 setInterval(async () => { await checkPendingWithdrawals(); }, 300000);
