@@ -185,32 +185,56 @@ body {
 
 .predictions-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
 .prediction-card { background: var(--bg-card); backdrop-filter: blur(12px); border-radius: var(--border-radius); padding: 16px; border: 1px solid rgba(74, 144, 217, 0.15); transition: all 0.2s; }
-.prediction-card.locked { opacity: 0.85; }
+.prediction-card.locked { opacity: 0.95; }
 .prediction-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 8px; flex-wrap: wrap; }
-.prediction-status { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.3px; display: inline-flex; align-items: center; gap: 4px; }
+.prediction-status { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.3px; display: inline-flex; align-items: center; gap: 6px; }
 .prediction-status.wait { background: rgba(243, 156, 18, 0.15); color: var(--warning); }
-.prediction-status.live { background: rgba(231, 76, 60, 0.15); color: var(--error); animation: pulseLive 1.5s ease-in-out infinite; }
+.prediction-status.live { background: rgba(231, 76, 60, 0.15); color: var(--error); }
 .prediction-status.closed { background: rgba(149, 165, 166, 0.15); color: #95a5a6; }
 .prediction-status.finished { background: rgba(46, 204, 113, 0.15); color: var(--success); }
-@keyframes pulseLive { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-.prediction-reward { font-size: 0.7rem; color: var(--primary-light); font-weight: 800; display: flex; align-items: center; gap: 4px; }
-.prediction-teams { display: flex; align-items: center; gap: 10px; }
-.team-pick-btn { flex: 1; background: rgba(0, 0, 0, 0.3); border: 2px solid rgba(74, 144, 217, 0.15); border-radius: var(--border-radius-sm); padding: 12px 8px; color: #fff; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: all 0.2s; }
-.team-pick-btn:not([disabled]):active { transform: scale(0.97); }
-.team-pick-btn:not([disabled]):hover { border-color: var(--primary); background: rgba(74, 144, 217, 0.1); }
-.team-pick-btn[disabled] { cursor: not-allowed; opacity: 0.7; }
-.team-pick-btn.picked { border-color: var(--success); background: rgba(46, 204, 113, 0.1); }
-.team-pick-btn.winner { border-color: #FFD700; background: rgba(255, 215, 0, 0.1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
-.team-pick-btn img { width: 44px; height: 44px; object-fit: contain; border-radius: 50%; background: rgba(0, 0, 0, 0.2); padding: 4px; }
-.team-pick-btn .team-name { font-size: 0.75rem; font-weight: 700; text-align: center; line-height: 1.2; color: var(--primary-light); }
-.team-pick-btn .winner-label { font-size: 0.55rem; color: #FFD700; font-weight: 800; letter-spacing: 0.3px; }
-.prediction-vs { font-size: 0.7rem; font-weight: 900; color: #666; letter-spacing: 1px; flex-shrink: 0; }
+.live-dot { display: inline-block; width: 8px; height: 8px; background: var(--error); border-radius: 50%; animation: pulseDot 1.2s ease-in-out infinite; }
+@keyframes pulseDot {
+    0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 var(--error); }
+    50% { transform: scale(1.3); opacity: 0.7; box-shadow: 0 0 10px 4px rgba(231, 76, 60, 0.6); }
+}
+.prediction-rewards-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.prediction-reward-badge { background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(243, 156, 18, 0.1)); border: 1px solid rgba(255, 215, 0, 0.3); padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; color: #FFD700; display: inline-flex; align-items: center; gap: 4px; }
+.prediction-reward-badge i { animation: starTwinkle 2s ease-in-out infinite; }
+@keyframes starTwinkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.15); }
+}
+.prediction-main-teams { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 14px 0; }
+.main-team { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.main-team-logo { width: 56px; height: 56px; object-fit: contain; border-radius: 50%; background: rgba(0, 0, 0, 0.25); padding: 6px; border: 2px solid rgba(74, 144, 217, 0.2); }
+.main-team-name { font-size: 0.7rem; font-weight: 700; color: var(--primary-light); text-align: center; line-height: 1.2; }
+.main-team-vs { font-size: 0.8rem; font-weight: 900; color: #666; letter-spacing: 1px; flex-shrink: 0; }
+.prediction-main-score { font-family: 'Orbitron', monospace; font-size: 1.6rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--theme-glow); flex-shrink: 0; }
+.prediction-score-inputs { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 14px 0; }
+.score-input-box { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; background: rgba(74, 144, 217, 0.08); border: 2px solid rgba(74, 144, 217, 0.15); border-radius: 16px; padding: 10px 6px; }
+.score-controls { display: flex; align-items: center; gap: 6px; }
+.score-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--theme-gradient); color: #fff; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px var(--theme-glow); flex-shrink: 0; }
+.score-btn:active { transform: scale(0.9); }
+.score-input { width: 44px; height: 44px; text-align: center; font-size: 1.4rem; font-weight: 900; color: var(--primary-light); background: rgba(0, 0, 0, 0.4); border: 2px solid rgba(74, 144, 217, 0.25); border-radius: 12px; font-family: 'Orbitron', monospace; outline: none; }
+.score-input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--theme-glow); }
+.score-input:disabled { opacity: 0.6; cursor: not-allowed; }
+.score-vs { font-size: 1.2rem; font-weight: 900; color: #666; flex-shrink: 0; }
+.predict-submit-btn { width: 100%; padding: 12px; margin-top: 6px; background: var(--theme-gradient); border: none; border-radius: 40px; color: #fff; font-weight: 800; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 20px var(--theme-glow); transition: all 0.2s; }
+.predict-submit-btn:active { transform: scale(0.97); }
+.predict-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .prediction-betting-ends { text-align: center; margin-top: 10px; font-size: 0.65rem; color: #888; font-family: 'Courier New', monospace; }
 .prediction-countdown { color: var(--primary-light); font-weight: 800; }
-.prediction-picked-info { text-align: center; margin-top: 10px; font-size: 0.7rem; color: var(--success); font-weight: 700; }
-.prediction-result { text-align: center; margin-top: 8px; padding: 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; }
-.prediction-result.won { background: rgba(46, 204, 113, 0.15); color: var(--success); }
-.prediction-result.lost { background: rgba(231, 76, 60, 0.15); color: var(--error); }
+.prediction-user-pick { margin-top: 12px; padding: 12px; background: rgba(74, 144, 217, 0.08); border-radius: 14px; border: 1px solid rgba(74, 144, 217, 0.15); text-align: center; }
+.prediction-user-pick.won { background: rgba(46, 204, 113, 0.08); border-color: rgba(46, 204, 113, 0.25); }
+.prediction-user-pick.lost { background: rgba(231, 76, 60, 0.08); border-color: rgba(231, 76, 60, 0.25); }
+.pick-label { font-size: 0.6rem; color: #888; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
+.pick-teams { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px; }
+.pick-mini-logo { width: 26px; height: 26px; object-fit: contain; border-radius: 50%; background: rgba(0, 0, 0, 0.2); padding: 2px; }
+.pick-sep { font-weight: 900; color: #666; }
+.pick-score { font-family: 'Orbitron', monospace; font-size: 1.3rem; font-weight: 900; color: var(--primary-light); letter-spacing: 2px; }
+.pick-result { margin-top: 8px; font-size: 0.72rem; font-weight: 800; }
+.prediction-user-pick.won .pick-result { color: var(--success); }
+.prediction-user-pick.lost .pick-result { color: var(--error); }
 
 .daily-bonus-card { background: var(--theme-gradient); border-radius: var(--border-radius); padding: 18px 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 14px; box-shadow: 0 8px 32px var(--theme-glow); position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.2); }
 .daily-bonus-card::before { content: '🎁'; position: absolute; top: -20px; right: -10px; font-size: 80px; opacity: 0.1; pointer-events: none; }
@@ -400,8 +424,10 @@ body {
     .miner-stats-row { grid-template-columns: 1fr 1fr; }
     .task-tab { font-size: 0.65rem; padding: 9px 4px; }
     .task-tab-badge { font-size: 0.55rem; padding: 1px 5px; }
-    .team-pick-btn img { width: 36px; height: 36px; }
-    .team-pick-btn .team-name { font-size: 0.65rem; }
+    .main-team-logo { width: 48px; height: 48px; }
+    .prediction-main-score { font-size: 1.3rem; }
+    .score-input { width: 38px; height: 38px; font-size: 1.2rem; }
+    .score-btn { width: 28px; height: 28px; font-size: 1rem; }
 }
 
 .mining-logo-wrapper {
@@ -441,4 +467,4 @@ body {
         transform: scale(1.08);
         filter: drop-shadow(0 0 30px var(--theme-glow)) brightness(1.4);
     }
-    }
+}
