@@ -1861,6 +1861,11 @@ setInterval(sendDailyBonusNotifications, 3600000);
 setInterval(sendMiningEndNotifications, 900000);
 scheduleAutoPoster();
 
+app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store');
+    next();
+});
+
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, '0.0.0.0', () => console.log(`🎯 GRAM HUNTERS on port ${PORT}`));
 server.on('error', (error) => console.error('Server error:', error));
