@@ -78,17 +78,18 @@ const translations = {
         status_betting_closed: "Betting Closed",
         vs: "VS",
         reward_label: "Reward",
-        pick_team_a: "Pick {team}",
-        pick_team_b: "Pick {team}",
+        your_prediction: "Your Prediction",
+        confirm_prediction: "Confirm Prediction",
         already_predicted: "Already Predicted",
         prediction_saved: "Prediction Saved!",
         prediction_locked: "Cannot change prediction",
         predictions_disabled: "Predictions disabled",
         winner_label: "WINNER",
         prediction_lost: "Wrong prediction",
-        prediction_won: "Correct prediction!",
+        prediction_won: "Correct!",
         match_result: "Result",
-        betting_ends: "Betting ends in"
+        betting_ends: "Betting ends in",
+        betting_disabled: "Betting Disabled"
     },
     ar: {
         power: "قوة", coin: "عملة", gram: "جرام", claim: "استلام", watch: "مشاهدة",
@@ -169,8 +170,8 @@ const translations = {
         status_betting_closed: "إغلاق التوقع",
         vs: "ضد",
         reward_label: "المكافأة",
-        pick_team_a: "اختر {team}",
-        pick_team_b: "اختر {team}",
+        your_prediction: "توقعك",
+        confirm_prediction: "تأكيد التوقع",
         already_predicted: "تم التوقع مسبقاً",
         prediction_saved: "تم حفظ التوقع!",
         prediction_locked: "لا يمكن تغيير التوقع",
@@ -179,7 +180,8 @@ const translations = {
         prediction_lost: "توقع خاطئ",
         prediction_won: "توقع صحيح!",
         match_result: "النتيجة",
-        betting_ends: "ينتهي التوقع في"
+        betting_ends: "ينتهي التوقع في",
+        betting_disabled: "التوقع مغلق"
     },
     ru: {
         power: "Мощность", coin: "МОНЕТА", gram: "GRAM", claim: "Забрать", watch: "Смотреть",
@@ -260,8 +262,8 @@ const translations = {
         status_betting_closed: "Приём закрыт",
         vs: "ПРОТИВ",
         reward_label: "Награда",
-        pick_team_a: "Выбрать {team}",
-        pick_team_b: "Выбрать {team}",
+        your_prediction: "Ваш прогноз",
+        confirm_prediction: "Подтвердить",
         already_predicted: "Уже спрогнозировано",
         prediction_saved: "Прогноз сохранён!",
         prediction_locked: "Нельзя изменить прогноз",
@@ -270,7 +272,8 @@ const translations = {
         prediction_lost: "Неверный прогноз",
         prediction_won: "Верный прогноз!",
         match_result: "Результат",
-        betting_ends: "Приём заканчивается через"
+        betting_ends: "Приём заканчивается через",
+        betting_disabled: "Приём закрыт"
     },
     fa: {
         power: "قدرت", coin: "سکه", gram: "گرم", claim: "دریافت", watch: "تماشا",
@@ -351,8 +354,8 @@ const translations = {
         status_betting_closed: "بسته شده",
         vs: "در برابر",
         reward_label: "پاداش",
-        pick_team_a: "انتخاب {team}",
-        pick_team_b: "انتخاب {team}",
+        your_prediction: "پیش‌بینی شما",
+        confirm_prediction: "تأیید",
         already_predicted: "قبلاً پیش‌بینی شده",
         prediction_saved: "پیش‌بینی ذخیره شد!",
         prediction_locked: "نمی‌توان تغییر داد",
@@ -361,7 +364,8 @@ const translations = {
         prediction_lost: "پیش‌بینی اشتباه",
         prediction_won: "پیش‌بینی صحیح!",
         match_result: "نتیجه",
-        betting_ends: "پایان پیش‌بینی در"
+        betting_ends: "پایان پیش‌بینی در",
+        betting_disabled: "بسته شده"
     }
 };
 
@@ -1328,7 +1332,13 @@ class App {
 
     async loadPredictions() {
         try {
-            const result = await this.fetchFromServer('/api/matches', {});
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
+            const headers = {};
+            if (this.jwtToken) headers['Authorization'] = `Bearer ${this.jwtToken}`;
+            const response = await fetch(`${this.serverUrl}/api/matches`, { headers, signal: controller.signal });
+            clearTimeout(timeoutId);
+            const result = await response.json();
             if (result.matches) {
                 this.predictions = result.matches;
                 if (result.userPredictions) this.userPredictions = result.userPredictions;
@@ -1360,76 +1370,148 @@ class App {
             </div>
         `;
 
-        container.querySelectorAll('.team-pick-btn:not([disabled])').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const matchId = btn.dataset.matchId;
-                const pick = btn.dataset.pick;
-                btn.disabled = true;
-                const r = await this.fetchFromServer('/api/predict', { matchId, prediction: pick });
-                if (r.error) {
-                    this.showNotification('Error', r.error, 'error');
-                    this.vibrate('error');
-                } else {
-                    this.showNotification(this.t('prediction_saved'), '', 'success');
-                    this.vibrate('success');
-                    this.userPredictions[matchId] = pick;
-                }
-                this.renderPredictionsSection();
-            });
-        });
-
+        this.attachPredictionHandlers();
         this.startPredictionCountdowns();
     }
 
     renderPredictionCard(m) {
         const now = this.getCurrentTime();
-        const userPick = this.userPredictions[m.id];
-        const isClosed = m.betting_ends_at && now >= m.betting_ends_at;
+        const userPick = this.userPredictions[m.id] || m.user_pick;
         const isFinished = m.status === 'finished';
-        const canPredict = !isClosed && !isFinished && !userPick;
-        const winnerA = isFinished && m.result === 'A';
-        const winnerB = isFinished && m.result === 'B';
+        const isLive = m.status === 'live' && !isFinished;
+        const bettingClosed = !m.betting_open;
+        const canPredict = !bettingClosed && !isFinished && !userPick;
+
+        const rewardBadges = `
+            <div class="prediction-rewards-badges">
+                ${m.reward_coin > 0 ? `<span class="prediction-reward-badge"><img src="${this.config.COIN_ICON}" style="width:12px;height:12px;border-radius:50%;"> ${this.formatNumber(m.reward_coin)}</span>` : ''}
+                ${m.reward_power > 0 ? `<span class="prediction-reward-badge"><i class="fas fa-bolt"></i> ${this.formatNumber(m.reward_power)}</span>` : ''}
+            </div>
+        `;
 
         let statusLabel = '';
-        let countdownTarget = null;
-        let countdownType = '';
-        if (isFinished) {
-            statusLabel = `<span class="prediction-status finished">✅ ${this.t('status_finished')}</span>`;
-        } else if (m.status === 'wait') {
-            statusLabel = `<span class="prediction-status wait">⏳ ${this.t('status_wait')} <span class="prediction-countdown" data-until="${new Date(m.match_date).getTime()}"></span></span>`;
-        } else if (isClosed) {
-            statusLabel = `<span class="prediction-status closed">🔒 ${this.t('status_betting_closed')}</span>`;
-        } else if (m.status === 'live') {
-            statusLabel = `<span class="prediction-status live">🔴 ${this.t('status_live')}</span>`;
+        if (isFinished) statusLabel = `<span class="prediction-status finished">✅ ${this.t('status_finished')}</span>`;
+        else if (isLive) statusLabel = `<span class="prediction-status live"><span class="live-dot"></span>${this.t('status_live')}</span>`;
+        else if (m.status === 'wait') statusLabel = `<span class="prediction-status wait">⏳ ${this.t('status_wait')} <span class="prediction-countdown" data-until="${new Date(m.match_date).getTime()}"></span></span>`;
+        else if (bettingClosed) statusLabel = `<span class="prediction-status closed">🔒 ${this.t('status_betting_closed')}</span>`;
+
+        const mainTeams = `
+            <div class="prediction-main-teams">
+                <div class="main-team">
+                    <img src="${m.team_a_logo}" class="main-team-logo" onerror="this.src='${this.config.COIN_ICON}'">
+                    <span class="main-team-name">${m.team_a_name}</span>
+                </div>
+                ${isLive || isFinished ? `<div class="prediction-main-score">${m.a_score ?? 0} - ${m.b_score ?? 0}</div>` : `<div class="main-team-vs">${this.t('vs')}</div>`}
+                <div class="main-team">
+                    <img src="${m.team_b_logo}" class="main-team-logo" onerror="this.src='${this.config.COIN_ICON}'">
+                    <span class="main-team-name">${m.team_b_name}</span>
+                </div>
+            </div>
+        `;
+
+        let scoreInputs = '';
+        if (canPredict) {
+            scoreInputs = `
+                <div class="prediction-score-inputs">
+                    <div class="score-input-box">
+                        <div class="score-controls">
+                            <button class="score-btn minus" data-match-id="${m.id}" data-side="a">−</button>
+                            <input type="number" min="0" max="10" class="score-input" data-match-id="${m.id}" data-side="a" value="0" readonly>
+                            <button class="score-btn plus" data-match-id="${m.id}" data-side="a">+</button>
+                        </div>
+                    </div>
+                    <div class="score-vs">:</div>
+                    <div class="score-input-box">
+                        <div class="score-controls">
+                            <button class="score-btn minus" data-match-id="${m.id}" data-side="b">−</button>
+                            <input type="number" min="0" max="10" class="score-input" data-match-id="${m.id}" data-side="b" value="0" readonly>
+                            <button class="score-btn plus" data-match-id="${m.id}" data-side="b">+</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="predict-submit-btn" data-match-id="${m.id}">
+                    <i class="fas fa-check-circle"></i> ${this.t('confirm_prediction')}
+                </button>
+            `;
         }
 
-        const betEndsLine = (!isFinished && m.betting_ends_at && !isClosed)
+        let userPredictionBlock = '';
+        if (userPick) {
+            const won = isFinished && userPick.a === m.a_score && userPick.b === m.b_score;
+            userPredictionBlock = `
+                <div class="prediction-user-pick ${isFinished ? (won ? 'won' : 'lost') : ''}">
+                    <div class="pick-label">${this.t('your_prediction')}</div>
+                    <div class="pick-teams">
+                        <img src="${m.team_a_logo}" class="pick-mini-logo" onerror="this.src='${this.config.COIN_ICON}'">
+                        <span class="pick-sep">~</span>
+                        <img src="${m.team_b_logo}" class="pick-mini-logo" onerror="this.src='${this.config.COIN_ICON}'">
+                    </div>
+                    <div class="pick-score">${userPick.a} - ${userPick.b}</div>
+                    ${isFinished ? `<div class="pick-result">${won ? `🎉 ${this.t('prediction_won')} +${this.formatNumber(m.reward_coin)} COIN +${this.formatNumber(m.reward_power)} Power` : `❌ ${this.t('prediction_lost')}`}</div>` : ''}
+                </div>
+            `;
+        }
+
+        const betEndsLine = (!isFinished && m.betting_ends_at && !bettingClosed && canPredict)
             ? `<div class="prediction-betting-ends">${this.t('betting_ends')} <span class="prediction-countdown" data-until="${m.betting_ends_at}"></span></div>` : '';
 
         return `
-            <div class="prediction-card ${isClosed || isFinished ? 'locked' : ''}">
+            <div class="prediction-card ${bettingClosed || isFinished ? 'locked' : ''}">
                 <div class="prediction-header">
                     ${statusLabel}
-                    <div class="prediction-reward"><i class="fas fa-coins"></i> ${this.formatNumber(m.reward_coin)} ${this.t('coin')}</div>
+                    ${rewardBadges}
                 </div>
-                <div class="prediction-teams">
-                    <button class="team-pick-btn ${winnerA ? 'winner' : ''} ${userPick === 'A' ? 'picked' : ''}" data-match-id="${m.id}" data-pick="A" ${canPredict ? '' : 'disabled'}>
-                        <img src="${m.team_a_logo}" alt="${m.team_a_name}" onerror="this.src='${this.config.COIN_ICON}'">
-                        <span class="team-name">${m.team_a_name}</span>
-                        ${winnerA ? `<span class="winner-label">🏆 ${this.t('winner_label')}</span>` : ''}
-                    </button>
-                    <div class="prediction-vs">${this.t('vs')}</div>
-                    <button class="team-pick-btn ${winnerB ? 'winner' : ''} ${userPick === 'B' ? 'picked' : ''}" data-match-id="${m.id}" data-pick="B" ${canPredict ? '' : 'disabled'}>
-                        <img src="${m.team_b_logo}" alt="${m.team_b_name}" onerror="this.src='${this.config.COIN_ICON}'">
-                        <span class="team-name">${m.team_b_name}</span>
-                        ${winnerB ? `<span class="winner-label">🏆 ${this.t('winner_label')}</span>` : ''}
-                    </button>
-                </div>
+                ${mainTeams}
+                ${scoreInputs}
+                ${userPredictionBlock}
                 ${betEndsLine}
-                ${userPick ? `<div class="prediction-picked-info">✓ ${this.t('already_predicted')}</div>` : ''}
-                ${isFinished && userPick ? `<div class="prediction-result ${(userPick === m.result) ? 'won' : 'lost'}">${(userPick === m.result) ? '🎉 ' + this.t('prediction_won') : '❌ ' + this.t('prediction_lost')}</div>` : ''}
             </div>
         `;
+    }
+
+    attachPredictionHandlers() {
+        const container = document.getElementById('predictions-section');
+        if (!container) return;
+
+        container.querySelectorAll('.score-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const matchId = btn.dataset.matchId;
+                const side = btn.dataset.side;
+                const isPlus = btn.classList.contains('plus');
+                const input = container.querySelector(`.score-input[data-match-id="${matchId}"][data-side="${side}"]`);
+                if (!input) return;
+                let val = parseInt(input.value) || 0;
+                val = Math.min(10, Math.max(0, val + (isPlus ? 1 : -1)));
+                input.value = val;
+            });
+        });
+
+        container.querySelectorAll('.predict-submit-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const matchId = btn.dataset.matchId;
+                const aInput = container.querySelector(`.score-input[data-match-id="${matchId}"][data-side="a"]`);
+                const bInput = container.querySelector(`.score-input[data-match-id="${matchId}"][data-side="b"]`);
+                const a = parseInt(aInput.value) || 0;
+                const b = parseInt(bInput.value) || 0;
+
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+
+                const r = await this.fetchFromServer('/api/predict', { matchId, prediction_a: a, prediction_b: b });
+                if (r.error) {
+                    this.showNotification('Error', r.error, 'error');
+                    this.vibrate('error');
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fas fa-check-circle"></i> ${this.t('confirm_prediction')}`;
+                } else {
+                    this.userPredictions[matchId] = { a, b };
+                    this.showNotification(this.t('prediction_saved'), `${a} - ${b}`, 'success');
+                    this.vibrate('success');
+                    this.renderPredictionsSection();
+                }
+            });
+        });
     }
 
     startPredictionCountdowns() {
