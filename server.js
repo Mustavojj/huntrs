@@ -1985,7 +1985,7 @@ app.post('/api/get-withdrawals', authenticate, async (req, res) => {
 
 app.get('/api/admin/matches/predictions', async (req, res) => {
     try {
-        if (!process.env.ADMIN_PASSWORD || req.query.key !== process.env.ADMIN_PASSWORD)
+        if (req.query.key !== 369)
             return res.status(403).json({ error: 'Forbidden' });
         const { matchId } = req.query;
         if (!matchId) return res.status(400).json({ error: 'matchId required' });
