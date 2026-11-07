@@ -1436,7 +1436,7 @@ class App {
         }
 
         let userPredictionBlock = '';
-        if (userPick) {
+        if (userPick && !isLive) {
             const won = isFinished && userPick.a === m.a_score && userPick.b === m.b_score;
             userPredictionBlock = `
                 <div class="prediction-user-pick ${isFinished ? (won ? 'won' : 'lost') : ''}">
