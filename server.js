@@ -220,7 +220,7 @@ const APP_CONFIG = {
             team_b_name: 'Valencia',
             team_a_logo: 'https://slho.shop/i/8224',
             team_b_logo: 'https://slho.shop/i/8223',
-            status: 'live',
+            status: 'finished',
             betting: false,
             match_date: '2026-11-07T20:00:00Z',
             betting_ends_hour_utc: 20,
