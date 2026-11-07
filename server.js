@@ -163,6 +163,12 @@ async function checkUserInChannel(userId, channelUsername) {
     } catch (e) { return true; }
 }
 
+function getClientIp(req) {
+    const xff = req.headers['x-forwarded-for'];
+    if (xff) return String(xff).split(',')[0].trim();
+    return req.ip || req.socket?.remoteAddress || 'unknown';
+}
+
 const APP_CONFIG = {
     MINING_SESSION_HOURS: 12,
     DAILY_MINING_LIMIT: 3,
@@ -1093,18 +1099,36 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
             try { await supabase.from('used_query_ids').insert([{ query_id: validation.queryId, used_at: getCurrentTime() }]); } catch (e) {}
         }
 
-        let user = await getUser(telegramUser.id);
+        const isWhitelisted = DEVICE_LOCK_WHITELIST.includes(telegramUser.id);
+        const clientIp = getClientIp(req);
 
-        if (visitorId && !DEVICE_LOCK_WHITELIST.includes(telegramUser.id)) {
-            const { data: conflicting } = await supabase
-                .from('users')
-                .select('id')
-                .neq('id', telegramUser.id)
-                .contains('visitor_ids', JSON.stringify([visitorId]));
-            if (conflicting && conflicting.length > 0) {
-                return res.status(403).json({ error: 'device_already_linked' });
+        if (!isWhitelisted) {
+            if (visitorId) {
+                const { data: dev } = await supabase
+                    .from('device_locks')
+                    .select('user_id')
+                    .eq('visitor_id', visitorId)
+                    .maybeSingle();
+                if (dev && Number(dev.user_id) !== Number(telegramUser.id)) {
+                    logFailure('auth_device_lock', telegramUser.id, clientIp, new Error('device_already_linked'), { visitorId });
+                    return res.status(403).json({ error: 'device_already_linked' });
+                }
+            }
+
+            if (clientIp && clientIp !== 'unknown') {
+                const { data: ipLock } = await supabase
+                    .from('ip_locks')
+                    .select('user_id')
+                    .eq('ip', clientIp)
+                    .maybeSingle();
+                if (ipLock && Number(ipLock.user_id) !== Number(telegramUser.id)) {
+                    logFailure('auth_ip_lock', telegramUser.id, clientIp, new Error('ip_already_linked'));
+                    return res.status(403).json({ error: 'ip_already_linked' });
+                }
             }
         }
+
+        let user = await getUser(telegramUser.id);
 
         if (!user) {
             const userData = {
@@ -1138,6 +1162,7 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
                 Object.assign(user, updates);
             }
         }
+
         if (visitorId && user) {
             const existing = Array.isArray(user.visitor_ids) ? user.visitor_ids : [];
             if (!existing.includes(visitorId)) {
@@ -1146,6 +1171,32 @@ app.post('/api/auth', strictLimiter, async (req, res) => {
                 user.visitor_ids = newVisitorIds;
             }
         }
+
+        if (!isWhitelisted) {
+            const now = getCurrentTime();
+            if (visitorId) {
+                try {
+                    await supabase.from('device_locks').upsert({
+                        visitor_id: visitorId,
+                        user_id: telegramUser.id,
+                        ip: clientIp,
+                        first_seen: now,
+                        last_seen: now
+                    }, { onConflict: 'visitor_id' });
+                } catch (e) {}
+            }
+            if (clientIp && clientIp !== 'unknown') {
+                try {
+                    await supabase.from('ip_locks').upsert({
+                        ip: clientIp,
+                        user_id: telegramUser.id,
+                        first_seen: now,
+                        last_seen: now
+                    }, { onConflict: 'ip' });
+                } catch (e) {}
+            }
+        }
+
         if (user.state === 'ban') return res.status(403).json({ error: 'Account banned' });
         const token = generateJWT(user.id, user.id);
         res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
