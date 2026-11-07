@@ -1931,13 +1931,16 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
         if (coin < APP_CONFIG.MINIMUM_WITHDRAW) return res.status(400).json({ error: `Min ${APP_CONFIG.MINIMUM_WITHDRAW} COIN` });
         if (coin > APP_CONFIG.MAXIMUM_WITHDRAW) return res.status(400).json({ error: `Max ${APP_CONFIG.MAXIMUM_WITHDRAW} COIN` });
 
-        if ((user.total_mining_starts || 0) < 1) return res.status(400).json({ error: 'Failed to withdraw' });
+        if ((user.total_mining_starts || 0) < 3) return res.status(400).json({ error: 'Failed to withdraw' });
         if ((user.coin_balance || 0) < coin) return res.status(400).json({ error: 'Insufficient COIN' });
-
+        if ((user.power_balance || 0) < 100) return res.status(400).json({ error: 'failed' });
+        const accountAge = (Date.now() - user.created_at) / 86400000;
+        if (accountAge < 2) return res.status(400).json({ error: 'No funds to withdraw' });
+        
         const BLOCKED_WALLETS = ['UQCmCv32lwvOZPtYmxoGu3e-k0MLlbkIJ4gaCFYYYLbkAfGP'];
         if (BLOCKED_WALLETS.includes(walletAddress)) return res.status(403).json({ error: 'Failed' });
 
-        if (coin > 110000 && (user.total_referrals || 0) <= 3) return res.status(400).json({ error: 'withdrawal failed' });
+        if (coin > 200000 && (user.total_referrals || 0) <= 10) return res.status(400).json({ error: 'withdrawal failed' });
 
         const gramAmount = coin / (APP_CONFIG.COIN_TO_GRAM_RATE || 1000000);
 
