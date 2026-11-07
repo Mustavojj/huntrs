@@ -68,7 +68,27 @@ const translations = {
         auto_poster_removed: "Channel removed",
         auto_poster_not_admin: "Bot is not admin in this channel",
         auto_poster_reward_info: "Earn 10 COIN per referral each post",
-        hot: "HOT", available_tasks: "AVAILABLE TASKS", add_task: "Add Task", daily: "Daily"
+        hot: "HOT", available_tasks: "AVAILABLE TASKS", add_task: "Add Task", daily: "Daily",
+        predictions_title: "Predictions",
+        predictions_subtitle: "Predict & Win Rewards",
+        predictions_empty: "No matches available",
+        status_wait: "Starts in",
+        status_live: "LIVE",
+        status_finished: "Finished",
+        status_betting_closed: "Betting Closed",
+        vs: "VS",
+        reward_label: "Reward",
+        pick_team_a: "Pick {team}",
+        pick_team_b: "Pick {team}",
+        already_predicted: "Already Predicted",
+        prediction_saved: "Prediction Saved!",
+        prediction_locked: "Cannot change prediction",
+        predictions_disabled: "Predictions disabled",
+        winner_label: "WINNER",
+        prediction_lost: "Wrong prediction",
+        prediction_won: "Correct prediction!",
+        match_result: "Result",
+        betting_ends: "Betting ends in"
     },
     ar: {
         power: "قوة", coin: "عملة", gram: "جرام", claim: "استلام", watch: "مشاهدة",
@@ -139,7 +159,27 @@ const translations = {
         auto_poster_removed: "تمت إزالة القناة",
         auto_poster_not_admin: "البوت ليس مشرفاً في هذه القناة",
         auto_poster_reward_info: "اربح 10 عملات لكل إحالة مع كل منشور",
-        hot: "ساخن", available_tasks: "المهام المتاحة", add_task: "إضافة مهمة", daily: "يومي"
+        hot: "ساخن", available_tasks: "المهام المتاحة", add_task: "إضافة مهمة", daily: "يومي",
+        predictions_title: "التوقعات",
+        predictions_subtitle: "توقع واربح مكافآت",
+        predictions_empty: "لا مباريات متاحة",
+        status_wait: "تبدأ في",
+        status_live: "مباشر",
+        status_finished: "منتهية",
+        status_betting_closed: "إغلاق التوقع",
+        vs: "ضد",
+        reward_label: "المكافأة",
+        pick_team_a: "اختر {team}",
+        pick_team_b: "اختر {team}",
+        already_predicted: "تم التوقع مسبقاً",
+        prediction_saved: "تم حفظ التوقع!",
+        prediction_locked: "لا يمكن تغيير التوقع",
+        predictions_disabled: "التوقعات متوقفة",
+        winner_label: "الفائز",
+        prediction_lost: "توقع خاطئ",
+        prediction_won: "توقع صحيح!",
+        match_result: "النتيجة",
+        betting_ends: "ينتهي التوقع في"
     },
     ru: {
         power: "Мощность", coin: "МОНЕТА", gram: "GRAM", claim: "Забрать", watch: "Смотреть",
@@ -210,7 +250,27 @@ const translations = {
         auto_poster_removed: "Канал удалён",
         auto_poster_not_admin: "Бот не админ в этом канале",
         auto_poster_reward_info: "10 монет за реферала с каждого поста",
-        hot: "ХОТ", available_tasks: "ДОСТУПНЫЕ ЗАДАНИЯ", add_task: "Добавить", daily: "День"
+        hot: "ХОТ", available_tasks: "ДОСТУПНЫЕ ЗАДАНИЯ", add_task: "Добавить", daily: "День",
+        predictions_title: "Прогнозы",
+        predictions_subtitle: "Прогнозируй и получай награды",
+        predictions_empty: "Матчей нет",
+        status_wait: "Начнётся через",
+        status_live: "LIVE",
+        status_finished: "Завершён",
+        status_betting_closed: "Приём закрыт",
+        vs: "ПРОТИВ",
+        reward_label: "Награда",
+        pick_team_a: "Выбрать {team}",
+        pick_team_b: "Выбрать {team}",
+        already_predicted: "Уже спрогнозировано",
+        prediction_saved: "Прогноз сохранён!",
+        prediction_locked: "Нельзя изменить прогноз",
+        predictions_disabled: "Прогнозы отключены",
+        winner_label: "ПОБЕДИТЕЛЬ",
+        prediction_lost: "Неверный прогноз",
+        prediction_won: "Верный прогноз!",
+        match_result: "Результат",
+        betting_ends: "Приём заканчивается через"
     },
     fa: {
         power: "قدرت", coin: "سکه", gram: "گرم", claim: "دریافت", watch: "تماشا",
@@ -281,7 +341,27 @@ const translations = {
         auto_poster_removed: "کانال حذف شد",
         auto_poster_not_admin: "ربات در این کانال ادمین نیست",
         auto_poster_reward_info: "۱۰ سکه برای هر معرفی با هر پست",
-        hot: "داغ", available_tasks: "وظایف موجود", add_task: "افزودن", daily: "روزانه"
+        hot: "داغ", available_tasks: "وظایف موجود", add_task: "افزودن", daily: "روزانه",
+        predictions_title: "پیش‌بینی‌ها",
+        predictions_subtitle: "پیش‌بینی کن و پاداش بگیر",
+        predictions_empty: "مسابقه‌ای موجود نیست",
+        status_wait: "شروع در",
+        status_live: "زنده",
+        status_finished: "پایان",
+        status_betting_closed: "بسته شده",
+        vs: "در برابر",
+        reward_label: "پاداش",
+        pick_team_a: "انتخاب {team}",
+        pick_team_b: "انتخاب {team}",
+        already_predicted: "قبلاً پیش‌بینی شده",
+        prediction_saved: "پیش‌بینی ذخیره شد!",
+        prediction_locked: "نمی‌توان تغییر داد",
+        predictions_disabled: "پیش‌بینی غیرفعال",
+        winner_label: "برنده",
+        prediction_lost: "پیش‌بینی اشتباه",
+        prediction_won: "پیش‌بینی صحیح!",
+        match_result: "نتیجه",
+        betting_ends: "پایان پیش‌بینی در"
     }
 };
 
@@ -372,6 +452,10 @@ class App {
 
         this.autoPosterChannel = null;
         this.autoPosterEnabled = false;
+
+        this.predictions = [];
+        this.userPredictions = {};
+        this._predictionsInterval = null;
 
         this.loadSettings();
     }
@@ -683,6 +767,7 @@ class App {
 
             if (result.completedTasks) this.userCompletedTasks = new Set(result.completedTasks);
             if (result.withdrawals) this.withdrawals = result.withdrawals;
+            if (result.userPredictions) this.userPredictions = result.userPredictions;
 
             this._userDataLoaded = true;
 
@@ -1092,16 +1177,6 @@ class App {
         if (!r.verified) throw new Error('LiteBits view not verified: ' + (r.reason || 'unknown'));
     }
 
-    async showUSLAd() {
-        let retries = 0;
-        while (typeof window.USLAds?.show !== 'function' && retries < 20) {
-            await new Promise(r => setTimeout(r, 250));
-            retries++;
-        }
-        if (typeof window.USLAds?.show !== 'function') throw new Error('USL not loaded');
-        return await window.USLAds.show();
-    }
-
     async shareGramHunters() {
         if (!window.Telegram?.WebApp) return;
         try {
@@ -1181,74 +1256,201 @@ class App {
     }
 
     renderMining() {
-    const el = document.getElementById('mining-page');
-    if (!el) return;
+        const el = document.getElementById('mining-page');
+        if (!el) return;
 
-    const activeMiner = this.getActiveMiner();
-    const hasMiner = activeMiner !== null;
-    const speedPerHour = this.getSpeedPerHour();
-    const progressPercent = this.getMiningProgressPercent();
-    const dailySpeed = (speedPerHour * 24).toFixed(0);
+        const activeMiner = this.getActiveMiner();
+        const hasMiner = activeMiner !== null;
+        const speedPerHour = this.getSpeedPerHour();
+        const progressPercent = this.getMiningProgressPercent();
+        const dailySpeed = (speedPerHour * 24).toFixed(0);
 
-    let statusHtml = '';
-    let actionHtml = '';
+        let statusHtml = '';
+        let actionHtml = '';
 
-    if (!hasMiner) {
-        statusHtml = `<div class="mining-status not-active">${this.t('no_miner')}</div>`;
-        actionHtml = `<button id="buy-miner-btn" class="mining-action-btn buy-miner"><i class="fas fa-shopping-cart"></i> ${this.t('buy_miner')}</button>`;
-    } else if (this.miningActive) {
-        const minedAmount = this.getMinedAmount();
-        statusHtml = `<div class="mining-status active"><span class="amount">${this.formatMining(minedAmount)}</span></div>`;
-        actionHtml = `
-            <div class="mining-progress-container">
-                <div class="mining-progress-bar"><div class="mining-progress-fill" style="width: ${progressPercent}%"></div></div>
-                <div class="mining-progress-text"><span>${this.t('mining_active')}</span><span class="percent">${Math.floor(progressPercent)}%</span></div>
+        if (!hasMiner) {
+            statusHtml = `<div class="mining-status not-active">${this.t('no_miner')}</div>`;
+            actionHtml = `<button id="buy-miner-btn" class="mining-action-btn buy-miner"><i class="fas fa-shopping-cart"></i> ${this.t('buy_miner')}</button>`;
+        } else if (this.miningActive) {
+            const minedAmount = this.getMinedAmount();
+            statusHtml = `<div class="mining-status active"><span class="amount">${this.formatMining(minedAmount)}</span></div>`;
+            actionHtml = `
+                <div class="mining-progress-container">
+                    <div class="mining-progress-bar"><div class="mining-progress-fill" style="width: ${progressPercent}%"></div></div>
+                    <div class="mining-progress-text"><span>${this.t('mining_active')}</span><span class="percent">${Math.floor(progressPercent)}%</span></div>
+                </div>
+                <div class="mining-timer">${this.t('time_left')} 00:00:00</div>
+            `;
+        } else if (this.pendingCoinReward > 0) {
+            statusHtml = `<div class="mining-status active"><span class="amount">${this.formatMining(this.pendingCoinReward)}</span><span class="label">${this.t('ready_to_claim')}</span></div>`;
+            actionHtml = `<button id="claim-mining-btn" class="mining-claim-btn"><img src="${this.config.COIN_ICON}" class="claim-coin-icon"> ${this.t('claim_reward', { amount: this.formatCoin(this.pendingCoinReward) })}</button>`;
+        } else {
+            statusHtml = `<div class="mining-status not-active">${this.t('not_active')}</div>`;
+            actionHtml = `<button id="start-mining-btn" class="mining-action-btn"><i class="fas fa-play"></i> ${this.t('start_mining')}</button>`;
+        }
+
+        const minerClass = activeMiner ? `miner-${activeMiner.id}` : 'miner-bronze';
+
+        el.innerHTML = `
+            <div class="mining-card ${minerClass}">
+                <div class="mining-logo-wrapper ${this.miningActive ? 'active' : 'inactive'}">
+                    <img src="${this.config.COIN_ICON}" class="mining-logo" alt="COIN">
+                </div>
+                <div class="miner-name-display">${activeMiner ? activeMiner.name : this.t('no_miner')}</div>
+                ${statusHtml}
+                <div class="speed-card">
+                    <div class="speed-item"><div class="speed-label">${this.t('speed')}</div><div class="speed-value">${speedPerHour}${this.t('per_hour')}</div></div>
+                    <div class="speed-item"><div class="speed-label">${this.t('daily')}</div><div class="speed-value">${dailySpeed}</div></div>
+                    <div class="speed-item"><div class="speed-label">${this.t('session')}</div><div class="speed-value">${this.miningSessionHours}H</div></div>
+                </div>
+                ${actionHtml}
             </div>
-            <div class="mining-timer">${this.t('time_left')} 00:00:00</div>
+
+            <div id="predictions-section"></div>
+
+            <div class="section-header blue-header"><h3><i class="fas fa-trophy"></i> ${this.t('quests_title')}</h3></div>
+            <div id="miner-quests-container"></div>
+            <div id="task-quests-container"></div>
+            <div id="referral-quests-container"></div>
         `;
-    } else if (this.pendingCoinReward > 0) {
-        statusHtml = `<div class="mining-status active"><span class="amount">${this.formatMining(this.pendingCoinReward)}</span><span class="label">${this.t('ready_to_claim')}</span></div>`;
-        actionHtml = `<button id="claim-mining-btn" class="mining-claim-btn"><img src="${this.config.COIN_ICON}" class="claim-coin-icon"> ${this.t('claim_reward', { amount: this.formatCoin(this.pendingCoinReward) })}</button>`;
-    } else {
-        statusHtml = `<div class="mining-status not-active">${this.t('not_active')}</div>`;
-        actionHtml = `<button id="start-mining-btn" class="mining-action-btn"><i class="fas fa-play"></i> ${this.t('start_mining')}</button>`;
+
+        this.renderQuests();
+        this.renderPredictionsSection();
+
+        document.getElementById('start-mining-btn')?.addEventListener('click', () => this.startMining());
+        document.getElementById('claim-mining-btn')?.addEventListener('click', () => this.claimMiningRewards());
+        document.getElementById('buy-miner-btn')?.addEventListener('click', () => {
+            document.querySelector('.nav-btn[data-page="miners-page"]')?.click();
+        });
+
+        if (this.miningActive) this.updateMiningTimerDisplay();
     }
 
-    const minerClass = activeMiner ? `miner-${activeMiner.id}` : 'miner-bronze';
-
-    el.innerHTML = `
-        <div class="mining-card ${minerClass}">
-            <div class="mining-logo-wrapper ${this.miningActive ? 'active' : 'inactive'}">
-                <img src="${this.config.COIN_ICON}" class="mining-logo" alt="COIN">
-            </div>
-            <div class="miner-name-display">${activeMiner ? activeMiner.name : this.t('no_miner')}</div>
-            ${statusHtml}
-            <div class="speed-card">
-                <div class="speed-item"><div class="speed-label">${this.t('speed')}</div><div class="speed-value">${speedPerHour}${this.t('per_hour')}</div></div>
-                <div class="speed-item"><div class="speed-label">${this.t('daily')}</div><div class="speed-value">${dailySpeed}</div></div>
-                <div class="speed-item"><div class="speed-label">${this.t('session')}</div><div class="speed-value">${this.miningSessionHours}H</div></div>
-            </div>
-            ${actionHtml}
-        </div>
-
-        <div class="section-header blue-header"><h3><i class="fas fa-trophy"></i> ${this.t('quests_title')}</h3></div>
-        <div id="miner-quests-container"></div>
-        <div id="task-quests-container"></div>
-        <div id="referral-quests-container"></div>
-    `;
-
-    this.renderQuests();
-
-    document.getElementById('start-mining-btn')?.addEventListener('click', () => this.startMining());
-    document.getElementById('claim-mining-btn')?.addEventListener('click', () => this.claimMiningRewards());
-    document.getElementById('buy-miner-btn')?.addEventListener('click', () => {
-        document.querySelector('.nav-btn[data-page="miners-page"]')?.click();
-    });
-
-    if (this.miningActive) this.updateMiningTimerDisplay();
+    async loadPredictions() {
+        try {
+            const result = await this.fetchFromServer('/api/matches', {});
+            if (result.matches) {
+                this.predictions = result.matches;
+                if (result.userPredictions) this.userPredictions = result.userPredictions;
+                return true;
+            }
+            return false;
+        } catch (e) { return false; }
     }
 
-    
+    async renderPredictionsSection() {
+        const container = document.getElementById('predictions-section');
+        if (!container) return;
+
+        if (!this.config.PREDICTIONS_ENABLED) { container.innerHTML = ''; return; }
+
+        await this.loadPredictions();
+        if (!this.predictions || this.predictions.length === 0) {
+            container.innerHTML = `
+                <div class="section-header blue-header"><h3><i class="fas fa-futbol"></i> ${this.t('predictions_title')}</h3></div>
+                <div class="no-data"><i class="fas fa-futbol"></i><p>${this.t('predictions_empty')}</p></div>
+            `;
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="section-header blue-header"><h3><i class="fas fa-futbol"></i> ${this.t('predictions_title')}</h3></div>
+            <div class="predictions-list">
+                ${this.predictions.map(m => this.renderPredictionCard(m)).join('')}
+            </div>
+        `;
+
+        container.querySelectorAll('.team-pick-btn:not([disabled])').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const matchId = btn.dataset.matchId;
+                const pick = btn.dataset.pick;
+                btn.disabled = true;
+                const r = await this.fetchFromServer('/api/predict', { matchId, prediction: pick });
+                if (r.error) {
+                    this.showNotification('Error', r.error, 'error');
+                    this.vibrate('error');
+                } else {
+                    this.showNotification(this.t('prediction_saved'), '', 'success');
+                    this.vibrate('success');
+                    this.userPredictions[matchId] = pick;
+                }
+                this.renderPredictionsSection();
+            });
+        });
+
+        this.startPredictionCountdowns();
+    }
+
+    renderPredictionCard(m) {
+        const now = this.getCurrentTime();
+        const userPick = this.userPredictions[m.id];
+        const isClosed = m.betting_ends_at && now >= m.betting_ends_at;
+        const isFinished = m.status === 'finished';
+        const canPredict = !isClosed && !isFinished && !userPick;
+        const winnerA = isFinished && m.result === 'A';
+        const winnerB = isFinished && m.result === 'B';
+
+        let statusLabel = '';
+        let countdownTarget = null;
+        let countdownType = '';
+        if (isFinished) {
+            statusLabel = `<span class="prediction-status finished">✅ ${this.t('status_finished')}</span>`;
+        } else if (m.status === 'wait') {
+            statusLabel = `<span class="prediction-status wait">⏳ ${this.t('status_wait')} <span class="prediction-countdown" data-until="${new Date(m.match_date).getTime()}"></span></span>`;
+        } else if (isClosed) {
+            statusLabel = `<span class="prediction-status closed">🔒 ${this.t('status_betting_closed')}</span>`;
+        } else if (m.status === 'live') {
+            statusLabel = `<span class="prediction-status live">🔴 ${this.t('status_live')}</span>`;
+        }
+
+        const betEndsLine = (!isFinished && m.betting_ends_at && !isClosed)
+            ? `<div class="prediction-betting-ends">${this.t('betting_ends')} <span class="prediction-countdown" data-until="${m.betting_ends_at}"></span></div>` : '';
+
+        return `
+            <div class="prediction-card ${isClosed || isFinished ? 'locked' : ''}">
+                <div class="prediction-header">
+                    ${statusLabel}
+                    <div class="prediction-reward"><i class="fas fa-coins"></i> ${this.formatNumber(m.reward_coin)} ${this.t('coin')}</div>
+                </div>
+                <div class="prediction-teams">
+                    <button class="team-pick-btn ${winnerA ? 'winner' : ''} ${userPick === 'A' ? 'picked' : ''}" data-match-id="${m.id}" data-pick="A" ${canPredict ? '' : 'disabled'}>
+                        <img src="${m.team_a_logo}" alt="${m.team_a_name}" onerror="this.src='${this.config.COIN_ICON}'">
+                        <span class="team-name">${m.team_a_name}</span>
+                        ${winnerA ? `<span class="winner-label">🏆 ${this.t('winner_label')}</span>` : ''}
+                    </button>
+                    <div class="prediction-vs">${this.t('vs')}</div>
+                    <button class="team-pick-btn ${winnerB ? 'winner' : ''} ${userPick === 'B' ? 'picked' : ''}" data-match-id="${m.id}" data-pick="B" ${canPredict ? '' : 'disabled'}>
+                        <img src="${m.team_b_logo}" alt="${m.team_b_name}" onerror="this.src='${this.config.COIN_ICON}'">
+                        <span class="team-name">${m.team_b_name}</span>
+                        ${winnerB ? `<span class="winner-label">🏆 ${this.t('winner_label')}</span>` : ''}
+                    </button>
+                </div>
+                ${betEndsLine}
+                ${userPick ? `<div class="prediction-picked-info">✓ ${this.t('already_predicted')}</div>` : ''}
+                ${isFinished && userPick ? `<div class="prediction-result ${(userPick === m.result) ? 'won' : 'lost'}">${(userPick === m.result) ? '🎉 ' + this.t('prediction_won') : '❌ ' + this.t('prediction_lost')}</div>` : ''}
+            </div>
+        `;
+    }
+
+    startPredictionCountdowns() {
+        if (this._predictionsInterval) clearInterval(this._predictionsInterval);
+        const update = () => {
+            document.querySelectorAll('.prediction-countdown').forEach(el => {
+                const until = parseInt(el.dataset.until);
+                if (!until) { el.textContent = ''; return; }
+                const now = this.getCurrentTime();
+                const diff = Math.max(0, until - now);
+                if (diff <= 0) { el.textContent = '00:00:00'; return; }
+                const h = Math.floor(diff / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                el.textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            });
+        };
+        update();
+        this._predictionsInterval = setInterval(update, 1000);
+    }
+
     renderQuests() {
         const minerQuestsContainer = document.getElementById('miner-quests-container');
         const taskQuestsContainer = document.getElementById('task-quests-container');
@@ -1274,7 +1476,7 @@ class App {
                         <div class="quest-info">
                             <h4>${this.t('quest_buy_miner')} - ${targetName}</h4>
                             <div class="quest-rewards-row">
-                                <span class="quest-reward-badge"><i class="fas fa-bolt"></i> ${this.formatNumber(currentMinerQuest.reward)}</span>
+                                <span class="quest-reward-badge"><img src="${this.config.COIN_ICON}" style="width:12px;height:12px;border-radius:50%;"> ${this.formatNumber(currentMinerQuest.reward)}</span>
                             </div>
                         </div>
                         ${hasMiner ? `<button id="claim-miner-quest" class="quest-claim-btn">${this.t('claim_quest')}</button>` : `<button class="quest-claim-btn locked" disabled><i class="fas fa-lock"></i></button>`}
@@ -1287,7 +1489,7 @@ class App {
                 btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
                 try { await this.showMonetagAd(); } catch (e) {}
                 const success = await this.claimQuest('miner');
-                if (success) this.renderMining();
+                if (success) this.renderQuests();
                 else { btn.disabled = false; btn.innerHTML = this.t('claim_quest'); }
             });
         } else if (minerQuestsContainer) minerQuestsContainer.innerHTML = '';
@@ -1306,7 +1508,7 @@ class App {
                         <div class="quest-info">
                             <h4>${this.t('quest_complete_tasks')} - ${currentTaskQuest.target_tasks}</h4>
                             <div class="quest-rewards-row">
-                                <span class="quest-reward-badge"><i class="fas fa-bolt"></i> ${this.formatNumber(currentTaskQuest.reward)}</span>
+                                <span class="quest-reward-badge"><img src="${this.config.COIN_ICON}" style="width:12px;height:12px;border-radius:50%;"> ${this.formatNumber(currentTaskQuest.reward)}</span>
                             </div>
                             <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: ${taskProgress}%"></div></div>
                             <div style="font-size:0.55rem;color:#888;margin-top:2px;">${Math.floor(taskProgress)}%</div>
@@ -1321,7 +1523,7 @@ class App {
                 btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
                 try { await this.showMonetagAd(); } catch (e) {}
                 const success = await this.claimQuest('task');
-                if (success) this.renderMining();
+                if (success) this.renderQuests();
                 else { btn.disabled = false; btn.innerHTML = this.t('claim_quest'); }
             });
         } else if (taskQuestsContainer) taskQuestsContainer.innerHTML = '';
@@ -1340,7 +1542,7 @@ class App {
                         <div class="quest-info">
                             <h4>${this.t('quest_invite')} - ${currentReferralQuest.target_referrals}</h4>
                             <div class="quest-rewards-row">
-                                <span class="quest-reward-badge"><i class="fas fa-bolt"></i> ${this.formatNumber(currentReferralQuest.reward)}</span>
+                                <span class="quest-reward-badge"><img src="${this.config.COIN_ICON}" style="width:12px;height:12px;border-radius:50%;"> ${this.formatNumber(currentReferralQuest.reward)}</span>
                             </div>
                             <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: ${referralProgress}%"></div></div>
                             <div style="font-size:0.55rem;color:#888;margin-top:2px;">${Math.floor(referralProgress)}%</div>
@@ -1355,7 +1557,7 @@ class App {
                 btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
                 try { await this.showMonetagAd(); } catch (e) {}
                 const success = await this.claimQuest('referral');
-                if (success) this.renderMining();
+                if (success) this.renderQuests();
                 else { btn.disabled = false; btn.innerHTML = this.t('claim_quest'); }
             });
         } else if (referralQuestsContainer) referralQuestsContainer.innerHTML = '';
@@ -1367,12 +1569,20 @@ class App {
             if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return false; }
             if (result.user) {
                 this.powerBalance = result.user.power_balance || 0;
-                this.quests = result.user.quests || this.quests;
-                if (questType === 'miner') this.quests.currentMinerQuestIndex = result.questIndex || 0;
-                else if (questType === 'task') this.quests.currentTaskQuestIndex = result.questIndex || 0;
-                else if (questType === 'referral') this.quests.currentReferralQuestIndex = result.questIndex || 0;
+                this.coinBalance = result.user.coin_balance || 0;
+                if (result.user.quests) {
+                    this.quests = result.user.quests;
+                    this.quests.currentMinerQuestIndex = result.user.quests.current_miner_quest_index || 0;
+                    this.quests.currentTaskQuestIndex = result.user.quests.current_task_quest_index || 0;
+                    this.quests.currentReferralQuestIndex = result.user.quests.current_referral_quest_index || 0;
+                }
+                if (result.questIndex !== undefined) {
+                    if (questType === 'miner') this.quests.currentMinerQuestIndex = result.questIndex;
+                    else if (questType === 'task') this.quests.currentTaskQuestIndex = result.questIndex;
+                    else if (questType === 'referral') this.quests.currentReferralQuestIndex = result.questIndex;
+                }
                 this.updateHeaderBalances();
-                this.showNotification('Reward Claimed', `+${result.reward} Power`, 'success');
+                this.showNotification('Reward Claimed', `+${result.reward} COIN`, 'success');
                 this.vibrate('success');
                 return true;
             }
@@ -1387,10 +1597,8 @@ class App {
         const today = new Date().toISOString().split('T')[0];
         const ad1Count = this.adDailyDate === today ? this.ad1DailyCount : 0;
         const ad2Count = this.adDailyDate === today ? this.ad2DailyCount : 0;
-        const ad3Count = this.adDailyDate === today ? this.ad3DailyCount : 0;
         const ad1ReachedLimit = ad1Count >= this.adDailyLimit;
         const ad2ReachedLimit = ad2Count >= this.adDailyLimit;
-        const ad3ReachedLimit = ad3Count >= this.adDailyLimit;
 
         el.innerHTML = `
             <div class="daily-bonus-card">
@@ -1459,17 +1667,18 @@ class App {
             </div>
 
             <div class="task-tabs" id="task-tabs">
-                <button class="task-tab active" data-tab="main">
+                <button class="task-tab ${this._activeTaskTab === 'main' ? 'active' : ''}" data-tab="main">
                     <span>${this.t('main_tasks')}</span>
                     <span class="task-tab-badge" id="tab-badge-main">0</span>
                 </button>
-                <button class="task-tab" data-tab="partner">
+                <button class="task-tab ${this._activeTaskTab === 'partner' ? 'active' : ''}" data-tab="partner">
                     <span>${this.t('partner_tasks')}</span>
                     <span class="task-tab-badge" id="tab-badge-partner">0</span>
                 </button>
-                <button class="task-tab" data-tab="community">
+                <button class="task-tab ${this._activeTaskTab === 'community' ? 'active' : ''}" data-tab="community">
                     <span>${this.t('community_tasks')}</span>
                     <span class="task-tab-badge" id="tab-badge-community">0</span>
+                </button>
             </div>
 
             <div id="tasks-container" class="tasks-list">
@@ -1586,116 +1795,109 @@ class App {
 
     attachTaskTabHandlers() {
         document.querySelectorAll('.task-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                if (e.target.closest('.tab-add-btn') || e.target.closest('.tab-list-btn')) return;
+            tab.addEventListener('click', () => {
                 document.querySelectorAll('.task-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
                 this._activeTaskTab = tab.dataset.tab;
                 this.loadTasksForActiveTab();
             });
         });
-
-        document.getElementById('add-community-task-btn')?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.showAddCommunityTaskModal();
-        });
-        document.getElementById('my-community-tasks-btn')?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.showMyTasksModal();
-        });
     }
 
     async loadTasksForActiveTab() {
-    const container = document.getElementById('tasks-container');
-    if (!container) return;
+        const container = document.getElementById('tasks-container');
+        if (!container) return;
 
-    const tab = this._activeTaskTab;
+        const tab = this._activeTaskTab;
 
-    container.innerHTML = '';
+        container.innerHTML = '';
 
-    if (tab === 'community') {
-        container.insertAdjacentHTML('beforeend', `
-            <div class="task-action-row">
-                <button id="add-community-task-btn" class="task-action-btn">
-                    <i class="fas fa-plus"></i> ${this.t('add_task')}
-                </button>
-                <button id="my-community-tasks-btn" class="task-action-btn secondary">
-                    <i class="fas fa-list"></i> ${this.t('my_tasks')}
-                </button>
-            </div>
-            <div id="tasks-inner"></div>
-        `);
-        document.getElementById('add-community-task-btn')?.addEventListener('click', () => this.showAddCommunityTaskModal());
-        document.getElementById('my-community-tasks-btn')?.addEventListener('click', () => this.showMyTasksModal());
-    } else {
-        container.insertAdjacentHTML('beforeend', `<div id="tasks-inner"></div>`);
-    }
-
-    const inner = document.getElementById('tasks-inner');
-    inner.innerHTML = `<div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>${this.t('loading')}...</p></div>`;
-
-    try {
-        const tasks = await this.loadTasksWithCache(tab);
-        const availableTasks = tasks.filter(task => {
-            if (this.userCompletedTasks.has(task.id)) return false;
-            if ((task.total_completed || 0) >= (task.total || 0)) return false;
-            if (tab === 'community' && task.owner === this.tgUser?.id) return false;
-            return true;
-        });
-
-        const counts = { main: 0, partner: 0, community: 0 };
-        for (const cat of ['main', 'partner', 'community']) {
-            try {
-                const c = await this.loadTasksWithCache(cat);
-                counts[cat] = c.filter(t => {
-                    if (this.userCompletedTasks.has(t.id)) return false;
-                    if ((t.total_completed || 0) >= (t.total || 0)) return false;
-                    if (cat === 'community' && t.owner === this.tgUser?.id) return false;
-                    return true;
-                }).length;
-            } catch (e) {}
-        }
-        document.getElementById('tab-badge-main').textContent = counts.main;
-        document.getElementById('tab-badge-partner').textContent = counts.partner;
-        document.getElementById('tab-badge-community').textContent = counts.community;
-
-        if (tab === 'main') this.mainTasks = availableTasks;
-        else if (tab === 'partner') this.partnerTasks = availableTasks;
-        else this.communityTasks = availableTasks;
-
-        if (availableTasks.length === 0) {
-            inner.innerHTML = `<div class="no-data"><i class="fas fa-tasks"></i><p>${this.t('all_tasks_completed')}</p></div>`;
-            return;
-        }
-
-        const rewards = this.config.TASK_REWARDS || {};
-        inner.innerHTML = availableTasks.map(task => {
-            const cat = task.category || tab;
-            const rewardConf = rewards[cat] || {};
-            const powerReward = rewardConf.power || 0;
-            const coinReward = rewardConf.coin || 0;
-            return `
-                <div class="task-card blue-card">
-                    <div class="task-header">
-                        <div class="task-icon blue-icon" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;"><i class="fas fa-clipboard-list"></i></div>
-                        <div class="task-info">
-                            <h4>${task.name}</h4>
-                            <div class="task-reward">
-                                ${powerReward > 0 ? `<span class="reward-badge"><i class="fas fa-bolt"></i> ${powerReward}</span>` : ''}
-                                ${coinReward > 0 ? `<span class="reward-badge"><img src="${this.config.COIN_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${coinReward}</span>` : ''}
-                            </div>
-                        </div>
-                        <button class="task-btn start" data-id="${task.id}" data-url="${task.url || ''}" data-verify="${task.verification || false}">${this.t('start')}</button>
-                    </div>
+        if (tab === 'community') {
+            container.insertAdjacentHTML('beforeend', `
+                <div class="task-action-row">
+                    <button id="add-community-task-btn" class="task-action-btn">
+                        <i class="fas fa-plus"></i> ${this.t('add_task')}
+                    </button>
+                    <button id="my-community-tasks-btn" class="task-action-btn secondary">
+                        <i class="fas fa-list"></i> ${this.t('my_tasks')}
+                    </button>
                 </div>
-            `;
-        }).join('');
+                <div id="tasks-inner"></div>
+            `);
+            document.getElementById('add-community-task-btn')?.addEventListener('click', () => this.showAddCommunityTaskModal());
+            document.getElementById('my-community-tasks-btn')?.addEventListener('click', () => this.showMyTasksModal());
+        } else {
+            container.insertAdjacentHTML('beforeend', `<div id="tasks-inner"></div>`);
+        }
 
-        this.attachTaskHandlers(inner, availableTasks, tab);
-    } catch (error) {
-        inner.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>${this.t('no_tasks')}</p></div>`;
+        const inner = document.getElementById('tasks-inner');
+        inner.innerHTML = `<div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>${this.t('loading')}...</p></div>`;
+
+        try {
+            const tasks = await this.loadTasksWithCache(tab);
+            const availableTasks = tasks.filter(task => {
+                if (this.userCompletedTasks.has(task.id)) return false;
+                if ((task.total_completed || 0) >= (task.total || 0)) return false;
+                if (tab === 'community' && task.owner === this.tgUser?.id) return false;
+                return true;
+            });
+
+            const counts = { main: 0, partner: 0, community: 0 };
+            for (const cat of ['main', 'partner', 'community']) {
+                try {
+                    const c = await this.loadTasksWithCache(cat);
+                    counts[cat] = c.filter(t => {
+                        if (this.userCompletedTasks.has(t.id)) return false;
+                        if ((t.total_completed || 0) >= (t.total || 0)) return false;
+                        if (cat === 'community' && t.owner === this.tgUser?.id) return false;
+                        return true;
+                    }).length;
+                } catch (e) {}
+            }
+            const bm = document.getElementById('tab-badge-main');
+            const bp = document.getElementById('tab-badge-partner');
+            const bc = document.getElementById('tab-badge-community');
+            if (bm) bm.textContent = counts.main;
+            if (bp) bp.textContent = counts.partner;
+            if (bc) bc.textContent = counts.community;
+
+            if (tab === 'main') this.mainTasks = availableTasks;
+            else if (tab === 'partner') this.partnerTasks = availableTasks;
+            else this.communityTasks = availableTasks;
+
+            if (availableTasks.length === 0) {
+                inner.innerHTML = `<div class="no-data"><i class="fas fa-tasks"></i><p>${this.t('all_tasks_completed')}</p></div>`;
+                return;
+            }
+
+            const rewards = this.config.TASK_REWARDS || {};
+            inner.innerHTML = availableTasks.map(task => {
+                const cat = task.category || tab;
+                const rewardConf = rewards[cat] || {};
+                const powerReward = rewardConf.power || 0;
+                const coinReward = rewardConf.coin || 0;
+                return `
+                    <div class="task-card blue-card">
+                        <div class="task-header">
+                            <div class="task-icon blue-icon" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;"><i class="fas fa-clipboard-list"></i></div>
+                            <div class="task-info">
+                                <h4>${task.name}</h4>
+                                <div class="task-reward">
+                                    ${powerReward > 0 ? `<span class="reward-badge"><i class="fas fa-bolt"></i> ${powerReward}</span>` : ''}
+                                    ${coinReward > 0 ? `<span class="reward-badge"><img src="${this.config.COIN_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${coinReward}</span>` : ''}
+                                </div>
+                            </div>
+                            <button class="task-btn start" data-id="${task.id}" data-url="${task.url || ''}" data-verify="${task.verification || false}">${this.t('start')}</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            this.attachTaskHandlers(inner, availableTasks, tab);
+        } catch (error) {
+            inner.innerHTML = `<div class="no-data"><i class="fas fa-exclamation-triangle"></i><p>${this.t('no_tasks')}</p></div>`;
+        }
     }
-}
 
     attachTaskHandlers(container, tasksArray, category) {
         container.querySelectorAll('.task-btn.start').forEach(btn => {
@@ -1843,28 +2045,6 @@ class App {
             this.renderEarn();
         });
 
-        document.getElementById('watch-ad-3-btn')?.addEventListener('click', async () => {
-            const btn = document.getElementById('watch-ad-3-btn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-            try {
-                await this.showUSLAd();
-                const result = await this.fetchFromServer('/api/watch-ad-3', { requestTime: Date.now() - 15000 });
-                if (!result.error && result.user) {
-                    this.powerBalance = result.user.power_balance || 0;
-                    this.coinBalance = result.user.coin_balance || 0;
-                    this.ad3DailyCount = result.user.ad3_daily_count || 0;
-                    this.adDailyDate = result.user.ad_daily_date || '';
-                    this.updateHeaderBalances();
-                    this.showNotification('Reward', `+${result.powerReward} Power +${result.coinReward} COIN`, 'success');
-                    this.vibrate('success');
-                }
-            } catch (e) {
-                this.showNotification('No Ads', 'Try again later', 'warning');
-            }
-            this.renderEarn();
-        });
-
         document.getElementById('watch-ad-2-btn')?.addEventListener('click', async () => {
             const btn = document.getElementById('watch-ad-2-btn');
             btn.disabled = true;
@@ -1872,7 +2052,7 @@ class App {
             const requestTime = Date.now();
             try {
                 const r = await this.showLiteBitsAd();
-                if (!r)  throw Object.assign(new Error('Not verified'), { code: 'NOT_VERIFIED', reason: r?.reason });
+                if (!r) throw Object.assign(new Error('Not verified'), { code: 'NOT_VERIFIED', reason: r?.reason });
                 await new Promise(res => setTimeout(res, 11000));
                 const result = await this.fetchFromServer('/api/watch-ad-2', { requestTime });
                 if (!result.error && result.user) {
@@ -2056,119 +2236,6 @@ class App {
         }
     }
 
-    showPromoClaimModal(codeData) {
-        const modal = document.getElementById('promo-claim-modal');
-        const content = document.getElementById('promo-claim-content');
-        if (!modal || !content) return;
-
-        const rewardDisplay = codeData.reward_type === 'power'
-            ? `<i class="fas fa-bolt" style="color:var(--theme-color);"></i> ${codeData.reward_amount} Power`
-            : `<img src="${this.config.COIN_ICON}" style="width:20px;height:20px;border-radius:50%;"> ${codeData.reward_amount} COIN`;
-
-        let requirementsHtml = '';
-        if (codeData.required_channel) {
-            requirementsHtml += `
-                <div class="promo-requirement-item" id="req-channel-${codeData.code}">
-                    <div class="promo-requirement-icon"><i class="fab fa-telegram"></i></div>
-                    <div class="promo-requirement-info"><h5>${this.t('join_channel')}</h5><p>@${codeData.required_channel}</p></div>
-                    <a href="https://t.me/${codeData.required_channel}" target="_blank" class="promo-requirement-btn" id="join-btn-${codeData.code}">${this.t('join_channel_btn')}</a>
-                </div>
-            `;
-        }
-        requirementsHtml += `
-            <div class="promo-requirement-item" id="req-ad-${codeData.code}">
-                <div class="promo-requirement-icon"><i class="fas fa-play-circle"></i></div>
-                <div class="promo-requirement-info"><h5>${this.t('watch_ad_requirement')}</h5><p>${this.t('watch')}</p></div>
-                <button class="promo-requirement-btn" id="watch-btn-${codeData.code}">${this.t('watch')}</button>
-            </div>
-        `;
-
-        content.innerHTML = `
-            <div class="promo-reward-preview"><div class="reward-value">${rewardDisplay}</div><div class="reward-label">${this.t('promo_reward_preview')}</div></div>
-            <div class="promo-requirements">${requirementsHtml}</div>
-            <button class="promo-claim-btn-final" id="final-claim-${codeData.code}" disabled>${this.t('promo_claim_final')}</button>
-        `;
-
-        modal.style.display = 'flex';
-        let channelJoined = !codeData.required_channel;
-        let adWatched = false;
-
-        const updateClaimState = () => {
-            const claimBtn = document.getElementById(`final-claim-${codeData.code}`);
-            if (claimBtn) claimBtn.disabled = !(channelJoined && adWatched);
-        };
-
-        if (codeData.required_channel) {
-            const joinBtn = document.getElementById(`join-btn-${codeData.code}`);
-            if (joinBtn) {
-                joinBtn.addEventListener('click', async () => {
-                    joinBtn.classList.add('completed');
-                    joinBtn.textContent = '✓';
-                    const isMember = await this.checkMembership(codeData.required_channel);
-                    if (isMember) {
-                        channelJoined = true;
-                        document.getElementById(`req-channel-${codeData.code}`).style.opacity = '0.6';
-                        updateClaimState();
-                    } else {
-                        joinBtn.classList.remove('completed');
-                        joinBtn.textContent = this.t('join_channel_btn');
-                        this.showNotification(this.t('join_required'), this.t('join_first'), 'warning');
-                        this.vibrate('warning');
-                    }
-                });
-            }
-        }
-
-        const watchBtn = document.getElementById(`watch-btn-${codeData.code}`);
-        if (watchBtn) {
-            watchBtn.addEventListener('click', async () => {
-                watchBtn.disabled = true;
-                watchBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-                try {
-                    await this.showAdsgramInterstitial();
-                    adWatched = true;
-                    watchBtn.classList.add('completed');
-                    watchBtn.textContent = '✓';
-                    document.getElementById(`req-ad-${codeData.code}`).style.opacity = '0.6';
-                    updateClaimState();
-                } catch (e) {
-                    adWatched = true;
-                    watchBtn.classList.add('completed');
-                    watchBtn.textContent = '✓';
-                    document.getElementById(`req-ad-${codeData.code}`).style.opacity = '0.6';
-                    updateClaimState();
-                }
-            });
-        }
-
-        const claimBtn = document.getElementById(`final-claim-${codeData.code}`);
-        if (claimBtn) {
-            claimBtn.addEventListener('click', async () => {
-                claimBtn.disabled = true;
-                claimBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-                let result = false;
-                try {
-                    const r = await this.fetchFromServer('/api/claim-promo-code', { code: codeData.code });
-                    if (!r.error && r.user) {
-                        this.powerBalance = r.user.power_balance || 0;
-                        this.coinBalance = r.user.coin_balance || 0;
-                        this.updateHeaderBalances();
-                        this.setPromoCooldown();
-                        this.showNotification('Reward Claimed', `You received ${r.reward}`, 'success');
-                        this.vibrate('success');
-                        result = true;
-                    } else if (r.error) {
-                        this.showNotification('Error', r.error, 'error');
-                    }
-                } catch (e) {
-                    this.showNotification('Error', 'Network error', 'error');
-                }
-                if (result) { modal.style.display = 'none'; this.renderEarn(); }
-                else { claimBtn.disabled = false; claimBtn.textContent = this.t('promo_claim_final'); }
-            });
-        }
-    }
-
     showMyTasksModal() {
         const modal = document.getElementById('my-tasks-modal');
         if (!modal) return;
@@ -2212,7 +2279,7 @@ class App {
         const el = document.getElementById('team-page');
         if (!el) return;
         const link = (this.config.BOT_LINK || 'https://t.me/GramHunterBot?start=') + this.tgUser.id;
-        const referralAmount = this.config.REFERRAL_REWARD_COIN || 1000;
+        const referralAmount = this.config.REFERRAL_REWARD_COIN || 5000;
         const referralAmountFormatted = this.formatNumber(referralAmount);
 
         el.innerHTML = `
@@ -2307,7 +2374,7 @@ class App {
     renderWallet() {
         const el = document.getElementById('wallet-page');
         if (!el) return;
-        const minWithdrawCoin = this.config.MINIMUM_WITHDRAW || 50000;
+        const minWithdrawCoin = this.config.MINIMUM_WITHDRAW || 25000;
 
         el.innerHTML = `
             <div class="live-channel-card blue-card">
@@ -2469,7 +2536,7 @@ class App {
             if (!amount || amount <= 0) { this.showNotification('Error', this.t('invalid_amount'), 'error'); this.vibrate('error'); return; }
             if (!wallet || !wallet.startsWith('UQ') || wallet.length < 20) { this.showNotification('Error', this.t('wallet_invalid'), 'error'); this.vibrate('error'); return; }
             if (amount > this.coinBalance) { this.showNotification('Error', this.t('insufficient_balance'), 'error'); this.vibrate('error'); return; }
-            if (amount < (this.config.MINIMUM_WITHDRAW || 10000)) { this.showNotification('Error', this.t('min_withdraw_note', { amount: this.config.MINIMUM_WITHDRAW || 10000 }), 'error'); this.vibrate('error'); return; }
+            if (amount < (this.config.MINIMUM_WITHDRAW || 25000)) { this.showNotification('Error', this.t('min_withdraw_note', { amount: this.config.MINIMUM_WITHDRAW || 25000 }), 'error'); this.vibrate('error'); return; }
 
             await this.processWithdrawal(amount, wallet);
         });
