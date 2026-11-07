@@ -468,3 +468,38 @@ body {
         filter: drop-shadow(0 0 30px var(--theme-glow)) brightness(1.4);
     }
 }
+
+.pick-teams {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+.pick-mini-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 3px;
+}
+.pick-score {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--primary-light);
+    letter-spacing: 1px;
+    padding: 0 8px;
+} 
+
+.prediction-status.wait {
+    color: var(--warning);
+}
+.prediction-status.wait .prediction-countdown {
+    color: var(--warning);
+    font-weight: 800;
+}
+.prediction-status.wait i {
+    color: var(--warning);
+} 
