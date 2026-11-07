@@ -1141,7 +1141,7 @@ app.post('/api/get-user', authenticate, async (req, res) => {
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-app.post('/api/matches', async (req, res) => {
+app.get('/api/matches', async (req, res) => {
     try {
         if (!APP_CONFIG.PREDICTIONS_ENABLED) return res.json({ matches: [], predictions_enabled: false });
         const now = Date.now();
