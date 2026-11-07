@@ -216,7 +216,7 @@ const APP_CONFIG = {
             team_b_logo: 'https://slho.shop/i/8223',
             status: 'wait',
             betting: true,
-            match_date: '2026-11-08T20:00:00Z',
+            match_date: '2026-11-07T20:00:00Z',
             betting_ends_hour_utc: 20,
             a_score: 0,
             b_score: 0,
