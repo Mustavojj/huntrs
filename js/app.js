@@ -1398,12 +1398,12 @@ class App {
         const mainTeams = `
             <div class="prediction-main-teams">
                 <div class="main-team">
-                    <img src="${m.team_a_logo}" class="main-team-logo" onerror="this.src='${this.config.COIN_ICON}'">
+                    <img src="${m.team_a_logo}" class="main-team-logo-bare" onerror="this.src='${this.config.COIN_ICON}'">
                     <span class="main-team-name">${m.team_a_name}</span>
                 </div>
                 ${isLive || isFinished ? `<div class="prediction-main-score">${m.a_score ?? 0} - ${m.b_score ?? 0}</div>` : `<div class="main-team-vs">${this.t('vs')}</div>`}
                 <div class="main-team">
-                    <img src="${m.team_b_logo}" class="main-team-logo" onerror="this.src='${this.config.COIN_ICON}'">
+                    <img src="${m.team_b_logo}" class="main-team-logo-bare" onerror="this.src='${this.config.COIN_ICON}'">
                     <span class="main-team-name">${m.team_b_name}</span>
                 </div>
             </div>
@@ -1442,9 +1442,9 @@ class App {
                 <div class="prediction-user-pick ${isFinished ? (won ? 'won' : 'lost') : ''}">
                     <div class="pick-label">${this.t('your_prediction')}</div>
                     <div class="pick-teams">
-                      <img src="${m.team_a_logo}" class="pick-mini-logo" onerror="this.src='${this.config.COIN_ICON}'">
+                      <img src="${m.team_a_logo}" class="pick-mini-logo-bare" onerror="this.src='${this.config.COIN_ICON}'">
                       <span class="pick-score">${userPick.a} - ${userPick.b}</span>
-                    <img src="${m.team_b_logo}" class="pick-mini-logo" onerror="this.src='${this.config.COIN_ICON}'">
+                    <img src="${m.team_b_logo}" class="pick-mini-logo-bare" onerror="this.src='${this.config.COIN_ICON}'">
                   </div>
                   ${isFinished ? `<div class="pick-result">${won ? `🎉 ${this.t('prediction_won')} +${this.formatNumber(m.reward_coin)} COIN +${this.formatNumber(m.reward_power)} Power` : `❌ ${this.t('prediction_lost')}`}</div>` : ''}
                 </div>
