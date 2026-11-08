@@ -1390,7 +1390,7 @@ class App {
         `;
 
         let statusLabel = '';
-        if (isFinished) statusLabel = `<span class="prediction-status finished">✅ ${this.t('status_finished')}</span>`;
+        if (isFinished) statusLabel = `<span class="prediction-status finished"><i class="fas fa-check-circle"></i> ${this.t('status_finished')}</span>`;
         else if (isLive) statusLabel = `<span class="prediction-status live"><span class="live-dot"></span>${this.t('status_live')}</span>`;
         else if (m.status === 'wait') statusLabel = `<span class="prediction-status wait"><i class="fas fa-hourglass-half"></i> ${this.t('status_wait')} <span class="prediction-countdown" data-until="${new Date(m.match_date).getTime()}"></span></span>`;
         else if (bettingClosed) statusLabel = `<span class="prediction-status closed"><i class="fas fa-lock"></i> ${this.t('status_betting_closed')}</span>`;
