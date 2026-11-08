@@ -212,7 +212,7 @@ const APP_CONFIG = {
     AUTO_POSTER_REWARD_PER_REFERRAL: 10,
     AUTO_POSTER_PROMO_REWARD: 200,
     AUTO_POSTER_POST_HOURS_UTC: [10, 22],
-    PREDICTIONS_ENABLED: true,
+    PREDICTIONS_ENABLED: false,
     MATCHES: [
         {
             id: 'match_002',
