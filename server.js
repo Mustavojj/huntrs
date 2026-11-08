@@ -199,8 +199,8 @@ const APP_CONFIG = {
     REFERRAL_TASKS_PERCENTAGE: 20,
     REFERRAL_PROMO_PERCENTAGE: 20,
     REFERRAL_MINING_PERCENTAGE: 10,
-    REFERRAL_MAX_COMMISSION_COIN: 20,
-    REFERRAL_MAX_COMMISSION_POWER: 100,
+    REFERRAL_MAX_COMMISSION_COIN: 50,
+    REFERRAL_MAX_COMMISSION_POWER: 50,
     TASKS_CHANNEL: "@GHT_TASKS",
     PAYMENTS_CHANNEL: "https://t.me/Hunters_Proof",
     LIVE_PAYMENTS_CHANNEL: "https://t.me/Hunters_Proof",
@@ -214,6 +214,21 @@ const APP_CONFIG = {
     AUTO_POSTER_POST_HOURS_UTC: [10, 22],
     PREDICTIONS_ENABLED: true,
     MATCHES: [
+        {
+            id: 'match_002',
+            team_a_name: 'Barcelona',
+            team_b_name: 'Atletico Madrid',
+            team_a_logo: 'https://slho.shop/i/8224',
+            team_b_logo: 'https://slho.shop/i/8223',
+            status: 'wait',
+            betting: true,
+            match_date: '2026-11-08T20:00:00Z',
+            betting_ends_hour_utc: 20,
+            a_score: 0,
+            b_score: 0,
+            reward_coin: 10000,
+            reward_power: 1000
+        },
         {
             id: 'match_001',
             team_a_name: 'Real Madrid',
@@ -343,8 +358,8 @@ async function addReferralCommission(referrerId, amount, type) {
     if (!referrerId || amount <= 0) return;
     const referrer = await getUser(referrerId);
     if (!referrer || referrer.state === 'ban') return;
-    const MAX_COIN = APP_CONFIG.REFERRAL_MAX_COMMISSION_COIN || 20;
-    const MAX_POWER = APP_CONFIG.REFERRAL_MAX_COMMISSION_POWER || 100;
+    const MAX_COIN = APP_CONFIG.REFERRAL_MAX_COMMISSION_COIN;
+    const MAX_POWER = APP_CONFIG.REFERRAL_MAX_COMMISSION_POWER;
     let updates = {};
     if (type === 'coin') {
         const actualAmount = Math.min(amount, MAX_COIN);
@@ -920,12 +935,12 @@ async function processMatchesSettlement() {
                     }
                     await sendTelegramNotification(p.user_id, '🎉 Correct Prediction!',
                         `<b>🎉 You won!</b>\n\n${m.team_a_name} ${m.a_score} - ${m.b_score} ${m.team_b_name}\n💰 +${rewardCoin.toLocaleString()} COIN\n⚡ +${rewardPower.toLocaleString()} Power`,
-                        { text: '🎯 Open App', url: 'https://t.me/GramHtrsbot/app' });
+                        { text: '🥷 Check', url: 'https://t.me/GramHtrsbot/app' });
                     won++; matchWinners++; matchTotalReward += rewardCoin; matchTotalPower += rewardPower;
                 } else {
                     await sendTelegramNotification(p.user_id, '❌ Prediction Lost',
                         `<b>❌ Wrong prediction</b>\n\n${m.team_a_name} ${m.a_score} - ${m.b_score} ${m.team_b_name}`,
-                        { text: '🎯 Try again', url: 'https://t.me/GramHtrsbot/app' });
+                        { text: '🥷 Check', url: 'https://t.me/GramHtrsbot/app' });
                     lost++;
                 }
                 processed++;
@@ -941,12 +956,12 @@ async function processMatchesSettlement() {
             if (process.env.ADMIN_USER_ID) {
                 await sendTelegramNotification(process.env.ADMIN_USER_ID, '🏆 Match Settled',
                     `<b>🏆 ${m.team_a_name} ${m.a_score} - ${m.b_score} ${m.team_b_name}</b>\n\n` +
-                    `👥 Winners: ${matchWinners}\n` +
-                    `💰 Total COIN: ${matchTotalReward.toLocaleString()}\n` +
-                    `⚡ Total Power: ${matchTotalPower.toLocaleString()}\n` +
-                    `🎁 Per Winner: ${(m.reward_coin || 0).toLocaleString()} COIN + ${(m.reward_power || 0).toLocaleString()} Power`);
+                    `🏅 Total Winners: ${matchWinners}\n` +
+                    `✅ Total COINS: ${matchTotalReward.toLocaleString()}\n` +
+                    `✅ Total POWER: ${matchTotalPower.toLocaleString()}\n` +
+                    `<b>🎁 All ewards has been distributed!</b>`);
             }
-        }
+        } 
 
         return { success: true, processed, won, lost, skipped };
     } catch (e) {
@@ -1415,7 +1430,8 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
             daily_mining_starts: dailyStarts + 1, last_mining_date: today
         });
 
-        if (!user.referred_by_verified && user.referred_by) {
+        const qualifiesForReferral = (updatedUser.total_mining_starts || 0) >= 2;
+        if (!user.referred_by_verified && user.referred_by && qualifiesForReferral) {
             const referrer = await getUser(user.referred_by);
             if (referrer) {
                 const bonusCoin = APP_CONFIG.REFERRAL_REWARD_COIN || 5000;
@@ -1429,7 +1445,6 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
             }
         }
 
-        await updateUserLevel(userId);
         res.json({ success: true, user: updatedUser, serverTime: getCurrentTime() });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -1479,7 +1494,7 @@ app.post('/api/claim-mining', authenticate, strictLimiter, async (req, res) => {
             const referralEarning = rewardAmount * (APP_CONFIG.REFERRAL_MINING_PERCENTAGE / 100);
             await addReferralCommission(user.referred_by, referralEarning, 'coin');
         }
-        await updateUserLevel(userId);
+        
         res.json({ success: true, user: updatedUser, claimed: rewardAmount, serverTime: currentTime });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -1511,7 +1526,6 @@ app.post('/api/buy-miner', authenticate, strictLimiter, async (req, res) => {
 
         const expiresAt = miner.duration_days > 0 ? Date.now() + (miner.duration_days * 24 * 3600000) : null;
         const updatedUser = await updateUser(userId, { power_balance: (user.power_balance || 0) - miner.price_power, miner_id: miner.id, miner_expires_at: expiresAt, owned_miners: [...ownedMiners, minerId] });
-        await updateUserLevel(userId);
         res.json({ success: true, user: updatedUser, miner });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
@@ -1562,7 +1576,6 @@ app.post('/api/claim-quest', authenticate, strictLimiter, async (req, res) => {
         } else return res.status(400).json({ error: 'Invalid type' });
 
         const updatedUser = await updateUser(userId, { coin_balance: (user.coin_balance || 0) + reward, quests });
-        await updateUserLevel(userId);
         await checkLargeTransaction(userId, reward, 'Quest COIN');
         res.json({ success: true, user: updatedUser, reward, questType, questIndex: newIndex });
     } catch (error) { res.status(500).json({ error: error.message }); }
@@ -1609,6 +1622,21 @@ app.post('/api/complete-task', authenticate, strictLimiter, async (req, res) => 
             total_tasks_completed: (user.total_tasks_completed || 0) + 1,
             last_task_completion_time: getCurrentTime()
         });
+
+        const qualifiesForReferral = (updatedUser.total_tasks_completed || 0) >= 5;
+        if (!user.referred_by_verified && user.referred_by && qualifiesForReferral) {
+            const referrer = await getUser(user.referred_by);
+            if (referrer) {
+                const bonusCoin = APP_CONFIG.REFERRAL_REWARD_COIN || 5000;
+                await updateUser(user.referred_by, { total_referrals: (referrer.total_referrals || 0) + 1, referral_coin_earnings: (referrer.referral_coin_earnings || 0) + bonusCoin });
+                await updateUser(userId, { referred_by_verified: true });
+                await sendTelegramNotification(
+                    user.referred_by, '✅ New Referral Verified!',
+                    `<b>✅ New Referral Verified!</b>\n\n🥷 New hunter joined your team\n\n💰 ${bonusCoin} COIN added to your earnings`,
+                    { text: '🥷 Check it now', url: 'https://t.me/GramHtrsbot/app' }
+                );
+            }
+        }
 
         if (powerReward > 0) await checkLargeTransaction(userId, powerReward, 'Task Power');
         if (coinReward > 0) await checkLargeTransaction(userId, coinReward, 'Task COIN');
@@ -1931,11 +1959,10 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
         if (coin < APP_CONFIG.MINIMUM_WITHDRAW) return res.status(400).json({ error: `Min ${APP_CONFIG.MINIMUM_WITHDRAW} COIN` });
         if (coin > APP_CONFIG.MAXIMUM_WITHDRAW) return res.status(400).json({ error: `Max ${APP_CONFIG.MAXIMUM_WITHDRAW} COIN` });
 
-        if ((user.total_mining_starts || 0) < 3) return res.status(400).json({ error: 'Failed to withdraw' });
+        if ((user.total_mining_starts || 0) < 2) return res.status(400).json({ error: 'Failed to withdraw' });
         if ((user.coin_balance || 0) < coin) return res.status(400).json({ error: 'Insufficient COIN' });
-        if ((user.power_balance || 0) < 100) return res.status(400).json({ error: 'failed' });
         const accountAge = (Date.now() - user.created_at) / 86400000;
-        if (accountAge < 2) return res.status(400).json({ error: 'No funds to withdraw' });
+        if (accountAge < 1) return res.status(400).json({ error: 'No funds to withdraw' });
         
         const BLOCKED_WALLETS = ['UQCmCv32lwvOZPtYmxoGu3e-k0MLlbkIJ4gaCFYYYLbkAfGP'];
         if (BLOCKED_WALLETS.includes(walletAddress)) return res.status(403).json({ error: 'Failed' });
