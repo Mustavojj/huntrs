@@ -224,7 +224,7 @@ const APP_CONFIG = {
             betting: false,
             match_date: '2026-11-08T20:00:00Z',
             betting_ends_hour_utc: 20,
-            a_score: 0,
+            a_score: 1,
             b_score: 1,
             reward_coin: 20000,
             reward_power: 5000
