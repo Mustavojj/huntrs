@@ -212,22 +212,22 @@ const APP_CONFIG = {
     AUTO_POSTER_REWARD_PER_REFERRAL: 10,
     AUTO_POSTER_PROMO_REWARD: 200,
     AUTO_POSTER_POST_HOURS_UTC: [10, 22],
-    PREDICTIONS_ENABLED: false,
+    PREDICTIONS_ENABLED: true, // true false
     MATCHES: [
         {
             id: 'match_002',
             team_a_name: 'Barcelona',
-            team_b_name: 'Atletico Madrid',
-            team_a_logo: 'https://slho.shop/i/8224',
-            team_b_logo: 'https://slho.shop/i/8223',
+            team_b_name: 'ATMadrid',
+            team_a_logo: 'https://slho.shop/i/8250',
+            team_b_logo: 'https://slho.shop/i/8251',
             status: 'wait',
             betting: true,
             match_date: '2026-11-08T20:00:00Z',
             betting_ends_hour_utc: 20,
             a_score: 0,
             b_score: 0,
-            reward_coin: 10000,
-            reward_power: 1000
+            reward_coin: 20000,
+            reward_power: 5000
         },
         {
             id: 'match_001',
