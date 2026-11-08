@@ -228,21 +228,6 @@ const APP_CONFIG = {
             b_score: 0,
             reward_coin: 20000,
             reward_power: 5000
-        },
-        {
-            id: 'match_001',
-            team_a_name: 'Real Madrid',
-            team_b_name: 'Valencia',
-            team_a_logo: 'https://slho.shop/i/8224',
-            team_b_logo: 'https://slho.shop/i/8223',
-            status: 'finished',
-            betting: false,
-            match_date: '2026-11-07T20:00:00Z',
-            betting_ends_hour_utc: 20,
-            a_score: 3,
-            b_score: 0,
-            reward_coin: 50000,
-            reward_power: 5000
         }
     ],
     QUESTS: {
