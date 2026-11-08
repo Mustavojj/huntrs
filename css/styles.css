@@ -508,3 +508,14 @@ body {
     height: 56px;
     object-fit: contain;
 } 
+.pick-mini-logo {
+    width: 28px;
+    height: 28px;
+    max-width: 28px;
+    max-height: 28px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 2px;
+    flex-shrink: 0;
+} 
