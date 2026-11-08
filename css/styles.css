@@ -503,3 +503,8 @@ body {
 .prediction-status.wait i {
     color: var(--warning);
 } 
+.main-team-logo-bare {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+} 
