@@ -519,3 +519,30 @@ body {
     padding: 2px;
     flex-shrink: 0;
 } 
+
+.pick-teams {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.pick-mini-logo-bare {
+    width: 28px !important;
+    height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.pick-score {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--primary-light);
+    letter-spacing: 1px;
+    padding: 0 6px;
+    white-space: nowrap;
+} 
