@@ -1,34 +1,30 @@
 const translations = {
     en: {
-        gram: "GRAM", claim: "Claim", watch: "Watch",
+        gram: "GRAM", claim: "Claim",
         loading: "Loading", start: "Start", done: "Done", delete: "Delete",
         copy: "Copy", copy_success: "Copied!", link_copied: "Link copied",
-        no_ads: "No Ads", no_ads_available: "No ads available",
         no_tasks: "No tasks", no_tasks_available: "No tasks available",
         all_tasks_completed: "All tasks completed!", no_withdrawals: "No payments created",
         no_my_tasks: "No tasks yet.", confirm_delete: "Are you sure?", deleted: "Deleted",
         busy: "Busy", complete_current_task: "Complete current task first",
         join_required: "Join Required", join_channel_first: "Please join channel first",
         earn: "Earn", home: "Home", team: "Team", wallet_page: "Withdraw",
-        activate: "ACTIVATE", active: "Active",
-        need_gram: "NEED {amount} GRAM",
         no_miner: "No Miner", gram_mined: "GRAM MINED", ready_to_claim: "READY TO CLAIM",
         not_active: "Not Active", start_mining: "START MINING",
-        claim_reward: "CLAIM {amount} GRAM", mining_active: "MINING ACTIVE", time_left: "TIME LEFT:",
+        claim_reward: "CLAIM {amount} GRAM", mining_active: "MINING ACTIVE",
         claim_quest: "Claim",
         main_tasks: "Main", partner_tasks: "Partner", community_tasks: "Community",
         promo_code: "Promo Code", enter_code: "Enter code",
-        daily_bonus: "Daily Bonus", daily_bonus_claimed: "Claimed", daily_bonus_ready: "CLAIM",
         welcome_bonus: "Welcome Bonus",
         invite_earn: "Build Your Team", invite_earn_sub: "Invite and earn generous rewards",
         referral_link_title: "Referral Link:", copy_link: "Copy Link",
         gram_earnings: "GRAM Earnings",
         total_referrals: "Total Referrals", verified_referrals: "Verified Referrals",
         earn_referral_each_label: "Referral Reward", earn_referral_each: "Earn {amount} GRAM per referral",
-        earn_referral_tasks_label: "Tasks & Ads commission", earn_referral_tasks: "Earn 10% from referrals earnings",
+        earn_referral_tasks_label: "Tasks commission", earn_referral_tasks: "Earn 10% from referrals earnings",
         earn_referral_mining_label: "Mining Commission", earn_referral_mining: "Earn 10% from mining earnings",
         withdraw_gram: "Withdraw GRAM", withdrawal_amount: "Withdrawal Amount", gram_wallet: "GRAM Wallet",
-        confirm_withdrawal: "Confirm Withdrawal", withdrawal_history: "Withdrawal History",
+        confirm_withdrawal: "Confirm Withdrawal", payments_history: "Payments History",
         my_payments: "My Payments", live_payments: "Live Payments",
         pending: "PENDING", completed: "PAID", processing: "PROCESSING", failed: "FAILED",
         min_withdraw_note: "Minimum Withdrawal: {amount} GRAM",
@@ -44,28 +40,16 @@ const translations = {
         name_required: "Name 5-20 chars", link_required: "Valid https:// link required",
         invalid_total: "Total 100-5000", payment_verified: "Payment verified!",
         payment_failed: "Payment failed", payment_checking: "Checking...", payment_error: "Payment error",
-        my_tasks: "My Tasks", promo_requirements: "Requirements",
+        my_tasks: "My Tasks",
         join_channel_btn: "Join Channel", watch_ad_requirement: "Watch Ad",
-        promo_reward_preview: "You receive", promo_claim_final: "CLAIM REWARD",
         join_first: "Join channel first", language_changed: "Language Changed!",
         task_cooldown: "Wait {s}s", promo_code_cooldown: "Wait {s}s",
         quests_title: "Quests", reward_claimed: "Reward Claimed",
         daily_limit_reached: "Daily limit reached",
         view_on_explorer: "View", just_now: "Just now", time_ago: "{time} ago",
         quest_complete_tasks: "COMPLETE TASKS", quest_invite: "INVITE HUNTERS",
-        auto_poster_title: "Auto Poster",
-        auto_poster_desc: "Let our bot post promo codes in your channel automatically and earn rewards for every post.",
-        auto_poster_add_admin: "Add Bot as Admin",
-        auto_poster_verify: "Verify Channel",
-        auto_poster_channel_input: "Channel username (e.g. @mychannel)",
-        auto_poster_active: "Active",
-        auto_poster_remove: "Remove",
-        auto_poster_verified: "Channel verified!",
-        auto_poster_removed: "Channel removed",
-        auto_poster_not_admin: "Bot is not admin in this channel",
-        auto_poster_reward_info: "Earn 10% from referral mining",
-        hot: "HOT", available_tasks: "AVAILABLE TASKS", add_task: "Add Task", daily: "Daily",
-        hourly: "Hourly", monthly: "Monthly",
+        hot: "HOT", available_tasks: "AVAILABLE TASKS", add_task: "Add Task",
+        hourly: "Hourly", daily: "Daily", monthly: "Monthly",
         withdrawable_balance: "Withdrawable Balance",
         mining_balance: "Mining Balance",
         withdrawal_conditions: "Withdrawal Conditions",
@@ -85,35 +69,31 @@ const translations = {
         share_friends: "Share with Friends"
     },
     ar: {
-        gram: "جرام", claim: "استلام", watch: "مشاهدة",
+        gram: "جرام", claim: "استلام",
         loading: "جار التحميل", start: "ابدأ", done: "تم", delete: "حذف",
         copy: "نسخ", copy_success: "تم النسخ!", link_copied: "تم نسخ الرابط",
-        no_ads: "لا إعلانات", no_ads_available: "لا إعلانات متاحة",
         no_tasks: "لا مهام", no_tasks_available: "لا مهام متاحة",
         all_tasks_completed: "تم إكمال الجميع!", no_withdrawals: "لا مدفوعات",
         no_my_tasks: "لا مهام.", confirm_delete: "متأكد؟", deleted: "تم الحذف",
         busy: "مشغول", complete_current_task: "أكمل المهمة الحالية",
         join_required: "الانضمام مطلوب", join_channel_first: "انضم للقناة أولاً",
         earn: "ربح", home: "الرئيسية", team: "الفريق", wallet_page: "السحب",
-        activate: "تفعيل", active: "نشط",
-        need_gram: "تحتاج {amount} جرام",
         no_miner: "لا منجم", gram_mined: "جرام معدني", ready_to_claim: "جاهز",
         not_active: "غير نشط", start_mining: "بدء التعدين",
-        claim_reward: "استلام {amount} جرام", mining_active: "التعدين نشط", time_left: "الوقت المتبقي:",
+        claim_reward: "استلام {amount} جرام", mining_active: "التعدين نشط",
         claim_quest: "استلام",
         main_tasks: "الرئيسية", partner_tasks: "الشركاء", community_tasks: "المجتمعية",
         promo_code: "رمز ترويجي", enter_code: "أدخل الرمز",
-        daily_bonus: "المكافأة اليومية", daily_bonus_claimed: "مستلمة", daily_bonus_ready: "استلام",
         welcome_bonus: "مكافأة الترحيب",
         invite_earn: "ابني فريقك", invite_earn_sub: "ادعُ واربح مكافآت سخية",
         referral_link_title: "رابط الإحالة:", copy_link: "نسخ الرابط",
         gram_earnings: "أرباح الجرام",
         total_referrals: "إجمالي الإحالات", verified_referrals: "الإحالات المؤكدة",
         earn_referral_each_label: "مكافأة الإحالة", earn_referral_each: "اربح {amount} جرام لكل إحالة",
-        earn_referral_tasks_label: "عمولة المهام والإعلانات", earn_referral_tasks: "اربح 10% من أرباح الإحالات",
+        earn_referral_tasks_label: "عمولة المهام", earn_referral_tasks: "اربح 10% من أرباح الإحالات",
         earn_referral_mining_label: "عمولة التعدين", earn_referral_mining: "اربح 10% من أرباح التعدين",
         withdraw_gram: "سحب جرام", withdrawal_amount: "مبلغ السحب", gram_wallet: "محفظة جرام",
-        confirm_withdrawal: "تأكيد السحب", withdrawal_history: "سجل السحوبات",
+        confirm_withdrawal: "تأكيد السحب", payments_history: "سجل المدفوعات",
         my_payments: "مدفوعاتي", live_payments: "المدفوعات الحية",
         pending: "قيد الانتظار", completed: "مدفوع", processing: "قيد المعالجة", failed: "فشل",
         min_withdraw_note: "الحد الأدنى للسحب: {amount} جرام",
@@ -129,28 +109,16 @@ const translations = {
         name_required: "الاسم 5-20 حرف", link_required: "رابط https:// صحيح",
         invalid_total: "الإجمالي 100-5000", payment_verified: "تم التحقق!",
         payment_failed: "فشل الدفع", payment_checking: "جارٍ التحقق...", payment_error: "خطأ دفع",
-        my_tasks: "مهامي", promo_requirements: "المتطلبات",
+        my_tasks: "مهامي",
         join_channel_btn: "انضم", watch_ad_requirement: "شاهد الإعلان",
-        promo_reward_preview: "ستحصل على", promo_claim_final: "استلام",
         join_first: "انضم أولاً", language_changed: "تم تغيير اللغة!",
         task_cooldown: "انتظر {s}ث", promo_code_cooldown: "انتظر {s}ث",
         quests_title: "المهام", reward_claimed: "تم الاستلام",
         daily_limit_reached: "تم بلوغ الحد اليومي",
         view_on_explorer: "عرض", just_now: "الآن", time_ago: "منذ {time}",
         quest_complete_tasks: "أكمل المهام", quest_invite: "ادعُ الصيادين",
-        auto_poster_title: "النشر التلقائي",
-        auto_poster_desc: "دع البوت ينشر أكواد ترويجية في قناتك تلقائياً واربح مكافآت عن كل منشور.",
-        auto_poster_add_admin: "أضف البوت كمشرف",
-        auto_poster_verify: "تحقق من القناة",
-        auto_poster_channel_input: "اسم القناة (مثال: @mychannel)",
-        auto_poster_active: "نشط",
-        auto_poster_remove: "إزالة",
-        auto_poster_verified: "تم التحقق من القناة!",
-        auto_poster_removed: "تمت إزالة القناة",
-        auto_poster_not_admin: "البوت ليس مشرفاً في هذه القناة",
-        auto_poster_reward_info: "اربح 10% من تعدين الإحالات",
-        hot: "ساخن", available_tasks: "المهام المتاحة", add_task: "إضافة مهمة", daily: "يومي",
-        hourly: "ساعي", monthly: "شهري",
+        hot: "ساخن", available_tasks: "المهام المتاحة", add_task: "إضافة مهمة",
+        hourly: "ساعي", daily: "يومي", monthly: "شهري",
         withdrawable_balance: "الرصيد القابل للسحب",
         mining_balance: "رصيد التعدين",
         withdrawal_conditions: "شروط السحب",
@@ -170,25 +138,21 @@ const translations = {
         share_friends: "شارك مع الأصدقاء"
     },
     ru: {
-        gram: "GRAM", claim: "Забрать", watch: "Смотреть",
+        gram: "GRAM", claim: "Забрать",
         loading: "Загрузка", start: "Начать", done: "Готово", delete: "Удалить",
         copy: "Копировать", copy_success: "Скопировано!", link_copied: "Ссылка скопирована",
-        no_ads: "Нет рекламы", no_ads_available: "Реклама недоступна",
         no_tasks: "Нет заданий", no_tasks_available: "Заданий нет",
         all_tasks_completed: "Все выполнены!", no_withdrawals: "Платежей нет",
         no_my_tasks: "Заданий нет.", confirm_delete: "Уверены?", deleted: "Удалено",
         busy: "Занято", complete_current_task: "Завершите задание",
         join_required: "Нужна подписка", join_channel_first: "Подпишитесь на канал",
         earn: "Заработать", home: "Главная", team: "Команда", wallet_page: "Вывод",
-        activate: "АКТИВИРОВАТЬ", active: "Активен",
-        need_gram: "НУЖНО {amount} GRAM",
         no_miner: "Нет майнера", gram_mined: "GRAM", ready_to_claim: "ГОТОВО",
         not_active: "Не активно", start_mining: "НАЧАТЬ",
-        claim_reward: "ЗАБРАТЬ {amount}", mining_active: "АКТИВЕН", time_left: "ОСТАЛОСЬ:",
+        claim_reward: "ЗАБРАТЬ {amount}", mining_active: "АКТИВЕН",
         claim_quest: "Забрать",
         main_tasks: "Главная", partner_tasks: "Партнёры", community_tasks: "Сообщества",
         promo_code: "Промокод", enter_code: "Введите код",
-        daily_bonus: "Бонус", daily_bonus_claimed: "Получено", daily_bonus_ready: "ЗАБРАТЬ",
         welcome_bonus: "Приветственный бонус",
         invite_earn: "Построй команду", invite_earn_sub: "Приглашай и зарабатывай",
         referral_link_title: "Реф. ссылка:", copy_link: "Копировать",
@@ -198,7 +162,7 @@ const translations = {
         earn_referral_tasks_label: "Комиссия с задач", earn_referral_tasks: "10% от рефералов",
         earn_referral_mining_label: "Комиссия с майнинга", earn_referral_mining: "10% от майнинга",
         withdraw_gram: "Вывод GRAM", withdrawal_amount: "Сумма вывода", gram_wallet: "GRAM Кошелёк",
-        confirm_withdrawal: "Подтвердить", withdrawal_history: "История",
+        confirm_withdrawal: "Подтвердить", payments_history: "История платежей",
         my_payments: "Мои платежи", live_payments: "Живые платежи",
         pending: "ОЖИДАНИЕ", completed: "ОПЛАЧЕНО", processing: "ОБРАБОТКА", failed: "ОШИБКА",
         min_withdraw_note: "Минимум: {amount} GRAM",
@@ -214,28 +178,16 @@ const translations = {
         name_required: "Имя 5-20 символов", link_required: "Ссылка https://",
         invalid_total: "Всего 100-5000", payment_verified: "Оплата принята!",
         payment_failed: "Ошибка", payment_checking: "Проверка...", payment_error: "Ошибка оплаты",
-        my_tasks: "Мои задания", promo_requirements: "Требования",
+        my_tasks: "Мои задания",
         join_channel_btn: "Подписаться", watch_ad_requirement: "Смотреть рекламу",
-        promo_reward_preview: "Вы получите", promo_claim_final: "ЗАБРАТЬ",
         join_first: "Сначала подписка", language_changed: "Язык изменён!",
         task_cooldown: "Ждите {s}с", promo_code_cooldown: "Ждите {s}с",
         quests_title: "Задания", reward_claimed: "Награда получена",
         daily_limit_reached: "Дневной лимит",
         view_on_explorer: "Открыть", just_now: "Только что", time_ago: "{time} назад",
         quest_complete_tasks: "ВЫПОЛНИТЬ", quest_invite: "ПРИГЛАСИТЬ",
-        auto_poster_title: "Автопостинг",
-        auto_poster_desc: "Пусть бот публикует промокоды в вашем канале автоматически, а вы получайте награды за каждый пост.",
-        auto_poster_add_admin: "Добавить бота админом",
-        auto_poster_verify: "Проверить канал",
-        auto_poster_channel_input: "Юзернейм канала (например @mychannel)",
-        auto_poster_active: "Активен",
-        auto_poster_remove: "Удалить",
-        auto_poster_verified: "Канал подтверждён!",
-        auto_poster_removed: "Канал удалён",
-        auto_poster_not_admin: "Бот не админ в этом канале",
-        auto_poster_reward_info: "10% от майнинга рефералов",
-        hot: "ХОТ", available_tasks: "ДОСТУПНЫЕ ЗАДАНИЯ", add_task: "Добавить", daily: "День",
-        hourly: "Час", monthly: "Месяц",
+        hot: "ХОТ", available_tasks: "ДОСТУПНЫЕ ЗАДАНИЯ", add_task: "Добавить",
+        hourly: "Час", daily: "День", monthly: "Месяц",
         withdrawable_balance: "Доступно к выводу",
         mining_balance: "Баланс майнинга",
         withdrawal_conditions: "Условия вывода",
@@ -255,25 +207,21 @@ const translations = {
         share_friends: "Поделиться"
     },
     fa: {
-        gram: "گرم", claim: "دریافت", watch: "تماشا",
+        gram: "گرم", claim: "دریافت",
         loading: "بارگذاری", start: "شروع", done: "انجام", delete: "حذف",
         copy: "کپی", copy_success: "کپی شد!", link_copied: "لینک کپی شد",
-        no_ads: "تبلیغ نیست", no_ads_available: "تبلیغی موجود نیست",
         no_tasks: "وظیفه‌ای نیست", no_tasks_available: "وظیفه‌ای نیست",
         all_tasks_completed: "همه تکمیل شد!", no_withdrawals: "پرداختی نیست",
         no_my_tasks: "وظیفه‌ای نیست.", confirm_delete: "مطمئنید؟", deleted: "حذف شد",
         busy: "مشغول", complete_current_task: "ابتدا وظیفه فعلی",
         join_required: "نیاز به عضویت", join_channel_first: "ابتدا عضو شوید",
         earn: "درآمد", home: "خانه", team: "تیم", wallet_page: "برداشت",
-        activate: "فعال‌سازی", active: "فعال",
-        need_gram: "نیاز {amount} گرم",
         no_miner: "بدون ماینر", gram_mined: "گرم معدنی", ready_to_claim: "آماده",
         not_active: "غیرفعال", start_mining: "شروع استخراج",
-        claim_reward: "دریافت {amount} گرم", mining_active: "فعال", time_left: "زمان باقی‌مانده:",
+        claim_reward: "دریافت {amount} گرم", mining_active: "فعال",
         claim_quest: "دریافت",
         main_tasks: "خانه", partner_tasks: "شرکا", community_tasks: "اجتماعی",
         promo_code: "کد", enter_code: "کد را وارد کنید",
-        daily_bonus: "پاداش روزانه", daily_bonus_claimed: "دریافت شد", daily_bonus_ready: "دریافت",
         welcome_bonus: "پاداش خوش‌آمدگویی",
         invite_earn: "تیم خود را بسازید", invite_earn_sub: "دعوت کنید و پاداش بگیرید",
         referral_link_title: "لینک معرفی:", copy_link: "کپی لینک",
@@ -283,7 +231,7 @@ const translations = {
         earn_referral_tasks_label: "کمیسیون وظایف", earn_referral_tasks: "۱۰٪ از معرفی‌ها",
         earn_referral_mining_label: "کمیسیون استخراج", earn_referral_mining: "۱۰٪ از استخراج",
         withdraw_gram: "برداشت GRAM", withdrawal_amount: "مبلغ برداشت", gram_wallet: "کیف GRAM",
-        confirm_withdrawal: "تأیید", withdrawal_history: "تاریخچه",
+        confirm_withdrawal: "تأیید", payments_history: "تاریخچه پرداخت‌ها",
         my_payments: "پرداخت‌های من", live_payments: "پرداخت‌های زنده",
         pending: "در انتظار", completed: "پرداخت شده", processing: "در حال پردازش", failed: "ناموفق",
         min_withdraw_note: "حداقل برداشت: {amount} گرم",
@@ -299,28 +247,16 @@ const translations = {
         name_required: "نام ۵-۲۰ کاراکتر", link_required: "لینک https://",
         invalid_total: "کل ۱۰۰-۵۰۰۰", payment_verified: "پرداخت تأیید شد!",
         payment_failed: "ناموفق", payment_checking: "بررسی...", payment_error: "خطای پرداخت",
-        my_tasks: "وظایف من", promo_requirements: "الزامات",
+        my_tasks: "وظایف من",
         join_channel_btn: "پیوستن", watch_ad_requirement: "تماشای تبلیغ",
-        promo_reward_preview: "دریافت می‌کنید", promo_claim_final: "دریافت",
         join_first: "ابتدا عضو شوید", language_changed: "زبان تغییر کرد!",
         task_cooldown: "{s}ثانیه صبر", promo_code_cooldown: "{s}ثانیه صبر",
         quests_title: "وظایف", reward_claimed: "پاداش دریافت شد",
         daily_limit_reached: "حد روزانه",
         view_on_explorer: "مشاهده", just_now: "همین حالا", time_ago: "{time} پیش",
         quest_complete_tasks: "تکمیل وظایف", quest_invite: "دعوت شکارچیان",
-        auto_poster_title: "نشر خودکار",
-        auto_poster_desc: "اجازه دهید ربات کدهای تخفیف را به صورت خودکار در کانال شما منتشر کند و در ازای هر پست پاداش بگیرید.",
-        auto_poster_add_admin: "افزودن ربات به عنوان ادمین",
-        auto_poster_verify: "تأیید کانال",
-        auto_poster_channel_input: "نام کاربری کانال (مثلاً @mychannel)",
-        auto_poster_active: "فعال",
-        auto_poster_remove: "حذف",
-        auto_poster_verified: "کانال تأیید شد!",
-        auto_poster_removed: "کانال حذف شد",
-        auto_poster_not_admin: "ربات در این کانال ادمین نیست",
-        auto_poster_reward_info: "۱۰٪ از استخراج معرفی‌ها",
-        hot: "داغ", available_tasks: "وظایف موجود", add_task: "افزودن", daily: "روزانه",
-        hourly: "ساعتی", monthly: "ماهانه",
+        hot: "داغ", available_tasks: "وظایف موجود", add_task: "افزودن",
+        hourly: "ساعتی", daily: "روزانه", monthly: "ماهانه",
         withdrawable_balance: "موجودی قابل برداشت",
         mining_balance: "موجودی استخراج",
         withdrawal_conditions: "شرایط برداشت",
@@ -374,13 +310,7 @@ class App {
         this.verifiedReferrals = 0;
         this.isTaskRunning = false;
         this.userState = null;
-        this.ad1DailyCount = 0;
-        this.ad2DailyCount = 0;
-        this.adDailyDate = '';
-        this.communityGramReward = 0.002;
-        this.adRewardGram = 0.0005;
-        this.adDailyLimit = 10;
-        this.dailyBonusClaimed = false;
+        this.totalMiningStarts = 0;
 
         this.lang = 'en';
         this.referredBy = null;
@@ -401,7 +331,7 @@ class App {
         this._promoCooldown = 0;
         this.visitorId = null;
 
-        this.quests = { currentMinerQuestIndex: 0, currentTaskQuestIndex: 0, currentReferralQuestIndex: 0 };
+        this.quests = { currentTaskQuestIndex: 0, currentReferralQuestIndex: 0 };
 
         this.config = {};
         this.mainTasks = [];
@@ -409,16 +339,9 @@ class App {
         this.communityTasks = [];
         this.myCommunityTasks = [];
         this.promoCodes = [];
-        this._activeTaskTab = 'main';
-
-        this.miners = [];
-        this.activeMiner = null;
-        this.ownedMiners = [];
+        this._activeTaskTab = 'community';
 
         this.pendingTaskData = null;
-
-        this.autoPosterChannel = null;
-        this.autoPosterEnabled = false;
 
         this.welcomeBonusClaimed = false;
 
@@ -450,28 +373,50 @@ class App {
         return name.substring(0, maxLength) + '...';
     }
 
+    truncateName20(name) {
+        if (!name) return 'User';
+        if (name.length <= 20) return name;
+        return name.substring(0, 20);
+    }
+
     t(key, params = {}) {
         let text = translations[this.lang]?.[key] || translations.en[key] || key;
         for (const [k, v] of Object.entries(params)) text = text.replace(`{${k}}`, v);
         return text;
     }
 
-    formatNumber(num) {
-        if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
-        if (num >= 1000) return (num / 1000).toFixed(2) + 'K';
-        return Math.floor(num).toString();
+    formatGram4(num) {
+        return (num || 0).toFixed(4);
     }
 
-    formatGram(num) {
+    formatGram8(num) {
         return (num || 0).toFixed(8);
     }
 
-    formatGramShort(num) {
-        if (num >= 1) return num.toFixed(4);
-        return num.toFixed(8);
+    formatGram6(num) {
+        return (num || 0).toFixed(6);
     }
 
-    getActiveMiner() { return this.activeMiner; }
+    formatGram5(num) {
+        return (num || 0).toFixed(5);
+    }
+
+    formatGram3(num) {
+        return (num || 0).toFixed(3);
+    }
+
+    formatGram2(num) {
+        return (num || 0).toFixed(2);
+    }
+
+    formatBalance4(num) {
+        return (num || 0).toFixed(4);
+    }
+
+    maskWallet(wallet) {
+        if (!wallet || wallet.length < 10) return wallet || '';
+        return wallet.substring(0, 5) + '*****' + wallet.substring(wallet.length - 5);
+    }
 
     getMiningRate() {
         return (this.miningBalance || 0) * (this.config.MINING_RATE_PERCENTAGE / 100 || 0.05);
@@ -490,16 +435,13 @@ class App {
     }
 
     updateHeaderBalances() {
-        const gramHeader = document.getElementById('header-gram');
-        if (gramHeader) gramHeader.innerHTML = `<img src="${this.config.GRAM_ICON}" style="width:14px;height:14px;border-radius:50%;object-fit:cover;"> ${this.formatGram(this.gramBalance)}`;
+        const miningEl = document.getElementById('header-mining-balance');
+        const withdrawableEl = document.getElementById('header-withdrawable-balance');
+        if (miningEl) miningEl.innerText = this.formatBalance4(this.miningBalance);
+        if (withdrawableEl) withdrawableEl.innerText = this.formatBalance4(this.withdrawableBalance);
     }
 
-    updateHeaderMiner() {
-        const minerName = document.getElementById('user-miner-name');
-        const minerLogo = document.getElementById('user-miner-logo');
-        if (minerName) minerName.innerText = 'Diamond';
-        if (minerLogo) minerLogo.src = this.config.GRAM_ICON || 'https://qu.ax/x/4tO7V.png';
-    }
+    updateHeaderMiner() {}
 
     checkCooldown(endpoint) {
         const now = Date.now();
@@ -568,10 +510,6 @@ class App {
             const config = await this.getFromServer('/api/config');
             this.config = config;
             this.miningSessionHours = config.MINING_SESSION_HOURS || 12;
-            this.communityGramReward = config.COMMUNITY_GRAM_REWARD || 0.002;
-            this.adRewardGram = config.AD_REWARD_GRAM || 0.0005;
-            this.adDailyLimit = config.AD_DAILY_LIMIT || 10;
-            this.miners = config.MINERS || [];
             return config;
         } catch (error) { return this.config; }
     }
@@ -641,12 +579,12 @@ class App {
         if (document.getElementById('not-registered-page')) return;
         const page = document.createElement('div');
         page.id = 'not-registered-page';
-        page.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;padding:20px;text-align:center;gap:20px;`;
+        page.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:#020824;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;padding:20px;text-align:center;gap:20px;`;
         page.innerHTML = `
             <div style="font-size:80px;margin-bottom:10px;">🎯</div>
-            <h2 style="color:#0EA5E9;font-size:1.5rem;font-weight:700;margin:0;">${this.t('not_registered_title')}</h2>
-            <p style="color:#888;font-size:0.9rem;max-width:300px;line-height:1.6;margin:0;">${this.t('not_registered_message')}</p>
-            <a href="https://t.me/GramHtrsbot/app?startapp=start" target="_blank" style="display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:linear-gradient(135deg,#0EA5E9,#0284C7);border-radius:60px;color:#fff;font-weight:700;font-size:1rem;text-decoration:none;margin-top:10px;">
+            <h2 style="color:#00E5FF;font-size:1.5rem;font-weight:700;margin:0;">${this.t('not_registered_title')}</h2>
+            <p style="color:#91B8D9;font-size:0.9rem;max-width:300px;line-height:1.6;margin:0;">${this.t('not_registered_message')}</p>
+            <a href="https://t.me/GramHtrsbot/app?startapp=start" target="_blank" style="display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:linear-gradient(135deg,#064BFF,#008CFF);border-radius:60px;color:#fff;font-weight:700;font-size:1rem;text-decoration:none;margin-top:10px;">
                 <i class="fas fa-rocket"></i> ${this.t('register_now')}
             </a>
         `;
@@ -659,15 +597,15 @@ class App {
         if (document.getElementById('device-lock-page')) return;
         const page = document.createElement('div');
         page.id = 'device-lock-page';
-        page.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;padding:20px;text-align:center;gap:20px;`;
+        page.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:#020824;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;padding:20px;text-align:center;gap:20px;`;
         page.innerHTML = `
             <div style="font-size:80px;">🚫</div>
             <h2 style="color:#FF4444;font-size:1.5rem;font-weight:700;margin:0;">${this.t('device_locked_title')}</h2>
-            <p style="color:#888;font-size:0.9rem;max-width:300px;line-height:1.6;margin:0;">
+            <p style="color:#91B8D9;font-size:0.9rem;max-width:300px;line-height:1.6;margin:0;">
                 ${this.t('device_locked_message')}
             </p>
             <button onclick="if(window.Telegram?.WebApp) window.Telegram.WebApp.close(); else window.close();"
-                style="padding:14px 32px;background:linear-gradient(135deg,#0EA5E9,#0284C7);border:none;border-radius:60px;color:#fff;font-weight:700;font-size:1rem;cursor:pointer;">
+                style="padding:14px 32px;background:linear-gradient(135deg,#064BFF,#008CFF);border:none;border-radius:60px;color:#fff;font-weight:700;font-size:1rem;cursor:pointer;">
                 ${this.t('close')}
             </button>
         `;
@@ -700,28 +638,19 @@ class App {
             this.totalReferrals = user.total_referrals || 0;
             this.verifiedReferrals = user.verified_referrals || 0;
             this.totalTasksCompleted = user.total_tasks_completed || 0;
+            this.totalMiningStarts = user.total_mining_starts || 0;
             this.userState = user.state || 'active';
-            this.ad1DailyCount = user.ad1_daily_count || 0;
-            this.ad2DailyCount = user.ad2_daily_count || 0;
-            this.adDailyDate = user.ad_daily_date || '';
             this.isAuthenticated = true;
-            this.ownedMiners = user.owned_miners || [];
-            this.autoPosterChannel = user.auto_poster_channel || null;
-            this.autoPosterEnabled = user.auto_poster_enabled || false;
             this.welcomeBonusClaimed = user.welcome_bonus_claimed || false;
-
-            this.activeMiner = { id: 'diamond', name: 'Diamond', logo: this.config.GRAM_ICON || 'https://qu.ax/x/4tO7V.png' };
 
             if (user.quests) {
                 this.quests = user.quests;
-                this.quests.currentMinerQuestIndex = user.quests.current_miner_quest_index || 0;
                 this.quests.currentTaskQuestIndex = user.quests.current_task_quest_index || 0;
                 this.quests.currentReferralQuestIndex = user.quests.current_referral_quest_index || 0;
             }
 
             if (result.completedTasks) this.userCompletedTasks = new Set(result.completedTasks);
             if (result.withdrawals) this.withdrawals = result.withdrawals;
-            if (result.userPredictions) this.userPredictions = result.userPredictions;
 
             this._userDataLoaded = true;
 
@@ -731,7 +660,6 @@ class App {
             if (photoImg) photoImg.src = this.tgUser.photo_url || this.config.DEFAULT_USER_AVATAR;
 
             this.updateHeaderBalances();
-            this.updateHeaderMiner();
 
             document.getElementById('app-loader').style.display = 'none';
             document.getElementById('app').style.display = 'block';
@@ -773,6 +701,7 @@ class App {
             this.pendingGramReward = result.user.pending_gram_reward || 0;
             this.totalReferrals = result.user.total_referrals || 0;
             this.verifiedReferrals = result.user.verified_referrals || 0;
+            this.totalMiningStarts = result.user.total_mining_starts || 0;
             this.renderMining();
             this.startMiningLoop();
             this.showNotification('Mining Started', 'Your rig is mining GRAM', 'success');
@@ -809,7 +738,7 @@ class App {
             this.miningEndTime = result.user.mining_end_time || null;
             this.updateHeaderBalances();
             this.renderMining();
-            this.showNotification('Reward Claimed', `+${this.formatGram(result.claimed)} GRAM`, 'success');
+            this.showNotification('Reward Claimed', `+${this.formatGram8(result.claimed)} GRAM`, 'success');
             this.vibrate('success');
         }
     }
@@ -822,7 +751,7 @@ class App {
             this.welcomeBonusClaimed = true;
             this.updateHeaderBalances();
             this.renderMining();
-            this.showNotification(this.t('welcome_bonus_success'), `+${this.formatGram(result.bonus)} GRAM`, 'success');
+            this.showNotification(this.t('welcome_bonus_success'), `+${this.formatGram8(result.bonus)} GRAM`, 'success');
             this.vibrate('success');
         }
     }
@@ -849,7 +778,7 @@ class App {
         const minutes = Math.floor((remaining % 3600) / 60);
         const seconds = Math.floor(remaining % 60);
         const timerEl = document.querySelector('.mining-timer');
-        if (timerEl) timerEl.innerHTML = `${this.t('time_left')} ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        if (timerEl) timerEl.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
 
     updateMiningProgressDisplay() {
@@ -861,7 +790,7 @@ class App {
         const progressText = document.querySelector('.mining-progress-text .percent');
         if (progressText) progressText.innerText = Math.floor(progressPercent) + '%';
         const amountEl = document.querySelector('.mining-status .amount');
-        if (amountEl) amountEl.innerText = this.formatGram(minedAmount);
+        if (amountEl) amountEl.innerText = this.formatGram6(minedAmount);
     }
 
     async applyPromoCode(code) {
@@ -883,36 +812,20 @@ class App {
         } catch (error) { return false; }
     }
 
-    async claimDailyBonus() {
-        try {
-            const result = await this.fetchFromServer('/api/claim-daily-bonus', {});
-            if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return false; }
-            if (result.user) {
-                this.miningBalance = result.user.mining_balance || 0;
-                this.dailyBonusClaimed = true;
-                this.updateHeaderBalances();
-                this.showNotification('Daily Bonus!', `+${this.formatGram(result.gramReward)} GRAM`, 'success');
-                this.vibrate('success');
-                return true;
-            }
-            return false;
-        } catch (error) { return false; }
-    }
-
-    async claimReferralEarnings(type) {
+    async claimReferralEarnings() {
         try {
             await this.showAdsgramInterstitial();
         } catch (e) {
-            this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning'); this.vibrate('warning'); return false;
+            this.showNotification('No Ads', 'No ads available', 'warning'); this.vibrate('warning'); return false;
         }
         try {
-            const result = await this.fetchFromServer('/api/claim-referral-earnings', { type });
+            const result = await this.fetchFromServer('/api/claim-referral-earnings', {});
             if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return false; }
             if (result.user) {
                 this.miningBalance = result.user.mining_balance || 0;
                 this.referralGramEarnings = result.user.referral_gram_earnings || 0;
                 this.updateHeaderBalances();
-                this.showNotification('Reward Claimed', `+${this.formatGram(result.claimed)} GRAM`, 'success');
+                this.showNotification('Reward Claimed', `+${this.formatGram8(result.claimed)} GRAM`, 'success');
                 this.vibrate('success');
                 if (this._teamLoaded) this.renderTeam();
                 return true;
@@ -937,14 +850,6 @@ class App {
         const tasks = await this.loadTasks(category);
         this.taskCache[category] = { data: tasks, timestamp: now };
         return tasks;
-    }
-
-    async loadPromoCodes() {
-        try {
-            const result = await this.fetchFromServer('/api/promo-codes', {});
-            this.promoCodes = result.codes || [];
-            return this.promoCodes;
-        } catch (error) { return []; }
     }
 
     async loadMyTasks() {
@@ -1073,19 +978,6 @@ class App {
         await controller.show();
     }
 
-    async showAdsgramAd() {
-        let retries = 0;
-        while (typeof window.Adsgram?.init !== 'function' && retries < 20) {
-            await new Promise(r => setTimeout(r, 250));
-            retries++;
-        }
-        if (typeof window.Adsgram?.init !== 'function') throw new Error('Adsgram not loaded');
-        const controller = window.Adsgram.init({ blockId: '57375' });
-        const result = await controller.show();
-        if (!result || result.done !== true) throw new Error('Ad not completed');
-        return result;
-    }
-
     async shareGramHunters() {
         if (!window.Telegram?.WebApp) return;
         try {
@@ -1106,27 +998,33 @@ class App {
         const monthlyRate = this.getMonthlyRate();
         const progressPercent = this.getMiningProgressPercent();
 
-        let statusHtml = '';
+        let bodyHtml = '';
         let actionHtml = '';
-        let welcomeHtml = '';
 
         if (!this.welcomeBonusClaimed) {
-            welcomeHtml = `
-                <div class="welcome-bonus-card">
-                    <div class="welcome-bonus-icon">🎁</div>
-                    <div class="welcome-bonus-info">
-                        <h4>${this.t('welcome_bonus')}</h4>
-                        <div class="welcome-bonus-amount">${this.formatGram(this.config.WELCOME_BONUS_GRAM || 0.20)} GRAM</div>
-                    </div>
-                    <button id="claim-welcome-btn" class="welcome-bonus-btn">${this.t('claim')}</button>
+            bodyHtml = `
+                <div class="welcome-card">
+                    <span class="welcome-gift-icon">🎁</span>
+                    <div class="welcome-title">${this.t('welcome_bonus')}</div>
+                    <div class="welcome-amount"><img src="${this.config.GRAM_ICON}"> ${this.formatGram2(this.config.WELCOME_BONUS_GRAM || 0.20)} GRAM</div>
+                    <button id="claim-welcome-btn" class="welcome-claim-btn">${this.t('claim')}</button>
                 </div>
             `;
+            el.innerHTML = `
+                ${bodyHtml}
+                <div class="section-header blue-header"><h3><i class="fas fa-trophy"></i> ${this.t('quests_title')}</h3></div>
+                <div id="task-quests-container"></div>
+                <div id="referral-quests-container"></div>
+            `;
+            this.renderQuests();
+            document.getElementById('claim-welcome-btn')?.addEventListener('click', () => this.claimWelcomeBonus());
+            return;
         }
 
         if (this.miningActive) {
             const minedAmount = this.getMinedAmount();
-            statusHtml = `
-                <div class="mining-status active"><span class="amount">${this.formatGram(minedAmount)}</span></div>
+            bodyHtml = `
+                <div class="mining-status active"><span class="amount">${this.formatGram6(minedAmount)}</span></div>
                 <div class="mining-status-row">
                     <span class="mining-status-label active"><span class="live-dot"></span> ${this.t('mining_status_active')}</span>
                 </div>
@@ -1134,20 +1032,20 @@ class App {
             actionHtml = `
                 <div class="mining-progress-container">
                     <div class="mining-progress-bar"><div class="mining-progress-fill" style="width: ${progressPercent}%"></div></div>
-                    <div class="mining-progress-text"><span class="mining-timer">${this.t('time_left')} 00:00:00</span><span class="percent">${Math.floor(progressPercent)}%</span></div>
+                    <div class="mining-progress-text"><span class="timer-only mining-timer">00:00:00</span><span class="percent">${Math.floor(progressPercent)}%</span></div>
                 </div>
             `;
         } else if (this.pendingGramReward > 0) {
-            statusHtml = `
-                <div class="mining-status active"><span class="amount">${this.formatGram(this.pendingGramReward)}</span><span class="label">${this.t('ready_to_claim')}</span></div>
+            bodyHtml = `
+                <div class="mining-status active"><span class="amount">${this.formatGram6(this.pendingGramReward)}</span><span class="label">${this.t('ready_to_claim')}</span></div>
                 <div class="mining-status-row">
                     <span class="mining-status-label inactive"><span class="live-dot"></span> ${this.t('mining_status_inactive')}</span>
                 </div>
             `;
-            actionHtml = `<button id="claim-mining-btn" class="mining-claim-btn"><img src="${this.config.GRAM_ICON}" class="claim-coin-icon"> ${this.t('claim_reward', { amount: this.formatGramShort(this.pendingGramReward) })}</button>`;
+            actionHtml = `<button id="claim-mining-btn" class="mining-claim-btn"><img src="${this.config.GRAM_ICON}" class="claim-coin-icon"> ${this.t('claim_reward', { amount: this.formatGram6(this.pendingGramReward) })}</button>`;
         } else {
-            statusHtml = `
-                <div class="mining-status not-active">${this.formatGram(0)}</div>
+            bodyHtml = `
+                <div class="mining-status not-active">${this.formatGram6(0)}</div>
                 <div class="mining-status-row">
                     <span class="mining-status-label inactive"><span class="live-dot"></span> ${this.t('mining_status_inactive')}</span>
                 </div>
@@ -1156,17 +1054,15 @@ class App {
         }
 
         el.innerHTML = `
-            ${welcomeHtml}
             <div class="mining-card">
                 <div class="mining-logo-wrapper ${this.miningActive ? 'active' : 'inactive'}">
-                    <img src="${this.config.GRAM_ICON}" class="mining-logo" alt="GRAM">
+                    <img src="${this.config.APP_LOGO}" class="mining-logo" alt="GRAM">
                 </div>
-                <div class="miner-name-display">Diamond</div>
-                ${statusHtml}
+                ${bodyHtml}
                 <div class="speed-card">
-                    <div class="speed-item"><div class="speed-label">${this.t('hourly')}</div><div class="speed-value">${this.formatGram(hourlyRate)}</div></div>
-                    <div class="speed-item"><div class="speed-label">${this.t('daily')}</div><div class="speed-value">${this.formatGram(dailyRate)}</div></div>
-                    <div class="speed-item"><div class="speed-label">${this.t('monthly')}</div><div class="speed-value">${this.formatGram(monthlyRate)}</div></div>
+                    <div class="speed-item"><div class="speed-label">${this.t('hourly')}</div><div class="speed-value">${this.formatGram5(hourlyRate)}</div></div>
+                    <div class="speed-item"><div class="speed-label">${this.t('daily')}</div><div class="speed-value">${this.formatGram3(dailyRate)}</div></div>
+                    <div class="speed-item"><div class="speed-label">${this.t('monthly')}</div><div class="speed-value">${this.formatGram2(monthlyRate)}</div></div>
                 </div>
                 ${actionHtml}
             </div>
@@ -1180,7 +1076,6 @@ class App {
 
         document.getElementById('start-mining-btn')?.addEventListener('click', () => this.startMining());
         document.getElementById('claim-mining-btn')?.addEventListener('click', () => this.claimMiningRewards());
-        document.getElementById('claim-welcome-btn')?.addEventListener('click', () => this.claimWelcomeBonus());
 
         if (this.miningActive) this.updateMiningTimerDisplay();
     }
@@ -1203,10 +1098,10 @@ class App {
                         <div class="quest-info">
                             <h4>${this.t('quest_complete_tasks')} - ${currentTaskQuest.target_tasks}</h4>
                             <div class="quest-rewards-row">
-                                <span class="quest-reward-badge"><img src="${this.config.GRAM_ICON}" style="width:12px;height:12px;border-radius:50%;"> ${this.formatGram(currentTaskQuest.reward)}</span>
+                                <span class="quest-reward-badge"><img src="${this.config.GRAM_ICON}"> ${this.formatGram3(currentTaskQuest.reward)}</span>
                             </div>
                             <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: ${taskProgress}%"></div></div>
-                            <div style="font-size:0.55rem;color:#888;margin-top:2px;">${Math.floor(taskProgress)}%</div>
+                            <div style="font-size:0.55rem;color:#91B8D9;margin-top:2px;">${Math.floor(taskProgress)}%</div>
                         </div>
                         ${taskQuestComplete ? `<button id="claim-task-quest" class="quest-claim-btn">${this.t('claim_quest')}</button>` : `<button class="quest-claim-btn locked" disabled><i class="fas fa-lock"></i></button>`}
                     </div>
@@ -1237,10 +1132,10 @@ class App {
                         <div class="quest-info">
                             <h4>${this.t('quest_invite')} - ${currentReferralQuest.target_referrals}</h4>
                             <div class="quest-rewards-row">
-                                <span class="quest-reward-badge"><img src="${this.config.GRAM_ICON}" style="width:12px;height:12px;border-radius:50%;"> ${this.formatGram(currentReferralQuest.reward)}</span>
+                                <span class="quest-reward-badge"><img src="${this.config.GRAM_ICON}"> ${this.formatGram3(currentReferralQuest.reward)}</span>
                             </div>
                             <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: ${referralProgress}%"></div></div>
-                            <div style="font-size:0.55rem;color:#888;margin-top:2px;">${Math.floor(referralProgress)}%</div>
+                            <div style="font-size:0.55rem;color:#91B8D9;margin-top:2px;">${Math.floor(referralProgress)}%</div>
                         </div>
                         ${referralQuestComplete ? `<button id="claim-referral-quest" class="quest-claim-btn">${this.t('claim_quest')}</button>` : `<button class="quest-claim-btn locked" disabled><i class="fas fa-lock"></i></button>`}
                     </div>
@@ -1266,7 +1161,6 @@ class App {
                 this.miningBalance = result.user.mining_balance || 0;
                 if (result.user.quests) {
                     this.quests = result.user.quests;
-                    this.quests.currentMinerQuestIndex = result.user.quests.current_miner_quest_index || 0;
                     this.quests.currentTaskQuestIndex = result.user.quests.current_task_quest_index || 0;
                     this.quests.currentReferralQuestIndex = result.user.quests.current_referral_quest_index || 0;
                 }
@@ -1275,7 +1169,7 @@ class App {
                     else if (questType === 'referral') this.quests.currentReferralQuestIndex = result.questIndex;
                 }
                 this.updateHeaderBalances();
-                this.showNotification('Reward Claimed', `+${this.formatGram(result.reward)} GRAM`, 'success');
+                this.showNotification('Reward Claimed', `+${this.formatGram8(result.reward)} GRAM`, 'success');
                 this.vibrate('success');
                 return true;
             }
@@ -1287,50 +1181,12 @@ class App {
         const el = document.getElementById('earn-page');
         if (!el) return;
 
-        const today = new Date().toISOString().split('T')[0];
-        const ad1Count = this.adDailyDate === today ? this.ad1DailyCount : 0;
-        const ad2Count = this.adDailyDate === today ? this.ad2DailyCount : 0;
-        const ad1ReachedLimit = ad1Count >= this.adDailyLimit;
-        const ad2ReachedLimit = ad2Count >= this.adDailyLimit;
-
         el.innerHTML = `
             <div class="promo-card blue-card">
                 <div class="promo-title"><i class="fas fa-ticket-alt"></i> ${this.t('promo_code')}</div>
                 <div class="promo-input-group">
                     <input type="text" id="promo-input" class="form-input blue-input" placeholder="${this.t('enter_code')}" autocomplete="off">
                     <button id="promo-submit" class="promo-submit-btn" disabled>${this.t('claim')}</button>
-                </div>
-            </div>
-
-            <div class="ad-card blue-card">
-                <div class="ad-header">
-                    <div class="ad-icon"><i class="fas fa-tv"></i></div>
-                    <div class="ad-info">
-                        <h4>${this.t('watch_ad_1')}</h4>
-                        <div class="ad-rewards">
-                            <span class="ad-reward-badge"><img src="${this.config.GRAM_ICON}"> ${this.formatGram(this.adRewardGram)}</span>
-                            <span class="ad-counter-badge">${ad1Count}/${this.adDailyLimit}</span>
-                        </div>
-                    </div>
-                    <button id="watch-ad-1-btn" class="ad-btn" ${ad1ReachedLimit ? 'disabled' : ''}>
-                        ${ad1ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}
-                    </button>
-                </div>
-            </div>
-
-            <div class="ad-card blue-card">
-                <div class="ad-header">
-                    <div class="ad-icon"><i class="fas fa-tv"></i></div>
-                    <div class="ad-info">
-                        <h4>${this.t('watch_ad_2')}</h4>
-                        <div class="ad-rewards">
-                            <span class="ad-reward-badge"><img src="${this.config.GRAM_ICON}"> ${this.formatGram(this.adRewardGram)}</span>
-                            <span class="ad-counter-badge">${ad2Count}/${this.adDailyLimit}</span>
-                        </div>
-                    </div>
-                    <button id="watch-ad-2-btn" class="ad-btn" ${ad2ReachedLimit ? 'disabled' : ''}>
-                        ${ad2ReachedLimit ? this.t('daily_limit_reached') : this.t('watch')}
-                    </button>
                 </div>
             </div>
 
@@ -1356,113 +1212,11 @@ class App {
             <div id="tasks-container" class="tasks-list">
                 <div class="task-loading"><i class="fas fa-spinner fa-pulse"></i><p>${this.t('loading')}...</p></div>
             </div>
-
-            <div class="section-header blue-header" style="margin-top:20px;">
-                <h3><i class="fas fa-bullhorn"></i> ${this.t('auto_poster_title')}</h3>
-            </div>
-
-            <div class="auto-poster-card blue-card" id="auto-poster-card">
-                ${this.renderAutoPosterContent()}
-            </div>
         `;
 
         this.attachEarnHandlers();
         this.attachTaskTabHandlers();
-        this.attachAutoPosterHandlers();
         this.loadTasksForActiveTab();
-    }
-
-    renderAutoPosterContent() {
-        if (this.autoPosterEnabled && this.autoPosterChannel) {
-            return `
-                <div class="auto-poster-active">
-                    <div class="auto-poster-status">
-                        <i class="fas fa-check-circle" style="color:var(--success);"></i>
-                        <span>${this.t('auto_poster_active')}</span>
-                    </div>
-                    <div class="auto-poster-channel">@${this.autoPosterChannel.replace('@', '')}</div>
-                    <button id="auto-poster-remove-btn" class="auto-poster-remove-btn">
-                        <i class="fas fa-trash"></i> ${this.t('auto_poster_remove')}
-                    </button>
-                </div>
-            `;
-        }
-        return `
-            <div class="auto-poster-desc">${this.t('auto_poster_desc')}</div>
-            <div class="auto-poster-steps">
-                <div class="auto-poster-step">
-                    <div class="auto-poster-step-num">1</div>
-                    <div class="auto-poster-step-text">${this.t('auto_poster_add_admin')}</div>
-                </div>
-                <div class="auto-poster-step">
-                    <div class="auto-poster-step-num">2</div>
-                    <div class="auto-poster-step-text">${this.t('auto_poster_verify')}</div>
-                </div>
-            </div>
-            <a href="https://t.me/${(this.config.BOT_USERNAME || 'GramHtrsbot').replace('@', '')}?startchannel=true&admin=post_messages" target="_blank" class="auto-poster-btn blue-btn">
-                <i class="fab fa-telegram"></i> ${this.t('auto_poster_add_admin')}
-            </a>
-            <div class="auto-poster-input-group">
-                <input type="text" id="auto-poster-channel-input" class="form-input blue-input" placeholder="${this.t('auto_poster_channel_input')}" autocomplete="off">
-                <button id="auto-poster-verify-btn" class="auto-poster-verify-btn blue-btn">${this.t('auto_poster_verify')}</button>
-            </div>
-        `;
-    }
-
-    attachAutoPosterHandlers() {
-        const removeBtn = document.getElementById('auto-poster-remove-btn');
-        if (removeBtn) {
-            removeBtn.addEventListener('click', async () => {
-                removeBtn.disabled = true;
-                removeBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-                try {
-                    const result = await this.fetchFromServer('/api/auto-poster/remove', {});
-                    if (result.success) {
-                        this.autoPosterChannel = null;
-                        this.autoPosterEnabled = false;
-                        this.showNotification(this.t('auto_poster_removed'), '', 'success');
-                        this.vibrate('success');
-                        this.renderEarn();
-                    } else {
-                        this.showNotification('Error', result.error || 'Failed', 'error');
-                        removeBtn.disabled = false;
-                    }
-                } catch (e) {
-                    removeBtn.disabled = false;
-                    this.showNotification('Error', 'Network error', 'error');
-                }
-            });
-        }
-
-        const verifyBtn = document.getElementById('auto-poster-verify-btn');
-        if (verifyBtn) {
-            verifyBtn.addEventListener('click', async () => {
-                const input = document.getElementById('auto-poster-channel-input');
-                const channel = input?.value.trim();
-                if (!channel) return;
-                verifyBtn.disabled = true;
-                verifyBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-                try {
-                    const result = await this.fetchFromServer('/api/auto-poster/verify', { channel });
-                    if (result.success) {
-                        this.autoPosterChannel = result.channel;
-                        this.autoPosterEnabled = true;
-                        this.showNotification(this.t('auto_poster_verified'), '', 'success');
-                        this.vibrate('success');
-                        this.renderEarn();
-                    } else {
-                        this.showNotification('Error', result.error || this.t('auto_poster_not_admin'), 'error');
-                        this.vibrate('error');
-                        verifyBtn.disabled = false;
-                        verifyBtn.innerHTML = this.t('auto_poster_verify');
-                    }
-                } catch (e) {
-                    verifyBtn.disabled = false;
-                    verifyBtn.innerHTML = this.t('auto_poster_verify');
-                    this.showNotification('Error', 'Network error', 'error');
-                }
-            });
-        }
     }
 
     attachTaskTabHandlers() {
@@ -1554,7 +1308,7 @@ class App {
                             <div class="task-info">
                                 <h4>${task.name}</h4>
                                 <div class="task-reward">
-                                    ${gramReward > 0 ? `<span class="reward-badge"><img src="${this.config.GRAM_ICON}" style="width:14px;height:14px;border-radius:50%;"> ${this.formatGram(gramReward)}</span>` : ''}
+                                    ${gramReward > 0 ? `<span class="reward-badge"><img src="${this.config.GRAM_ICON}"> ${this.formatGram3(gramReward)}</span>` : ''}
                                 </div>
                             </div>
                             <button class="task-btn start" data-id="${task.id}" data-url="${task.url || ''}" data-verify="${task.verification || false}">${this.t('start')}</button>
@@ -1614,7 +1368,7 @@ class App {
                                     this.userCompletedTasks.add(taskId);
                                     const rewards = this.config.TASK_REWARDS || {};
                                     const r = rewards[category] || {};
-                                    const reward = `+${this.formatGram(r.gram || 0)} GRAM`;
+                                    const reward = `+${this.formatGram3(r.gram || 0)} GRAM`;
                                     this.showNotification('Reward Claimed', reward, 'success');
                                     this.vibrate('success');
                                     this.isTaskRunning = false;
@@ -1675,67 +1429,7 @@ class App {
                 promoSubmit.innerHTML = this.t('claim');
             });
         }
-
-        document.getElementById('watch-ad-1-btn')?.addEventListener('click', async () => {
-            const btn = document.getElementById('watch-ad-1-btn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-            const requestTime = Date.now();
-            try {
-                await this.showAdsgramAd();
-                await new Promise(r => setTimeout(r, 15000));
-                const result = await this.fetchFromServer('/api/watch-ad-1', { requestTime });
-                if (!result.error && result.user) {
-                    this.miningBalance = result.user.mining_balance || 0;
-                    this.ad1DailyCount = result.user.ad1_daily_count || 0;
-                    this.adDailyDate = result.user.ad_daily_date || '';
-                    this.updateHeaderBalances();
-                    this.showNotification('Reward', `+${this.formatGram(result.gramReward)} GRAM`, 'success');
-                    this.vibrate('success');
-                } else if (result.error) {
-                    this.showNotification('Error', result.error, 'error');
-                    this.vibrate('error');
-                }
-            } catch (e) {
-                this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
-                this.vibrate('warning');
-            }
-            this.renderEarn();
-        });
-
-        document.getElementById('watch-ad-2-btn')?.addEventListener('click', async () => {
-            const btn = document.getElementById('watch-ad-2-btn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-            const requestTime = Date.now();
-            try {
-                await this.showAdsgramAd();
-                await new Promise(res => setTimeout(res, 11000));
-                const result = await this.fetchFromServer('/api/watch-ad-2', { requestTime });
-                if (!result.error && result.user) {
-                    this.miningBalance = result.user.mining_balance || 0;
-                    this.ad2DailyCount = result.user.ad2_daily_count || 0;
-                    this.adDailyDate = result.user.ad_daily_date || '';
-                    this.updateHeaderBalances();
-                    this.showNotification('Reward', `+${this.formatGram(result.gramReward)} GRAM`, 'success');
-                    this.vibrate('success');
-                } else if (result.error) {
-                    this.showNotification('Error', result.error, 'error');
-                    this.vibrate('error');
-                }
-            } catch (e) {
-                this.showNotification(this.t('no_ads'), this.t('no_ads_available'), 'warning');
-                this.vibrate('warning');
-            }
-            setTimeout(() => this.renderEarn(), 1000);
-            btn.disabled = false;
-            btn.innerHTML = this.t('watch');
-        });
     }
-
-    async loadMainTasks() { return this.loadTasksForActiveTab(); }
-    async loadPartnerTasks() { return this.loadTasksForActiveTab(); }
-    async loadCommunityTasks() { return this.loadTasksForActiveTab(); }
 
     showAddCommunityTaskModal() {
         const modal = document.getElementById('add-community-task-modal');
@@ -1857,7 +1551,7 @@ class App {
             checkBtn.replaceWith(checkBtn.cloneNode(true));
             const newCheckBtn = document.getElementById('check-payment-btn');
             newCheckBtn.addEventListener('click', async () => {
-                if (statusEl) { statusEl.textContent = this.t('payment_checking'); statusEl.style.color = '#0EA5E9'; }
+                if (statusEl) { statusEl.textContent = this.t('payment_checking'); statusEl.style.color = '#00AFFF'; }
                 try {
                     const result = await this.fetchFromServer('/api/check-payment', { memo, amount, taskData: this.pendingTaskData });
                     if (result.success) {
@@ -1936,7 +1630,7 @@ class App {
                         <div class="referral-row-icon"><i class="fas fa-user-plus"></i></div>
                         <div class="referral-row-info">
                             <div class="referral-row-label">${this.t('earn_referral_each_label')}</div>
-                            <div class="referral-row-value">${this.t('earn_referral_each', { amount: this.formatGram(referralAmount) })}</div>
+                            <div class="referral-row-value">${this.t('earn_referral_each', { amount: this.formatGram2(referralAmount) })}</div>
                         </div>
                     </div>
                     <div class="referral-row">
@@ -1966,10 +1660,10 @@ class App {
 
             <div class="earning-card">
                 <div class="earning-left">
-                    <div class="earning-icon"><img src="${this.config.GRAM_ICON}"></div>
+                    <div class="earning-icon"><img src="${this.config.MINING_BALANCE_ICON}"></div>
                     <div class="earning-value-container">
                         <span class="earning-label-small">${this.t('gram_earnings')}</span>
-                        <span class="earning-value">${this.formatGram(this.referralGramEarnings)}</span>
+                        <span class="earning-value">${this.formatGram8(this.referralGramEarnings)}</span>
                     </div>
                 </div>
                 <button id="claim-gram-earnings" class="claim-btn" ${this.referralGramEarnings < 0.001 ? 'disabled' : ''}>${this.t('claim')}</button>
@@ -1994,7 +1688,7 @@ class App {
         });
         document.getElementById('share-btn')?.addEventListener('click', () => this.shareGramHunters());
         document.getElementById('claim-gram-earnings')?.addEventListener('click', async () => {
-            await this.claimReferralEarnings('gram');
+            await this.claimReferralEarnings();
             this.renderTeam();
         });
     }
@@ -2038,25 +1732,25 @@ class App {
             </div>
 
             <div class="stat-card">
-                <div class="stat-card-icon withdrawable"><i class="fas fa-wallet"></i></div>
+                <div class="stat-card-icon"><img src="${this.config.MINING_BALANCE_ICON}"></div>
                 <div class="stat-card-info">
                     <div class="stat-card-label">${this.t('withdrawable_balance')}</div>
-                    <div class="stat-card-value"><img src="${this.config.GRAM_ICON}"> ${this.formatGram(this.withdrawableBalance)}</div>
+                    <div class="stat-card-value">${this.formatGram8(this.withdrawableBalance)}</div>
                 </div>
             </div>
 
             <div class="stat-card">
-                <div class="stat-card-icon mining"><i class="fas fa-hard-hat"></i></div>
+                <div class="stat-card-icon"><img src="${this.config.GRAM_ICON}"></div>
                 <div class="stat-card-info">
                     <div class="stat-card-label">${this.t('mining_balance')}</div>
-                    <div class="stat-card-value"><img src="${this.config.GRAM_ICON}"> ${this.formatGram(this.miningBalance)}</div>
+                    <div class="stat-card-value">${this.formatGram8(this.miningBalance)}</div>
                 </div>
             </div>
 
             ${conditionsHtml}
 
             <div class="withdraw-card blue-card">
-                <h4 style="text-align:center; color:var(--primary-light); margin-bottom:14px; font-weight:800;">
+                <h4 style="text-align:center; color:var(--neon-cyan); margin-bottom:14px; font-weight:800;">
                     <i class="fas fa-arrow-up"></i> ${this.t('withdraw_gram')}
                 </h4>
                 <div class="form-group">
@@ -2070,14 +1764,13 @@ class App {
                     <label class="form-label"><i class="fas fa-wallet"></i> ${this.t('gram_wallet')}</label>
                     <input type="text" id="withdraw-wallet" class="form-input blue-input" placeholder="${this.t('gram_wallet')}" autocomplete="off">
                 </div>
-                <div class="withdraw-preview" id="withdraw-preview"><span>≈ 0.00000000 GRAM</span></div>
                 <button id="withdraw-btn" class="withdraw-confirm-btn" disabled>${this.t('confirm_withdrawal')}</button>
                 <div class="withdraw-note">
                     <i class="fas fa-info-circle"></i> ${this.t('min_withdraw_note', { amount: minWithdrawGram })}
                 </div>
             </div>
 
-            <div class="section-header blue-header"><h3><i class="fas fa-history"></i> ${this.t('withdrawal_history')}</h3></div>
+            <div class="section-header blue-header"><h3><i class="fas fa-history"></i> ${this.t('payments_history')}</h3></div>
 
             <div class="history-tabs">
                 <button class="history-tab active" data-tab="my">${this.t('my_payments')}</button>
@@ -2111,20 +1804,21 @@ class App {
                 container.innerHTML = `<div class="no-data">${this.t('no_withdrawals')}</div>`;
                 return;
             }
-            container.innerHTML = this.withdrawals.slice(0, 10).map(w => {
+            container.innerHTML = this.withdrawals.slice(0, 20).map(w => {
                 const statusClass = w.status || 'pending';
                 const statusText = statusClass === 'completed' ? this.t('completed') : (statusClass === 'processing' ? this.t('processing') : (statusClass === 'failed' ? this.t('failed') : this.t('pending')));
                 const explorerLink = w.tx_hash ? `<a href="https://tonscan.org/tx/${w.tx_hash}" target="_blank" class="history-card-view"><i class="fas fa-arrow-up-right-from-square"></i> ${this.t('view_on_explorer')}</a>` : '';
                 return `
                     <div class="history-card">
                         <div class="history-card-body">
-                            <div class="history-card-amount">${this.formatGram(w.gram_amount || 0)} GRAM</div>
-                            <div class="history-card-date"><i class="fas fa-clock"></i> ${this.formatTimeAgo(w.timestamp)}</div>
+                            <div class="history-card-header">
+                                <div class="history-card-amount">${this.formatGram4(w.gram_amount || 0)}</div>
+                                <span class="history-card-status ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="history-card-wallet">${this.maskWallet(w.wallet)}</div>
+                            <div class="history-card-date">${this.formatTimeAgo(w.timestamp)}</div>
                         </div>
-                        <div class="history-card-right">
-                            <span class="history-card-status ${statusClass}">${statusText}</span>
-                            ${explorerLink}
-                        </div>
+                        ${explorerLink}
                     </div>
                 `;
             }).join('');
@@ -2137,18 +1831,20 @@ class App {
                 const statusClass = w.status || 'pending';
                 const statusText = statusClass === 'completed' ? this.t('completed') : (statusClass === 'processing' ? this.t('processing') : (statusClass === 'failed' ? this.t('failed') : this.t('pending')));
                 const explorerLink = w.tx_hash ? `<a href="https://tonscan.org/tx/${w.tx_hash}" target="_blank" class="history-card-view"><i class="fas fa-arrow-up-right-from-square"></i> ${this.t('view_on_explorer')}</a>` : '';
-                const avatar = w.user_photo || w.photo_url || this.config.DEFAULT_USER_AVATAR || 'https://qu.ax/x/4tO7V.png';
+                const avatar = w.user_photo || this.config.DEFAULT_USER_AVATAR;
+                const displayName = this.truncateName20(w.user_name || 'User');
                 return `
                     <div class="history-card">
-                        <img src="${avatar}" class="history-card-avatar" onerror="this.src='https://qu.ax/x/4tO7V.png'">
+                        <img src="${avatar}" class="history-card-avatar" onerror="this.src='${this.config.DEFAULT_USER_AVATAR}'">
                         <div class="history-card-body">
-                            <div class="history-card-amount">${this.formatGram(w.gram_amount || 0)} GRAM</div>
-                            <div class="history-card-date"><i class="fas fa-clock"></i> ${this.formatTimeAgo(w.timestamp)}</div>
+                            <div class="history-card-header">
+                                <div class="history-card-name">${displayName}</div>
+                                <div class="history-card-amount">(${this.formatGram3(w.gram_amount || 0)})</div>
+                            </div>
+                            <div class="history-card-wallet">${this.maskWallet(w.wallet)}</div>
+                            <div class="history-card-date">${this.formatTimeAgo(w.timestamp)}</div>
                         </div>
-                        <div class="history-card-right">
-                            <span class="history-card-status ${statusClass}">${statusText}</span>
-                            ${explorerLink}
-                        </div>
+                        ${explorerLink}
                     </div>
                 `;
             }).join('');
@@ -2178,12 +1874,9 @@ class App {
         const walletInput = document.getElementById('withdraw-wallet');
         const withdrawBtn = document.getElementById('withdraw-btn');
         const maxBtn = document.getElementById('max-amount');
-        const preview = document.getElementById('withdraw-preview');
 
-        const updatePreview = () => {
+        const updateBtnState = () => {
             const amount = parseFloat(amountInput?.value);
-            const gramAmount = !isNaN(amount) && amount > 0 ? amount : 0;
-            if (preview) preview.innerHTML = `<span>≈ ${this.formatGram(gramAmount)} GRAM</span>`;
             const wallet = walletInput?.value.trim();
             const isValid = amount > 0 && wallet && wallet.startsWith('UQ') && wallet.length >= 20;
             if (withdrawBtn) withdrawBtn.disabled = !isValid;
@@ -2191,12 +1884,12 @@ class App {
 
         maxBtn?.addEventListener('click', () => {
             if (amountInput) {
-                amountInput.value = this.withdrawableBalance;
-                updatePreview();
+                amountInput.value = this.withdrawableBalance.toFixed(8);
+                updateBtnState();
             }
         });
-        amountInput?.addEventListener('input', updatePreview);
-        walletInput?.addEventListener('input', updatePreview);
+        amountInput?.addEventListener('input', updateBtnState);
+        walletInput?.addEventListener('input', updateBtnState);
 
         withdrawBtn?.addEventListener('click', async () => {
             const amount = parseFloat(amountInput.value);
@@ -2233,7 +1926,7 @@ class App {
                 this.withdrawableBalance = result.user.withdrawable_balance || 0;
                 this.updateHeaderBalances();
             }
-            this.showNotification('Withdrawn!', `${result.gramAmount} GRAM sent`, 'success');
+            this.showNotification('Withdrawn!', `${this.formatGram4(result.gramAmount)} GRAM sent`, 'success');
             this.vibrate('success');
             this.withdrawals.unshift(result.withdrawal);
             if (this._walletLoaded) this.renderWallet();
@@ -2246,7 +1939,6 @@ class App {
 
     setupNavigation() {
         document.querySelectorAll('.nav-btn').forEach(btn => {
-            if (btn.style.display === 'none') return;
             btn.addEventListener('click', async () => {
                 const id = btn.dataset.page;
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -2255,7 +1947,7 @@ class App {
                 document.getElementById(id)?.classList.add('active');
 
                 if (id === 'mining-page') this.renderMining();
-                else if (id === 'earn-page') { this._earnLoaded = true; this.renderEarn(); }
+                else if (id === 'earn-page') { this._earnLoaded = true; this._activeTaskTab = 'community'; this.renderEarn(); }
                 else if (id === 'team-page') { this._teamLoaded = true; this.renderTeam(); }
                 else if (id === 'wallet-page') { this._walletLoaded = true; this.renderWallet(); }
             });
@@ -2288,7 +1980,6 @@ class App {
                 if (this._teamLoaded) this.renderTeam();
                 if (this._walletLoaded) this.renderWallet();
                 this.updateHeaderBalances();
-                this.updateHeaderMiner();
                 this.showNotification(this.t('language_changed'), '', 'success');
                 this.vibrate('success');
             });
@@ -2298,19 +1989,19 @@ class App {
     async initialize() {
         try {
             if (!window.Telegram?.WebApp) {
-                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0f;color:#0EA5E9;font-family:sans-serif;text-align:center;padding:20px;">Open from Telegram only</div>';
+                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#020824;color:#00AFFF;font-family:sans-serif;text-align:center;padding:20px;">Open from Telegram only</div>';
                 return;
             }
             this.tg = window.Telegram.WebApp;
 
             if (!this.tg.initData) {
-                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0f;color:#0EA5E9;font-family:sans-serif;text-align:center;padding:20px;">Invalid session.<br>Please open from Telegram.</div>';
+                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#020824;color:#00AFFF;font-family:sans-serif;text-align:center;padding:20px;">Invalid session.<br>Please open from Telegram.</div>';
                 return;
             }
 
             this.tgUser = this.tg.initDataUnsafe?.user;
             if (!this.tgUser) {
-                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0f;color:#0EA5E9;font-family:sans-serif;text-align:center;padding:20px;">Invalid session.<br>Please open from Telegram.</div>';
+                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#020824;color:#00AFFF;font-family:sans-serif;text-align:center;padding:20px;">Invalid session.<br>Please open from Telegram.</div>';
                 return;
             }
 
@@ -2339,7 +2030,6 @@ class App {
             try { this.setupEventListeners(); } catch (e) { console.error('EventListeners error:', e); }
             try { this.renderMining(); } catch (e) { console.error('RenderMining error:', e); }
             try { this.setupNavigation(); } catch (e) { console.error('Navigation error:', e); }
-            try { this.updateHeaderMiner(); } catch (e) { console.error('HeaderMiner error:', e); }
 
             if (this.miningActive && this.miningEndTime) {
                 const currentTime = this.getCurrentTime();
@@ -2375,7 +2065,7 @@ class App {
 
 document.addEventListener('DOMContentLoaded', () => {
     if (!window.Telegram?.WebApp) {
-        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0f;color:#0EA5E9;font-family:sans-serif;">Open from Telegram Mini App</div>';
+        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#020824;color:#00AFFF;font-family:sans-serif;">Open from Telegram Mini App</div>';
         return;
     }
     window.app = new App();
