@@ -7,28 +7,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
-    <script src='//libtl.com/sdk.js' data-zone='12129587' data-sdk='show_12129587'></script>
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-    <script src="https://ads.litebits.io/sdk/v1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body class="theme-diamond">
 
 <div id="app-loader" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#0a0a0f;gap:20px;">
     <div style="position:relative;width:100px;height:100px;display:flex;align-items:center;justify-content:center;">
-        <img src="https://slho.shop/i/8067" style="width:90px;height:90px;border-radius:50%;border:3px solid #4A90D9;box-shadow:0 0 30px rgba(74,144,217,0.7);object-fit:cover;animation:loaderPulse 1.5s ease-in-out infinite;">
+        <img src="https://qu.ax/x/4tO7V.png" style="width:90px;height:90px;border-radius:50%;border:3px solid #0EA5E9;box-shadow:0 0 30px rgba(14,165,233,0.7);object-fit:cover;animation:loaderPulse 1.5s ease-in-out infinite;">
     </div>
     
     <div style="display:flex;gap:8px;">
-        <span style="width:10px;height:10px;border-radius:50%;background:#4A90D9;animation:dotPulse 1.2s ease-in-out infinite;"></span>
-        <span style="width:10px;height:10px;border-radius:50%;background:#4A90D9;animation:dotPulse 1.2s ease-in-out 0.2s infinite;"></span>
-        <span style="width:10px;height:10px;border-radius:50%;background:#4A90D9;animation:dotPulse 1.2s ease-in-out 0.4s infinite;"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:#0EA5E9;animation:dotPulse 1.2s ease-in-out infinite;"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:#0EA5E9;animation:dotPulse 1.2s ease-in-out 0.2s infinite;"></span>
+        <span style="width:10px;height:10px;border-radius:50%;background:#0EA5E9;animation:dotPulse 1.2s ease-in-out 0.4s infinite;"></span>
     </div>
     <style>
         @keyframes loaderPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(74,144,217,0.7); }
-            50% { transform: scale(1.08); box-shadow: 0 0 50px rgba(74,144,217,1); }
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(14,165,233,0.7); }
+            50% { transform: scale(1.08); box-shadow: 0 0 50px rgba(14,165,233,1); }
         }
         @keyframes dotPulse {
             0%, 100% { opacity: 0.3; transform: scale(0.8); }
@@ -38,7 +36,7 @@
 </div>
 
 <div id="ban-modal" class="modal" style="display:none;">
-    <div class="modal-content blue-modal" style="max-width:320px;width:90%;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(74,144,217,0.2);text-align:center;padding:30px 24px;">
+    <div class="modal-content blue-modal" style="max-width:320px;width:90%;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(14,165,233,0.2);text-align:center;padding:30px 24px;">
         <div style="font-size:60px;margin-bottom:16px;">🚫</div>
         <h3 style="color:#FF4444;font-size:1.3rem;font-weight:700;margin-bottom:8px;">Account Banned</h3>
         <p style="color:#888;font-size:0.95rem;margin-bottom:20px;">Your account has been banned.<br>Contact support for more information.</p>
@@ -48,25 +46,26 @@
 
 <div id="app" style="display:none;">
     <header class="app-header hunter-header" id="app-header">
-        <div class="header-top">
-            <div class="user-info">
-                <div class="avatar-wrapper">
-                    <img id="user-photo" class="user-avatar" src="https://slho.shop/i/8067">
-                </div>
-                <div class="user-details">
-                    <span id="user-name" class="user-name">User</span>
-                    <div class="user-miner" id="user-miner-display">
-                        <img id="user-miner-logo" src="https://slho.shop/i/8098" style="width:14px;height:14px;border-radius:50%;object-fit:cover;">
-                        <span id="user-miner-name">Bronze</span>
+        <div class="header-card">
+            <div class="header-top">
+                <div class="user-info">
+                    <div class="avatar-wrapper">
+                        <img id="user-photo" class="user-avatar" src="https://qu.ax/x/4tO7V.png">
                     </div>
+                    <div class="user-details">
+                        <span id="user-name" class="user-name">User</span>
+                        <div class="user-miner" id="user-miner-display">
+                            <img id="user-miner-logo" src="https://qu.ax/x/4tO7V.png" style="width:14px;height:14px;border-radius:50%;object-fit:cover;">
+                            <span id="user-miner-name">Diamond</span>
+                        </div>
+                    </div>
+               </div>
+                <div class="header-actions">
+                    <div class="header-balances" id="header-balances">
+                        <div class="header-balance" id="header-gram"><img src="https://qu.ax/x/4tO7V.png" style="width:14px;height:14px;border-radius:50%;object-fit:cover;"> 0.00000000</div>
+                    </div>
+                    <button id="lang-btn" class="header-icon-btn"><img id="current-flag" src="https://flagcdn.com/w40/gb.png" style="width:24px;height:16px;border-radius:4px;object-fit:cover;"></button>
                 </div>
-           </div>
-            <div class="header-actions">
-                <div class="header-balances" id="header-balances">
-                    <div class="header-balance" id="header-power"><i class="fas fa-bolt"></i> 0</div>
-                    <div class="header-balance" id="header-coin"><img src="https://cdn-icons-png.flaticon.com/512/6466/6466968.png" style="width:14px;height:14px;border-radius:50%;object-fit:cover;"> 0</div>
-                </div>
-                <button id="lang-btn" class="header-icon-btn"><img id="current-flag" src="https://flagcdn.com/w40/gb.png" style="width:24px;height:16px;border-radius:4px;object-fit:cover;"></button>
             </div>
         </div>
     </header>
@@ -80,17 +79,17 @@
     </main>
 
     <nav class="bottom-nav hunter-nav">
-        <button class="nav-btn" data-page="miners-page"><i class="fas fa-hard-hat"></i><span>Miners</span></button>
         <button class="nav-btn" data-page="earn-page"><i class="fas fa-sack-dollar"></i><span>Earn</span></button>
-        <button class="nav-btn home-nav" data-page="mining-page"><i class="fas fa-home"></i><span>Home</span></button>
         <button class="nav-btn" data-page="team-page"><i class="fas fa-users"></i><span>Team</span></button>
+        <button class="nav-btn home-nav" data-page="mining-page"><i class="fas fa-home"></i><span>Home</span></button>
         <button class="nav-btn" data-page="wallet-page"><i class="fas fa-wallet"></i><span>Withdraw</span></button>
+        <button class="nav-btn" data-page="miners-page" style="display:none;"><i class="fas fa-hard-hat"></i><span>Miners</span></button>
     </nav>
 </div>
 
 <div id="add-community-task-modal" class="modal" style="display:none;">
-    <div class="modal-content blue-modal" style="max-width:400px;width:92%;max-height:90vh;overflow-y:auto;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(74,144,217,0.15);padding:0;">
-        <div class="modal-header blue-header" style="padding:16px 20px;border-bottom:1px solid rgba(74,144,217,0.1);">
+    <div class="modal-content blue-modal" style="max-width:400px;width:92%;max-height:90vh;overflow-y:auto;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(14,165,233,0.15);padding:0;">
+        <div class="modal-header blue-header" style="padding:16px 20px;border-bottom:1px solid rgba(14,165,233,0.1);">
             <h3 style="color:var(--theme-color);font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-plus-circle"></i> Add Community Task</h3>
             <button class="modal-close" onclick="document.getElementById('add-community-task-modal').style.display='none'">&times;</button>
         </div>
@@ -122,7 +121,7 @@
                     <span id="community-verification-note" style="font-size:0.6rem;color:var(--theme-color);display:none;margin-left:4px;"><i class="fas fa-info-circle"></i> Bot must be admin</span>
                 </div>
             </div>
-            <div style="background:rgba(74,144,217,0.08);border-radius:12px;padding:12px;margin:12px 0;border:1px solid rgba(74,144,217,0.1);">
+            <div style="background:rgba(14,165,233,0.08);border-radius:12px;padding:12px;margin:12px 0;border:1px solid rgba(14,165,233,0.1);">
                 <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
                     <span style="color:#888;">Total Cost:</span>
                     <span id="community-total-cost-display" style="color:var(--theme-color);font-weight:700;">0.00 GRAM</span>
@@ -134,27 +133,27 @@
 </div>
 
 <div id="payment-modal" class="modal" style="display:none;">
-    <div class="modal-content blue-modal" style="max-width:380px;width:92%;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(74,144,217,0.15);padding:0;">
-        <div class="modal-header blue-header" style="padding:16px 20px;border-bottom:1px solid rgba(74,144,217,0.1);">
+    <div class="modal-content blue-modal" style="max-width:380px;width:92%;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(14,165,233,0.15);padding:0;">
+        <div class="modal-header blue-header" style="padding:16px 20px;border-bottom:1px solid rgba(14,165,233,0.1);">
             <h3 style="color:var(--theme-color);font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-credit-card"></i> Payment</h3>
             <button class="modal-close" onclick="document.getElementById('payment-modal').style.display='none'">&times;</button>
         </div>
         <div class="modal-body" style="padding:20px;">
             <div class="form-group">
                 <label class="form-label" style="color:var(--theme-color);"><i class="fas fa-wallet"></i> Wallet (Tap to copy)</label>
-                <div style="background:rgba(0,0,0,0.3);padding:8px 14px;border-radius:40px;border:1px solid rgba(74,144,217,0.1);cursor:pointer;" id="payment-wallet-display">
+                <div style="background:rgba(0,0,0,0.3);padding:8px 14px;border-radius:40px;border:1px solid rgba(14,165,233,0.1);cursor:pointer;" id="payment-wallet-display">
                     <span style="font-size:0.7rem;font-family:monospace;color:var(--theme-color);word-break:break-all;display:block;">-</span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="form-label" style="color:var(--theme-color);"><i class="fas fa-tag"></i> Memo (Tap to copy)</label>
-                <div style="background:rgba(0,0,0,0.3);padding:8px 14px;border-radius:40px;border:1px solid rgba(74,144,217,0.1);cursor:pointer;" id="payment-memo-display">
+                <div style="background:rgba(0,0,0,0.3);padding:8px 14px;border-radius:40px;border:1px solid rgba(14,165,233,0.1);cursor:pointer;" id="payment-memo-display">
                     <span style="font-size:0.65rem;font-family:monospace;color:var(--theme-color);word-break:break-all;display:block;">-</span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="form-label" style="color:var(--theme-color);"><i class="fas fa-coins"></i> Amount (Tap to copy)</label>
-                <div style="background:rgba(0,0,0,0.3);padding:8px 14px;border-radius:40px;border:1px solid rgba(74,144,217,0.1);cursor:pointer;" id="payment-amount-display">
+                <div style="background:rgba(0,0,0,0.3);padding:8px 14px;border-radius:40px;border:1px solid rgba(14,165,233,0.1);cursor:pointer;" id="payment-amount-display">
                     <span style="font-size:0.8rem;font-family:monospace;color:var(--theme-color);font-weight:600;display:block;">0.00 GRAM</span>
                 </div>
             </div>
@@ -166,8 +165,8 @@
 </div>
 
 <div id="my-tasks-modal" class="modal" style="display:none;">
-    <div class="modal-content blue-modal" style="max-width:400px;width:92%;max-height:90vh;overflow-y:auto;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(74,144,217,0.15);padding:0;">
-        <div class="modal-header blue-header" style="padding:16px 20px;border-bottom:1px solid rgba(74,144,217,0.1);">
+    <div class="modal-content blue-modal" style="max-width:400px;width:92%;max-height:90vh;overflow-y:auto;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(14,165,233,0.15);padding:0;">
+        <div class="modal-header blue-header" style="padding:16px 20px;border-bottom:1px solid rgba(14,165,233,0.1);">
             <h3 style="color:var(--theme-color);font-size:1.1rem;display:flex;align-items:center;gap:10px;margin:0;"><i class="fas fa-tasks"></i> My Tasks</h3>
             <button class="modal-close" onclick="document.getElementById('my-tasks-modal').style.display='none'">&times;</button>
         </div>
@@ -178,7 +177,7 @@
 </div>
 
 <div id="lang-modal" class="modal" style="display:none;">
-    <div class="modal-content" style="max-width:260px;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(74,144,217,0.2);padding:16px;">
+    <div class="modal-content" style="max-width:260px;background:rgba(15,20,35,0.98);border-radius:24px;border:1px solid rgba(14,165,233,0.2);padding:16px;">
         <div style="display:flex;flex-direction:column;gap:10px;">
             <button class="lang-option" data-lang="en"><img src="https://flagcdn.com/w40/gb.png"><span>English</span></button>
             <button class="lang-option" data-lang="ar"><img src="https://flagcdn.com/w40/sa.png"><span>العربية</span></button>
