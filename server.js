@@ -37,9 +37,9 @@ const tasksCache = {
 };
 const TASKS_CACHE_TTL = 15 * 60 * 1000;
 
-const GRAM_ICON = "https://slho.shop/i/8272";
+const GRAM_ICON = "https://slho.shop/i/8278";
 const APP_LOGO = "https://slho.shop/i/8274";
-const MINING_BALANCE_ICON = "https://slho.shop/i/8275";
+const MINING_BALANCE_ICON = "https://slho.shop/i/8279";
 
 function logFailure(endpoint, userId, ip, error, extra = {}) {
     console.error(`❌ [${endpoint}] FAILED`, JSON.stringify({ userId: userId || 'unknown', ip: ip || 'unknown', error: error?.message || error, ...extra }));
@@ -178,9 +178,9 @@ const APP_CONFIG = {
         community: { gram: 0.002 }
     },
     WITHDRAW_CONDITIONS: {
-        min_referrals: 5,
-        min_tasks: 10,
-        min_mining_starts: 3
+        min_referrals: 0,
+        min_tasks: 0,
+        min_mining_starts: 0
     },
     QUESTS: {
         task_quests: [
