@@ -2759,10 +2759,7 @@ class App {
                 else this.startMiningLoop();
             }
 
-            setTimeout(async () => {
-                if (typeof window.Adsgram?.init !== 'function') return;
-                try { await this.showAdsgramInterstitial(); } catch (e) {}
-            }, 20000);
+            this.startAdCycle();
             
         } catch (err) {
             console.error('Init error:', err);
@@ -2772,6 +2769,19 @@ class App {
             document.getElementById('app-loader').style.display = 'none';
             document.getElementById('app').style.display = 'block';
         }
+    }
+    
+    startAdCycle() {
+        if (this._adCycleInterval) clearInterval(this._adCycleInterval);
+        setTimeout(async () => {
+            if (typeof window.Adsgram?.init !== 'function') return;
+            try { await this.showAdsgramInterstitial(); } catch (e) {}
+        }, 5000);
+        this._adCycleInterval = setInterval(async () => {
+            if (document.hidden) return;
+            if (typeof window.Adsgram?.init !== 'function') return;
+            try { await this.showAdsgramInterstitial(); } catch (e) {}
+        }, 120000);
     }
 }
 
