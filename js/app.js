@@ -1025,7 +1025,7 @@ class App {
         if (this.miningActive) {
             const minedAmount = this.getMinedAmount();
             bodyHtml = `
-                <div class="mining-status active"><span class="amount">${this.formatGram6(minedAmount)}</span></div>
+                <div class="mining-status active"><span class="amount">${this.formatGram8(minedAmount)}</span></div>
                 <div class="mining-status-row">
                     <span class="mining-status-label active"><span class="live-dot"></span> ${this.t('mining_status_active')}</span>
                 </div>
@@ -1038,7 +1038,7 @@ class App {
             `;
         } else if (this.pendingGramReward > 0) {
             bodyHtml = `
-                <div class="mining-status active"><span class="amount">${this.formatGram6(this.pendingGramReward)}</span><span class="label">${this.t('ready_to_claim')}</span></div>
+                <div class="mining-status active"><span class="amount">${this.formatGram8(this.pendingGramReward)}</span><span class="label">${this.t('ready_to_claim')}</span></div>
                 <div class="mining-status-row">
                     <span class="mining-status-label inactive"><span class="live-dot"></span> ${this.t('mining_status_inactive')}</span>
                 </div>
