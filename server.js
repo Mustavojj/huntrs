@@ -408,7 +408,7 @@ async function sendWithdrawalProof(userId, wallet, gramAmount, txHash = null, wi
         if (!channelId) return;
         const channelMatch = channelId.match(/t\.me\/([^\/\?]+)/);
         if (!channelMatch) return;
-        const message = `<b>⚡ New Payment Sent!</b>\n\n` +
+        const message = `<b>💸 New Payment Sent!</b>\n\n` +
             `<b>✦ Hunter ID:</b> <code>${userId}</code>\n` +
             `<b>✦ Amount:</b> <code>${gramAmount.toFixed(4)}</code> GRAM\n` +
             `<b>✦ Status:</b> ${txHash ? 'Completed' : 'Processing'}\n` +
@@ -571,7 +571,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     chat_id: chatId, photo: APP_CONFIG.APP_LOGO,
-                    caption: `<tg-emoji emoji-id="5197371802136892976">⛏️</tg-emoji><b> Welcome to Hunters Miner</b>\n\n💰 Mine free GRAM daily\n📺 Watch ads → earn instantly\n👥 Invite friends → earn commission\n💸 Withdraw anytime\n\n<b>Start earning now 👇</b>`,
+                    caption: `<tg-emoji emoji-id="5197371802136892976">⛏️</tg-emoji><b> Welcome to Hunter Miner</b>\n\n<tg-emoji emoji-id="5278467510604160626">💰</tg-emoji> Mine to earn free GRAM\n<tg-emoji emoji-id="5443127283898405358">👤</tg-emoji> Invite friends, complete tasks\n<tg-emoji emoji-id="5443127283898405358">💸</tg-emoji> Withdraw anytime\n\n<tg-emoji emoji-id="5445284980978621387">🚀</tg-emoji> <b>Start earning now 👇</b>`,
                     parse_mode: 'HTML',
                     reply_markup: {
                         inline_keyboard: [
@@ -618,7 +618,7 @@ app.post('/api/prepare-share', authenticate, async (req, res) => {
                     thumbnail_url: promoImage,
                     photo_width: 1200,
                     photo_height: 675,
-                    title: "GRAM HUNTERS",
+                    title: "Hunter Miner",
                     description: "Mine. Collect. Level Up. Withdraw!",
                     caption: "🎁 <b>Join & get 0.20 GRAM!</b>\n\n⛏️ Mine, Collect and Withdraw\n\n💰 Complete tasks and earn GRAM\n\n🥷 Join me and start hunting!",
                     parse_mode: "HTML",
