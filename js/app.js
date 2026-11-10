@@ -1664,7 +1664,7 @@ class App {
                     <div class="earning-icon"><img src="${this.config.MINING_BALANCE_ICON}"></div>
                     <div class="earning-value-container">
                         <span class="earning-label-small">${this.t('gram_earnings')}</span>
-                        <span class="earning-value">${this.formatGram8(this.referralGramEarnings)}</span>
+                        <span class="earning-value">${this.formatGram4(this.referralGramEarnings)}</span>
                     </div>
                 </div>
                 <button id="claim-gram-earnings" class="claim-btn" ${this.referralGramEarnings < 0.001 ? 'disabled' : ''}>${this.t('claim')}</button>
@@ -1736,7 +1736,7 @@ class App {
                 <div class="stat-card-icon"><img src="${this.config.GRAM_ICON}"></div>
                 <div class="stat-card-info">
                     <div class="stat-card-label">${this.t('withdrawable_balance')}</div>
-                    <div class="stat-card-value">${this.formatGram8(this.withdrawableBalance)}</div>
+                    <div class="stat-card-value">${this.formatGram4(this.withdrawableBalance)}</div>
                 </div>
             </div>
 
@@ -1744,7 +1744,7 @@ class App {
                 <div class="stat-card-icon"><img src="${this.config.MINING_BALANCE_ICON}"></div>
                 <div class="stat-card-info">
                     <div class="stat-card-label">${this.t('mining_balance')}</div>
-                    <div class="stat-card-value">${this.formatGram8(this.miningBalance)}</div>
+                    <div class="stat-card-value">${this.formatGram4(this.miningBalance)}</div>
                 </div>
             </div>
 
