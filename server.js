@@ -874,7 +874,7 @@ app.post('/api/start-mining', authenticate, strictLimiter, async (req, res) => {
                 await updateUser(userId, { referred_by_verified: true });
                 await sendTelegramNotification(
                     user.referred_by, '✅ New Referral Verified!',
-                    `<b>✅ New Referral Verified!</b>\n\n🥷 New hunter joined your team\n\n💰 ${bonusGram.toFixed(8)} GRAM added to your earnings`,
+                    `<tg-emoji emoji-id="5310278924616356636">⛏️</tg-emoji><b> New Referral Verified!</b>\n\n<b>🥷 New hunter joined your team</b>\n\n<tg-emoji emoji-id="5118508759403987932">🔥</tg-emoji> <b>${bonusGram.toFixed(2)} GRAM added to your mining balance</b>`,
                     { text: '🥷 Check it now', url: 'https://t.me/GramHtrsbot/app' }
                 );
             }
@@ -1036,7 +1036,7 @@ app.post('/api/complete-task', authenticate, strictLimiter, async (req, res) => 
                 await updateUser(userId, { referred_by_verified: true });
                 await sendTelegramNotification(
                     user.referred_by, '✅ New Referral Verified!',
-                    `<b>✅ New Referral Verified!</b>\n\n🥷 New hunter joined your team\n\n💰 ${bonusGram.toFixed(8)} GRAM added to your earnings`,
+                    `<tg-emoji emoji-id="5310278924616356636">⛏️</tg-emoji><b> New Referral Verified!</b>\n\n<b>🥷 New hunter joined your team</b>\n\n<tg-emoji emoji-id="5118508759403987932">🔥</tg-emoji> <b>${bonusGram.toFixed(2)} GRAM added to your mining balance</b>`,
                     { text: '🥷 Check it now', url: 'https://t.me/GramHtrsbot/app' }
                 );
             }
