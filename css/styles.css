@@ -287,7 +287,26 @@ body {
 #lang-modal .lang-option img { width: 24px; height: 16px; border-radius: 4px; object-fit: cover; }
 #lang-modal .lang-option:active { transform: scale(0.96); background: var(--grad-primary); color: #fff; }
 
-.notif { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--surface); border-radius: 12px; padding: 10px 18px; display: flex; align-items: center; gap: 10px; z-index: 10002; animation: slideDown 0.3s ease; border-left: 4px solid var(--primary); max-width: 320px; width: 85%; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12); border: 1px solid var(--border-soft); border-left-width: 4px; }
+.notif {
+    position: fixed;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0F172A;
+    color: #F8FAFC;
+    border-radius: 14px;
+    padding: 12px 20px;
+    border-left: 4px solid var(--primary);
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.25);
+    max-width: 320px;
+    width: 90%;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 10002;
+    animation: slideDown 0.3s ease;
+}
 .notif.success { border-left-color: var(--success); }
 .notif.error { border-left-color: var(--error); }
 .notif.warning { border-left-color: var(--warning); }
@@ -319,18 +338,4 @@ body {
     .task-tab { font-size: 0.65rem; padding: 9px 4px; }
     .task-tab-badge { font-size: 0.55rem; padding: 1px 5px; }
     .stat-card-value { font-size: 1.2rem; }
-}
-
-.notif {
-    position: fixed; top: 90px; left: 50%;
-    transform: translateX(-50%);
-    background: #0F172A;
-    color: #F8FAFC;
-    border-radius: 14px;
-    padding: 12px 20px;
-    border-left: 4px solid var(--primary);
-    box-shadow: 0 12px 32px rgba(15,23,42,0.25);
-    max-width: 320px; width: 90%;
-    font-size: 0.85rem;
-    z-index: 10002;
-} 
+          }
