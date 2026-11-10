@@ -1046,7 +1046,7 @@ class App {
             actionHtml = `<button id="claim-mining-btn" class="mining-claim-btn"><img src="${this.config.GRAM_ICON}" class="claim-coin-icon"> ${this.t('claim_reward', { amount: this.formatGram6(this.pendingGramReward) })}</button>`;
         } else {
             bodyHtml = `
-                <div class="mining-status not-active">${this.formatGram6(0)}</div>
+                <div class="mining-status not-active">${this.formatGram8(0)}</div>
                 <div class="mining-status-row">
                     <span class="mining-status-label inactive"><span class="live-dot"></span> ${this.t('mining_status_inactive')}</span>
                 </div>
