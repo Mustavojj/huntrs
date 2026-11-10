@@ -600,7 +600,7 @@ app.post('/api/prepare-share', authenticate, async (req, res) => {
         const userId = req._userId;
         const botUsername = (process.env.BOT_USERNAME || 'GramHtrsbot').replace('@', '');
         const appShortName = process.env.APP_SHORT_NAME || 'app';
-        const promoImage = APP_CONFIG.APP_LOGO;
+        const promoImage = "https://slho.shop/i/8299";
         const miniAppUrl = `https://t.me/${botUsername}/${appShortName}?startapp=${userId}`;
 
         const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/savePreparedInlineMessage`, {
