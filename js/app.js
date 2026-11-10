@@ -1006,7 +1006,7 @@ class App {
                 <div class="welcome-card">
                     <span class="welcome-gift-icon">🎁</span>
                     <div class="welcome-title">${this.t('welcome_bonus')}</div>
-                    <div class="welcome-amount"><img src="${this.config.GRAM_ICON}"> ${this.formatGram2(this.config.WELCOME_BONUS_GRAM || 0.20)} GRAM</div>
+                    <div class="welcome-amount">${this.formatGram2(this.config.WELCOME_BONUS_GRAM || 0.20)} GRAM</div>
                     <button id="claim-welcome-btn" class="welcome-claim-btn">${this.t('claim')}</button>
                 </div>
             `;
