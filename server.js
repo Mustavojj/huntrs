@@ -620,10 +620,10 @@ app.post('/api/prepare-share', authenticate, async (req, res) => {
                     photo_height: 675,
                     title: "GRAM HUNTERS",
                     description: "Mine. Collect. Level Up. Withdraw!",
-                    caption: "🥷 <b>Join GRAM HUNTERS!</b>\n\n🚀 Mine. Collect. Level Up. Withdraw!\n\n💰 Earn rewards and invite your friends!\n\n👇 Join me and start hunting!",
+                    caption: "🎁 <b>Join & get 0.20 GRAM!</b>\n\n⛏️ Mine, Collect and Withdraw\n\n💰 Complete tasks and earn GRAM\n\n🥷 Join me and start hunting!",
                     parse_mode: "HTML",
                     reply_markup: {
-                        inline_keyboard: [[{ text: "⚔️ Start Hunting", url: miniAppUrl }]]
+                        inline_keyboard: [[{ text: "🥷 Start Hunting", url: miniAppUrl }]]
                     }
                 }
             })
