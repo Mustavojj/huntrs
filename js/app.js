@@ -435,10 +435,11 @@ class App {
     }
 
     updateHeaderBalances() {
-        const miningEl = document.getElementById('header-mining-balance');
-        const withdrawableEl = document.getElementById('header-withdrawable-balance');
-        if (miningEl) miningEl.innerText = this.formatBalance4(this.miningBalance);
-        if (withdrawableEl) withdrawableEl.innerText = this.formatBalance4(this.withdrawableBalance);
+        const totalEl = document.getElementById('header-total-balance');
+        if (totalEl) {
+            const total = (this.miningBalance || 0) + (this.withdrawableBalance || 0);
+            totalEl.innerText = total.toFixed(4);
+        }
     }
 
     updateHeaderMiner() {}
