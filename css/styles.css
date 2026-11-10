@@ -344,3 +344,26 @@ body {
 .home-btn:active { transform: scale(0.96); }
 
 .bottom-nav { flex: 3; background: rgba(20, 20, 31, 0.97); backdrop-filter: blur(20px); display: flex; padding: 6px 8px; border-radius: 60px; gap: 4px; border: 1px solid var(--border); box-shadow: var(--shadow); } 
+
+.home-btn {
+    width: 62px;
+    height: 52px;
+    flex-shrink: 0;
+    border-radius: 40px;
+    background: var(--grad-primary);
+    border: none;
+    color: #0A0A0F;
+    font-size: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 8px 0;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(245, 179, 1, 0.4);
+    transition: all 0.2s;
+}
+.home-btn i { font-size: 1.1rem; }
+.home-btn span { font-size: 0.5rem; font-weight: 700; }
+.home-btn:active { transform: scale(0.92); } 
