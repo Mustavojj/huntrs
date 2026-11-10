@@ -231,7 +231,7 @@ function invalidateTasksCache(category = null) {
 
 function getMiningRate(user) {
     const miningBalance = user.mining_balance || 0;
-    return miningBalance * (APP_CONFIG.MINING_RATE_PERCENTAGE / 100);
+    return miningBalance * (APP_CONFIG.MINING_RATE_PERCENTAGE / 100) / 24;
 }
 
 function calculateMiningReward(user, startTime, endTime) {
