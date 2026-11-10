@@ -571,7 +571,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     chat_id: chatId, photo: APP_CONFIG.APP_LOGO,
-                    caption: `<tg-emoji emoji-id="5197371802136892976">⛏️</tg-emoji><b> Welcome to Hunter Miner</b>\n\n<tg-emoji emoji-id="5865994057167146921">💰</tg-emoji> Join & get 0.20 GRAM Bonus\n<tg-emoji emoji-id="5865994057167146921">💰</tg-emoji> Mine to earn free GRAM\n<tg-emoji emoji-id="5865994057167146921">👤</tg-emoji> Invite friends, complete tasks\n<tg-emoji emoji-id="5865994057167146921">💸</tg-emoji> Withdraw anytime\n\n<tg-emoji emoji-id="5445284980978621387">🚀</tg-emoji> <b>Start earning now 👇</b>`,
+                    caption: `<tg-emoji emoji-id="5197371802136892976">⛏️</tg-emoji><b> Welcome to Hunter Miner</b>\n\n<tg-emoji emoji-id="5865994057167146921">💰</tg-emoji> <b>Join and get 0.20 GRAM Bonus</b>\n<tg-emoji emoji-id="5865994057167146921">👤</tg-emoji> <b>Invite friends, complete tasks</b>\n<tg-emoji emoji-id="5865994057167146921">💰</tg-emoji> <b>Mine and earn free GRAM</b>\n<tg-emoji emoji-id="5865994057167146921">💸</tg-emoji> <b>Withdraw anytime</b>\n\n<tg-emoji emoji-id="5445284980978621387">🚀</tg-emoji> <b>Start earning now 👇</b>`,
                     parse_mode: 'HTML',
                     reply_markup: {
                         inline_keyboard: [
