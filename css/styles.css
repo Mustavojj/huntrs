@@ -336,5 +336,5 @@ body {
     letter-spacing: 0.5px;
 } 
 
-.home-btn { width: 56px; height: 56px; flex-shrink: 0; border-radius: 50%; background: #F5B301; border: 2px solid #FFD966; color: #0A0A0F; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 18px rgba(245, 179, 1, 0.5); transition: all 0.2s; }
+.home-btn { width: 56px; height: 56px; flex-shrink: 0; border-radius: 50%; background: #F5B301; border: none; color: #0A0A0F; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 3px 10px rgba(245, 179, 1, 0.3); transition: all 0.2s; }
 .home-btn:active { transform: scale(0.92); } 
