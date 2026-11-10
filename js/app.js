@@ -791,7 +791,7 @@ class App {
         const progressText = document.querySelector('.mining-progress-text .percent');
         if (progressText) progressText.innerText = Math.floor(progressPercent) + '%';
         const amountEl = document.querySelector('.mining-status .amount');
-        if (amountEl) amountEl.innerText = this.formatGram6(minedAmount);
+        if (amountEl) amountEl.innerText = this.formatGram8(minedAmount);
     }
 
     async applyPromoCode(code) {
