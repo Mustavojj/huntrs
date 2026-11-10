@@ -419,7 +419,7 @@ class App {
     }
 
     getMiningRate() {
-        return (this.miningBalance || 0) * (this.config.MINING_RATE_PERCENTAGE / 100 || 0.05);
+        return (this.miningBalance || 0) * (this.config.MINING_RATE_PERCENTAGE / 100 || 0.05) / 24;
     }
 
     getHourlyRate() {
@@ -1099,7 +1099,7 @@ class App {
                         <div class="quest-info">
                             <h4>${this.t('quest_complete_tasks')} - ${currentTaskQuest.target_tasks}</h4>
                             <div class="quest-rewards-row">
-                                <span class="quest-reward-badge"><img src="${this.config.GRAM_ICON}"> ${this.formatGram3(currentTaskQuest.reward)}</span>
+                                <span class="quest-reward-badge"><img src="${this.config.MINING_BALANCE_ICON}"> ${this.formatGram2(currentTaskQuest.reward)}</span>
                             </div>
                             <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: ${taskProgress}%"></div></div>
                             <div style="font-size:0.55rem;color:#91B8D9;margin-top:2px;">${Math.floor(taskProgress)}%</div>
@@ -1133,7 +1133,7 @@ class App {
                         <div class="quest-info">
                             <h4>${this.t('quest_invite')} - ${currentReferralQuest.target_referrals}</h4>
                             <div class="quest-rewards-row">
-                                <span class="quest-reward-badge"><img src="${this.config.GRAM_ICON}"> ${this.formatGram3(currentReferralQuest.reward)}</span>
+                                <span class="quest-reward-badge"><img src="${this.config.MINING_BALANCE_ICON}"> ${this.formatGram2(currentReferralQuest.reward)}</span>
                             </div>
                             <div class="quest-progress-bar"><div class="quest-progress-fill" style="width: ${referralProgress}%"></div></div>
                             <div style="font-size:0.55rem;color:#91B8D9;margin-top:2px;">${Math.floor(referralProgress)}%</div>
@@ -1309,7 +1309,7 @@ class App {
                             <div class="task-info">
                                 <h4>${task.name}</h4>
                                 <div class="task-reward">
-                                    ${gramReward > 0 ? `<span class="reward-badge"><img src="${this.config.GRAM_ICON}"> ${this.formatGram3(gramReward)}</span>` : ''}
+                                    ${gramReward > 0 ? `<span class="reward-badge"><img src="${this.config.MINING_BALANCE_ICON}"> ${this.formatGram3(gramReward)}</span>` : ''}
                                 </div>
                             </div>
                             <button class="task-btn start" data-id="${task.id}" data-url="${task.url || ''}" data-verify="${task.verification || false}">${this.t('start')}</button>
@@ -1733,7 +1733,7 @@ class App {
             </div>
 
             <div class="stat-card">
-                <div class="stat-card-icon"><img src="${this.config.MINING_BALANCE_ICON}"></div>
+                <div class="stat-card-icon"><img src="${this.config.GRAM_ICON}"></div>
                 <div class="stat-card-info">
                     <div class="stat-card-label">${this.t('withdrawable_balance')}</div>
                     <div class="stat-card-value">${this.formatGram8(this.withdrawableBalance)}</div>
@@ -1741,7 +1741,7 @@ class App {
             </div>
 
             <div class="stat-card">
-                <div class="stat-card-icon"><img src="${this.config.GRAM_ICON}"></div>
+                <div class="stat-card-icon"><img src="${this.config.MINING_BALANCE_ICON}"></div>
                 <div class="stat-card-info">
                     <div class="stat-card-label">${this.t('mining_balance')}</div>
                     <div class="stat-card-value">${this.formatGram8(this.miningBalance)}</div>
@@ -1840,7 +1840,7 @@ class App {
                         <div class="history-card-body">
                             <div class="history-card-header">
                                 <div class="history-card-name">${displayName}</div>
-                                <div class="history-card-amount">(${this.formatGram3(w.gram_amount || 0)})</div>
+                                <div class="history-card-amount">▼ ${this.formatGram3(w.gram_amount || 0)}</div>
                             </div>
                             <div class="history-card-wallet">${this.maskWallet(w.wallet)}</div>
                             <div class="history-card-date">${this.formatTimeAgo(w.timestamp)}</div>
