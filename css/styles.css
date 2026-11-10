@@ -320,3 +320,18 @@ body {
     .task-tab-badge { font-size: 0.55rem; padding: 1px 5px; }
     .stat-card-value { font-size: 1.2rem; }
 }
+
+.header-balance-single span,
+.stat-card-value,
+.earning-value,
+.history-card-amount,
+.mining-status .amount,
+.speed-item .speed-value,
+.team-link-box,
+.reward-badge,
+.quest-reward-badge,
+.my-task-stat {
+    font-family: 'Orbitron', 'Courier New', monospace !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.5px;
+} 
