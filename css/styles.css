@@ -306,12 +306,13 @@ body {
 .notif {
     position: fixed; top: 90px; left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: 16px;
-    padding: 14px 20px;
-    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.15);
+    background: #0F172A;
+    color: #F8FAFC;
+    border-radius: 14px;
+    padding: 12px 20px;
+    border-left: 4px solid var(--primary);
+    box-shadow: 0 12px 32px rgba(15,23,42,0.25);
     max-width: 320px; width: 90%;
+    font-size: 0.85rem;
     z-index: 10002;
 } 
