@@ -37,9 +37,9 @@ const tasksCache = {
 };
 const TASKS_CACHE_TTL = 15 * 60 * 1000;
 
-const GRAM_ICON = "https://slho.shop/i/8283";
+const GRAM_ICON = "https://slho.shop/i/8297";
 const APP_LOGO = "https://slho.shop/i/8281";
-const MINING_BALANCE_ICON = "https://slho.shop/i/8282";
+const MINING_BALANCE_ICON = "https://slho.shop/i/8298";
 
 function logFailure(endpoint, userId, ip, error, extra = {}) {
     console.error(`❌ [${endpoint}] FAILED`, JSON.stringify({ userId: userId || 'unknown', ip: ip || 'unknown', error: error?.message || error, ...extra }));
