@@ -37,9 +37,9 @@ const tasksCache = {
 };
 const TASKS_CACHE_TTL = 15 * 60 * 1000;
 
-const GRAM_ICON = "https://slho.shop/i/8297";
-const APP_LOGO = "https://slho.shop/i/8281";
-const MINING_BALANCE_ICON = "https://slho.shop/i/8298";
+const GRAM_ICON = "https://i.postimg.cc/Xqq4bZ1b/file-00000000d368821093a299693a488ea9.png";
+const APP_LOGO = "https://i.postimg.cc/CMRxXt3G/file-000000002a0c8210ac450c6a3c32841b.png";
+const MINING_BALANCE_ICON = "https://i.postimg.cc/MpSZcGvb/IMG-20261111-053642-213.jpg";
 
 function logFailure(endpoint, userId, ip, error, extra = {}) {
     console.error(`❌ [${endpoint}] FAILED`, JSON.stringify({ userId: userId || 'unknown', ip: ip || 'unknown', error: error?.message || error, ...extra }));
@@ -600,7 +600,7 @@ app.post('/api/prepare-share', authenticate, async (req, res) => {
         const userId = req._userId;
         const botUsername = (process.env.BOT_USERNAME || 'GramHtrsbot').replace('@', '');
         const appShortName = process.env.APP_SHORT_NAME || 'app';
-        const promoImage = "https://slho.shop/i/8299";
+        const promoImage = "https://i.postimg.cc/c4MybBLc/IMG-20261111-053610-514.jpg";
         const miniAppUrl = `https://t.me/${botUsername}/${appShortName}?startapp=${userId}`;
 
         const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/savePreparedInlineMessage`, {
