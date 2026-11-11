@@ -727,6 +727,9 @@ class App {
 
     async claimMiningRewards() {
         if (this.pendingGramReward <= 0) { this.showNotification('Error', 'No rewards', 'error'); this.vibrate('error'); return; }
+        
+        await new Promise(r => setTimeout(r, 1200));
+        
         try { await this.showAdsgramInterstitial(); } catch (e) {}
         const result = await this.fetchFromServer('/api/claim-mining', {});
         if (result.error) { this.showNotification('Error', result.error, 'error'); this.vibrate('error'); return; }
