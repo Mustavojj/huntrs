@@ -213,6 +213,7 @@ async function getTasksFromCache(category) {
             .select('id, name, url, category, total, total_completed, verification, created_at, owner')
             .eq('category', category)
             .eq('status', 'active')
+            .order('created_at', { ascending: category !== 'community' })
             .limit(500);
         if (error) throw error;
         const filtered = (data || []).filter(t => (t.total_completed || 0) < t.total);
