@@ -465,6 +465,10 @@ class App {
     setPromoCooldown() { this._promoCooldown = Date.now(); }
 
     async fetchFromServer(endpoint, data = {}) {
+    const criticalPaths = ['/api/claim-mining', '/api/stop-mining', '/api/get-user'];
+    const isCritical = criticalPaths.includes(endpoint);
+
+    if (!isCritical) {
         const now = Date.now();
         const key = `${endpoint}_${this.tgUser?.id || 'user'}`;
         const lastCall = this._lastFetchTime.get(key) || 0;
@@ -472,30 +476,32 @@ class App {
             await new Promise(r => setTimeout(r, 1000 - (now - lastCall)));
         }
         this._lastFetchTime.set(key, Date.now());
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 20000);
-            const headers = { 'Content-Type': 'application/json' };
-            if (this.jwtToken) headers['Authorization'] = `Bearer ${this.jwtToken}`;
-            const payload = { ...data, userId: this.tgUser?.id, username: this.tgUser?.username || '', firstName: this.tgUser?.first_name || 'User', photoUrl: this.tgUser?.photo_url || this.config.DEFAULT_USER_AVATAR };
-            const response = await fetch(`${this.serverUrl}${endpoint}`, { method: 'POST', headers, body: JSON.stringify(payload), signal: controller.signal });
-            clearTimeout(timeoutId);
-            const result = await response.json();
-            if (result.error === 'Invalid token' || result.error === 'Token expired' || result.error === 'No token provided') {
-                const refreshed = await this.refreshToken();
-                if (refreshed) return this.fetchFromServer(endpoint, data);
-                this.isAuthenticated = false;
-                throw new Error('Auth required');
-            }
-            if (result.error === 'user_not_registered') { this.showNotRegisteredPage(); throw new Error('Not registered'); }
-            if (result.error === 'Account banned') { this.showBanModal(); throw new Error('Banned'); }
-            if (result.error === 'device_already_linked' || result.error === 'ip_already_linked') { this.showDeviceLock(); throw new Error('Device locked'); }
-            if (result.error === 'Too many requests') throw new Error('Cooldown');
-            if (result.serverTime) this.serverTimeOffset = result.serverTime - Date.now();
-            return result;
-        } catch (error) { throw error; }
     }
 
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
+        const headers = { 'Content-Type': 'application/json' };
+        if (this.jwtToken) headers['Authorization'] = `Bearer ${this.jwtToken}`;
+        const payload = { ...data, userId: this.tgUser?.id, username: this.tgUser?.username || '', firstName: this.tgUser?.first_name || 'User', photoUrl: this.tgUser?.photo_url || this.config.DEFAULT_USER_AVATAR };
+        const response = await fetch(`${this.serverUrl}${endpoint}`, { method: 'POST', headers, body: JSON.stringify(payload), signal: controller.signal });
+        clearTimeout(timeoutId);
+        const result = await response.json();
+        if (result.error === 'Invalid token' || result.error === 'Token expired' || result.error === 'No token provided') {
+            const refreshed = await this.refreshToken();
+            if (refreshed) return this.fetchFromServer(endpoint, data);
+            this.isAuthenticated = false;
+            throw new Error('Auth required');
+        }
+        if (result.error === 'user_not_registered') { this.showNotRegisteredPage(); throw new Error('Not registered'); }
+        if (result.error === 'Account banned') { this.showBanModal(); throw new Error('Banned'); }
+        if (result.error === 'device_already_linked' || result.error === 'ip_already_linked') { this.showDeviceLock(); throw new Error('Device locked'); }
+        if (result.error === 'Too many requests') throw new Error('Cooldown');
+        if (result.serverTime) this.serverTimeOffset = result.serverTime - Date.now();
+        return result;
+    } catch (error) { throw error; }
+    }
+    
     async getFromServer(endpoint) {
         try {
             const controller = new AbortController();
@@ -2026,6 +2032,11 @@ class App {
             try { await this.getConfig(); } catch (e) { console.error('Config error:', e); }
             try { await this.getServerTime(); } catch (e) { console.error('ServerTime error:', e); }
             try { await this.loadUserData(); } catch (e) { console.error('UserData error:', e); }
+            if (this.miningActive && this.miningEndTime && this.getCurrentTime() >= this.miningEndTime) {
+                await this.stopMining();
+                await new Promise(r => setTimeout(r, 800));
+            }
+
             this.startServerTimeSync();
 
             if (this.userState === 'ban') { this.showBanModal(); return; }
