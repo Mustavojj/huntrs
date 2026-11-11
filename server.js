@@ -1010,14 +1010,16 @@ app.post('/api/complete-task', authenticate, strictLimiter, async (req, res) => 
         if (completed) return res.status(400).json({ error: 'Already done' });
 
         setTaskCompletionCooldown(userId);
+        
         const newCompleted = (task.total_completed || 0) + 1;
         const taskUpdates = { total_completed: newCompleted };
-        if (newCompleted >= task.total) {
+        const taskJustCompleted = newCompleted >= task.total && task.status !== 'completed';
+        if (taskJustCompleted) {
             taskUpdates.status = 'completed';
         }
         await supabase.from('tasks').update(taskUpdates).eq('id', taskId);
         if (taskJustCompleted && task.owner && task.owner !== 0) {
-            await sendTelegramNotification(
+        await sendTelegramNotification(
                 task.owner,
                 '<tg-emoji emoji-id="5920365070369427908">✅</tg-emoji> Task Completed!',
                 `<b><tg-emoji emoji-id="5310278924616356636">✅</tg-emoji> Your task has been fully completed!</b>\n\n` +
@@ -1068,6 +1070,8 @@ app.post('/api/complete-task', authenticate, strictLimiter, async (req, res) => 
         res.json({ success: true, user: updatedUser, reward: gramReward });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });
+
+
 
 app.post('/api/tasks/:category', authenticate, async (req, res) => {
     try { res.json({ tasks: await getTasks(req.params.category, req._userId) }); }
