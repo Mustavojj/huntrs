@@ -848,7 +848,9 @@ class App {
         try {
             const result = await this.fetchFromServer(`/api/tasks/${category}`, {});
             const tasks = result.tasks;
-            if (tasks) tasks.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+            if (tasks && category !== 'community') {
+                tasks.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+            }
             return tasks || [];
         } catch (error) { return []; }
     }
