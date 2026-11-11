@@ -1010,7 +1010,23 @@ app.post('/api/complete-task', authenticate, strictLimiter, async (req, res) => 
         if (completed) return res.status(400).json({ error: 'Already done' });
 
         setTaskCompletionCooldown(userId);
-        await supabase.from('tasks').update({ total_completed: (task.total_completed || 0) + 1 }).eq('id', taskId);
+        const newCompleted = (task.total_completed || 0) + 1;
+        const taskUpdates = { total_completed: newCompleted };
+        if (newCompleted >= task.total) {
+            taskUpdates.status = 'completed';
+        }
+        await supabase.from('tasks').update(taskUpdates).eq('id', taskId);
+        if (taskJustCompleted && task.owner && task.owner !== 0) {
+            await sendTelegramNotification(
+                task.owner,
+                '<tg-emoji emoji-id="5920365070369427908">✅</tg-emoji> Task Completed!',
+                `<b><tg-emoji emoji-id="5310278924616356636">✅</tg-emoji> Your task has been fully completed!</b>\n\n` +
+                `<b>- Task Name:</b> ${task.name}\n` +
+                `<b>- Total Completions:</b> ${newCompleted}/${task.total}\n` +
+                `<b>- Total Paid:</b> ${(newCompleted * (APP_CONFIG.TASK_REWARDS.community.gram || 0.002) * 100 / 100).toFixed(4)} GRAM\n\n`,
+                { text: '🥷 Check on app', url: 'https://t.me/GramHtrsbot/app' }
+            );
+        }
         await supabase.from('user_completed_tasks').insert([{ user_id: userId, task_id: taskId, completed_at: Date.now() }]);
         invalidateTasksCache(task.category);
 
