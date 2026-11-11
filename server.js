@@ -1155,25 +1155,39 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
         const address = APP_CONFIG.PAYMENT_WALLET;
         if (!address) return res.status(500).json({ error: 'Wallet not configured' });
 
-        const { data: usedMemo } = await supabase.from('confirmed_memos').select('memo').eq('memo', memo).maybeSingle();
-        if (usedMemo) return res.json({ success: false, error: 'Used' });
+        const totalNum = parseInt(taskData.total);
+        if (totalNum < 100 || totalNum > 5000) return res.json({ success: false, error: 'Invalid total' });
 
-        const response = await fetch(`https://toncenter.com/api/v2/getTransactions?address=${address}&limit=3`);
+        const requiredAmount = (taskData.total / 100) * (APP_CONFIG.PRICE_PER_100 || 0.10);
+
+        const response = await fetch(`https://toncenter.com/api/v2/getTransactions?address=${address}&limit=30`);
         const data = await response.json();
         if (!data.ok) return res.status(500).json({ error: 'API error' });
 
-        let foundTx = null;
-        if (data.result && data.result.length > 0) foundTx = data.result.find(tx => tx.in_msg?.message?.includes(memo));
-        if (!foundTx) return res.json({ success: false, error: 'Not found' });
+        const now = Date.now() / 1000;
+        const thirtyMinAgo = now - 3000;
 
-        if (foundTx.in_msg?.message !== memo) return res.json({ success: false, error: 'Invalid memo' });
+        const foundTx = (data.result || []).find(tx => {
+            const txTime = tx.utime;
+            const txAmount = parseFloat(tx.in_msg?.value) / 1e9 || 0;
+            const txMemo = tx.in_msg?.message || '';
 
-        const txAmount = parseFloat(foundTx.in_msg?.value) / 1000000000 || 0;
-        const totalNum = parseInt(taskData.total);
-        if (totalNum < 100 || totalNum > 5000) return res.json({ success: false, error: 'Invalid' });
+            if (txTime < thirtyMinAgo) return false;
+            if (Math.abs(txAmount - requiredAmount) > requiredAmount * 0.02) return false;
+            if (txMemo && !txMemo.includes(String(userId)) && txMemo !== memo) return false;
 
-        const requiredAmount = (taskData.total / 100) * (APP_CONFIG.PRICE_PER_100 || 0.10);
-        if (txAmount < requiredAmount * 0.98) return res.json({ success: false, error: 'Insufficient' });
+            return true;
+        });
+
+        if (!foundTx) return res.json({ success: false, error: 'Payment not found (wait 1-2 min and retry)' });
+
+        const txHash = foundTx.transaction_id?.hash || foundTx.in_msg?.hash || `tx_${foundTx.utime}_${userId}`;
+        const { data: usedTx } = await supabase
+            .from('confirmed_memos')
+            .select('memo')
+            .eq('memo', txHash)
+            .maybeSingle();
+        if (usedTx) return res.json({ success: false, error: 'This payment already used' });
 
         let verification = taskData.verification || false;
         if (verification && taskData.link) {
@@ -1184,22 +1198,32 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
             }
         }
 
-        const { data: existingTask } = await supabase.from('tasks').select('id').eq('id', memo).maybeSingle();
+        const taskId = `task_${userId}_${Date.now()}`;
+        const { data: existingTask } = await supabase.from('tasks').select('id').eq('id', taskId).maybeSingle();
         if (existingTask) return res.json({ success: false, error: 'Exists' });
 
         const taskToAdd = {
-            id: memo, name: taskData.name, url: taskData.link,
-            category: 'community', reward: APP_CONFIG.TASK_REWARDS.community.gram || 0.002,
-            total: taskData.total, verification: verification, owner: userId,
-            status: 'active', created_at: Date.now(), total_completed: 0, notified: false
+            id: taskId,
+            name: taskData.name,
+            url: taskData.link,
+            category: 'community',
+            reward: APP_CONFIG.TASK_REWARDS.community.gram || 0.002,
+            total: taskData.total,
+            verification: verification,
+            owner: userId,
+            status: 'active',
+            created_at: Date.now(),
+            total_completed: 0,
+            notified: false
         };
 
         const { data: taskResult, error: taskError } = await supabase.from('tasks').insert([taskToAdd]).select().single();
-        if (taskError) return res.status(500).json({ error: 'Failed' });
+        if (taskError) return res.status(500).json({ error: 'Failed to add task' });
 
         invalidateTasksCache('community');
         await updateUser(userId, { task_count: (user.task_count || 0) + 1 });
-        await supabase.from('confirmed_memos').insert([{ memo, user_id: userId, used_at: Date.now() }]);
+
+        await supabase.from('confirmed_memos').insert([{ memo: txHash, user_id: userId, used_at: Date.now() }]);
 
         const taskChannelMsg = `⚡ <b>NEW TASK AVAILABLE</b>\n\n` +
             `📋 <b>Name: ${taskData.name}</b>\n` +
