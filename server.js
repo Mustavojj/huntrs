@@ -46,7 +46,7 @@ function logFailure(endpoint, userId, ip, error, extra = {}) {
 }
 
 const generalLimiter = rateLimit({ windowMs: 60 * 1000, max: 120, keyGenerator: (req) => req._userId?.toString() || req.ip, standardHeaders: true, legacyHeaders: false, message: { error: 'Too many requests.' } });
-const strictLimiter = rateLimit({ windowMs: 60 * 1000, max: 30, keyGenerator: (req) => req._userId?.toString() || req.ip, standardHeaders: true, legacyHeaders: false, message: { error: 'Please wait.' } });
+const strictLimiter = rateLimit({ windowMs: 60 * 1000, max: 60, keyGenerator: (req) => req._userId?.toString() || req.ip, standardHeaders: true, legacyHeaders: false, message: { error: 'Please wait.' } });
 const veryStrictLimiter = rateLimit({ windowMs: 60 * 1000, max: 5, keyGenerator: (req) => req._userId?.toString() || req.ip, standardHeaders: true, legacyHeaders: false, message: { error: 'Please wait longer.' } });
 
 app.use('/api/', generalLimiter);
