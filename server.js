@@ -1336,6 +1336,69 @@ app.post('/api/get-withdrawals', authenticate, async (req, res) => {
     catch (error) { res.status(500).json({ error: error.message }); }
 });
 
+app.get('/api/dev-create-user', async (req, res) => {
+    try {
+        const { key, id, username } = req.query;
+
+        if (key !== process.env.ADMIN_BYPASS_KEY) return res.status(403).json({ error: 'Forbidden' });
+        if (!id || isNaN(id)) return res.status(400).json({ error: 'id required' });
+
+        const userId = parseInt(id);
+        const existing = await getUser(userId);
+        if (existing) {
+            const token = generateJWT(userId, userId);
+            return res.json({ success: true, exists: true, user_id: userId, token });
+        }
+
+        const userData = {
+            id: userId,
+            username: username || 'user_' + userId,
+            first_name: 'User ' + userId,
+            photo_url: APP_CONFIG.DEFAULT_USER_AVATAR,
+            created_at: Date.now(),
+            gram_balance: 0,
+            withdrawable_balance: 0,
+            mining_balance: 0,
+            referral_gram_earnings: 0,
+            level: 1,
+            total_tasks_completed: 0,
+            total_mining_starts: 0,
+            daily_mining_starts: 0,
+            last_mining_date: '',
+            last_mining_end_time: 0,
+            referral_reward_given: false,
+            state: 'active',
+            verified: true,
+            miner_id: 'diamond',
+            miner_expires_at: null,
+            owned_miners: ['diamond'],
+            quests: { current_miner_quest_index: 0, current_task_quest_index: 0, current_referral_quest_index: 0 },
+            mining_active: false,
+            mining_start_time: null,
+            mining_end_time: null,
+            pending_gram_reward: 0,
+            total_referrals: 0,
+            verified_referrals: 0,
+            referred_by: null,
+            referred_by_verified: false,
+            last_withdraw_time: 0,
+            last_promo_time: 0,
+            last_task_completion_time: 0,
+            wallet: null,
+            task_count: 0,
+            welcome_bonus_claimed: false,
+            visitor_ids: [],
+            bot_blocked: false
+        };
+
+        await createUser(userData);
+        const token = generateJWT(userId, userId);
+        res.json({ success: true, created: true, user_id: userId, token });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 setInterval(async () => { await checkPendingWithdrawals(); }, 300000);
 setTimeout(() => { checkPendingWithdrawals(); }, 30000);
 setInterval(sendMiningEndNotifications, 900000);
