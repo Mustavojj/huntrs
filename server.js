@@ -38,7 +38,7 @@ const tasksCache = {
 const TASKS_CACHE_TTL = 15 * 60 * 1000;
 
 const GRAM_ICON = "https://i.postimg.cc/Xqq4bZ1b/file-00000000d368821093a299693a488ea9.png";
-const APP_LOGO = "https://i.postimg.cc/CMRxXt3G/file-000000002a0c8210ac450c6a3c32841b.png";
+const APP_LOGO = "https://i.postimg.cc/prSFdkdj/IMG-20261113-185332-424.jpg";
 const MINING_BALANCE_ICON = "https://i.postimg.cc/MpSZcGvb/IMG-20261111-053642-213.jpg";
 
 function logFailure(endpoint, userId, ip, error, extra = {}) {
