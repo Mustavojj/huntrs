@@ -1249,7 +1249,7 @@ app.post('/api/check-payment', authenticate, async (req, res) => {
         const taskChannelMsg = `⚡ <b>NEW TASK AVAILABLE</b>\n\n` +
             `📋 <b>Name: ${taskData.name}</b>\n` +
             `ℹ️ <b>Category: Community</b>\n` +
-            `✅ <b>Available for ${taskData.total} completion</b>`;
+            `🥷 <b>Target: ${taskData.total} completion</b>`;
         await sendChannelNotification(APP_CONFIG.TASKS_CHANNEL, taskChannelMsg, { text: '⚡ Complete Now', url: 'https://t.me/GramHtrsbot/app' });
 
         res.json({ success: true, task: taskResult, message: 'Task added' });
