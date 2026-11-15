@@ -1267,10 +1267,10 @@ app.post('/api/withdraw-gram', authenticate, veryStrictLimiter, async (req, res)
         if (!user) return res.status(404).json({ error: 'User not found' });
 
         const now = Date.now();
-        const cooldownMs = 6 * 3600000;
+        const cooldownMs = 48 * 3600000;
         if (user.last_withdraw_time && (now - user.last_withdraw_time) < cooldownMs) {
             const remaining = Math.ceil((cooldownMs - (now - user.last_withdraw_time)) / 3600000);
-            return res.status(400).json({ error: `Wait ${remaining}h` });
+            return res.status(400).json({ error: `Wait 48 hours after last withdrawal request.` });
         }
 
         if (!walletAddress || !walletAddress.startsWith('UQ') || walletAddress.length < 20) return res.status(400).json({ error: 'Invalid wallet' });
